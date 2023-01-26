@@ -74,9 +74,12 @@ non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'s
 for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')].iterrows():
     logging.info(f'{row.comment_code} score set to {row.score} in non_rt_comment_table')
 
-overall_tier_score_df['non_rt_positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier(comment_table_df=non_rt_comment_table))
+# non-rt score positive score multiplier has to get scores from non_rt_comment_table
+overall_tier_score_df['non_rt_positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier,args=(non_rt_comment_table,))
+overall_tier_score_df['non_rt_net_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] - overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
+logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df)} columns')
 
-
+overall_tier_score_df.to_csv('overall_tier_score.csv')
 # # writing overall_tier_score_df to tier_score excel file
 # with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
 #     overall_tier_score_df.to_excel(excel_writer=overall_tier_score_df,sheet_name='overall_tier_score',startrow=overall_tier_score_writer.sheets['overall_tier_score'].max_row)
