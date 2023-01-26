@@ -34,11 +34,12 @@ overall_tier_score_df['negative_comment_code'].fillna('',inplace=True)
 logging.info('Nan values in comment code columns replaced with empty string')
 
 # function to calculate additional score multiplier
-def get_additional_score_multiplier(desc):
+def get_additional_score_multiplier(desc,comment_table_df=comment_table):
     """calculates the multiplier for the additional score from the comment codes
 
     Args:
         desc (string): all the comment codes for a particular GPU
+        comment_table_df (dataframe object, optional): the comment table to use from which reference values for the comment code will be taken from. Defaults to comment_table.
 
     Returns:
         float: the multiplier for additiona score calculated based on the comment code
@@ -46,7 +47,7 @@ def get_additional_score_multiplier(desc):
     list_desc = desc.split()
     add_score = 0
     for indi_desc in list_desc:
-        temp_df = comment_table[comment_table['comment_code']==indi_desc].reset_index(drop=True)
+        temp_df = comment_table_df[comment_table_df['comment_code']==indi_desc].reset_index(drop=True)
         add_score = add_score + temp_df['score'][0]
     return add_score/100
 
@@ -73,8 +74,8 @@ non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'s
 for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')].iterrows():
     logging.info(f'{row.comment_code} score set to {row.score} in non_rt_comment_table')
 
-print(non_rt_comment_table)
-print(non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')])
+overall_tier_score_df['non_rt_positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier(comment_table_df=non_rt_comment_table))
+
 
 # # writing overall_tier_score_df to tier_score excel file
 # with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
