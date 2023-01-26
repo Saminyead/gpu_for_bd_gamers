@@ -69,7 +69,9 @@ logging.info('net_tier_score column added')
 
 non_rt_comment_table = comment_table
 non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'score'] = 0
-logging.info(f'rt_1 score set to {non_rt_comment_table.score[0]} in non_rt_comment_table')
+
+for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')].iterrows():
+    logging.info(f'{row.comment_code} score set to {row.score} in non_rt_comment_table')
 
 print(non_rt_comment_table)
 print(non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')])
