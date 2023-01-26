@@ -1,0 +1,8 @@
+*.env
+*.log
+__pycache__/
+logs/
+flex_functions.py
+flex.ipynb
+gpu_data_nb.ipynb
+techpowerup_tier_to_db.py

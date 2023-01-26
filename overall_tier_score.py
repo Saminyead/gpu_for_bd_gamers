@@ -1,0 +1,81 @@
+import pandas as pd
+from openpyxl import load_workbook
+import logging
+import re
+import sqlalchemy
+from dotenv import load_dotenv
+
+# setting up logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler('./logs/overall_tier_score.log'),
+        logging.StreamHandler()
+    ])
+
+# fetching the tier_score and comment tables
+
+tier_score_table = pd.read_excel(io='tier_score.xlsx',sheet_name='tier_score_sheet',usecols='A:G')
+# for some reason it's reading a bunch of blank rows towards the bottom
+overall_tier_score_df = tier_score_table.dropna(axis=0,how='all')
+comment_table = pd.read_excel(io='tier_score.xlsx',sheet_name='comment_table')
+
+logging.info(f'overall_tier_score_df dataframe created with {len(overall_tier_score_df)} rows')
+logging.info(f'comment_table dataframe created with {len(comment_table)} rows')
+
+# replace NaN values in positive_comment_code with empty string
+
+# tier_score are calculated on the comment codes; which are split into individual code using the split method; and NaN values cannot be split
+overall_tier_score_df['positive_comment_code'].fillna('',inplace=True)
+overall_tier_score_df['negative_comment_code'].fillna('',inplace=True)
+
+logging.info('Nan values in comment code columns replaced with empty string')
+
+# function to calculate additional score multiplier
+def get_additional_score_multiplier(desc):
+    """calculates the multiplier for the additional score from the comment codes
+
+    Args:
+        desc (string): all the comment codes for a particular GPU
+
+    Returns:
+        float: the multiplier for additiona score calculated based on the comment code
+    """
+    list_desc = desc.split()
+    add_score = 0
+    for indi_desc in list_desc:
+        temp_df = comment_table[comment_table['comment_code']==indi_desc].reset_index(drop=True)
+        add_score = add_score + temp_df['score'][0]
+    return add_score/100
+
+# function to calculate non
+
+# adding the columns to be calculated
+
+overall_tier_score_df['positive_additional_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier)
+logging.info('mutliplier column for positive comment code added')
+overall_tier_score_df['negative_additional_score_multiplier'] = overall_tier_score_df['negative_comment_code'].apply(get_additional_score_multiplier)
+logging.info('mutliplier column for negative comment code added')
+
+overall_tier_score_df['overall_additional_score'] = (overall_tier_score_df['positive_additional_score_multiplier'] + overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
+logging.info('overall_additional_tier_score column added')
+
+overall_tier_score_df['net_tier_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['overall_additional_score']
+logging.info('net_tier_score column added')
+
+# to calculate the non-rt overall tier scores
+
+non_rt_comment_table = comment_table
+non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'score'] = 0
+logging.info(f'rt_1 score set to {non_rt_comment_table.score[0]} in non_rt_comment_table')
+
+print(non_rt_comment_table)
+print(non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')])
+
+# # writing overall_tier_score_df to tier_score excel file
+# with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
+#     overall_tier_score_df.to_excel(excel_writer=overall_tier_score_df,sheet_name='overall_tier_score',startrow=overall_tier_score_writer.sheets['overall_tier_score'].max_row)
+
+
