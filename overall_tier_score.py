@@ -81,10 +81,8 @@ overall_tier_score_df['non_rt_additional_score'] = (overall_tier_score_df['non_r
 overall_tier_score_df['non_rt_net_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] - overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
 logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df)} columns')
 
-overall_tier_score_df.to_csv('overall_tier_score_2.csv')
 
-
-# # writing overall_tier_score_df to tier_score excel file
-# with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
-#     overall_tier_score_df.to_excel(excel_writer=overall_tier_score_writer,sheet_name='overall_tier_scores')
-#     overall_tier_score_writer.close()
+# writing overall_tier_score_df to tier_score excel file
+with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
+    overall_tier_score_df.to_excel(excel_writer=overall_tier_score_writer,sheet_name='overall_tier_scores')
+    overall_tier_score_writer.close()
