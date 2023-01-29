@@ -268,7 +268,18 @@ with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx', mode="a", engine="ope
 
 logging.info(f'Written lowest_price_df to excel file')
 
-# loading the previous two dataframes into databases
+# creating a tiered lowest_prices table
+
+overall_tier_score_df =pd.read_excel('tier_score.xlsx',sheet_name='overall_tier_scores',index_col=[0])
+
+lowest_prices_tiered=pd.merge(
+    left=lowest_price_df,
+    right=overall_tier_score_df[['gpu_unit_name','base_tier_score', 'net_tier_score', 'non_rt_net_score']],
+    on='gpu_unit_name'
+    )
+
+logging.info(f'lowest_prices_tiered dataframe created with {len(lowest_prices_tiered)} rows and {len(lowest_prices_tiered.columns)} column')
+# loading the previous dataframes into databases
 
 load_dotenv()
 
@@ -284,5 +295,6 @@ logging.info(msg='Connection to database established')
 
 gpu_of_interest_df.to_sql(name='gpu_of_interest',con=pgsql_db_engine,if_exists='replace',index=False)
 lowest_price_df.to_sql(name='lowest_prices',con=pgsql_db_engine,if_exists='append',index=False)
+lowest_prices_tiered.to_sql(name='lowest_prices_tiered',con=pgsql_db_engine,if_exists='replace',index=False)
 
-logging.info(msg='Both dataframes written to database')
+logging.info(msg='All dataframes written to database')
