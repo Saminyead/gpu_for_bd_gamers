@@ -31,7 +31,7 @@ ryans_card_list = get_card_list(pages_list=ryans_pages,card_tag='div.card-body.t
 ryans_df = gpu_dataframe_card(card_list=ryans_card_list,gpu_name_tag='p.card-text.p-0.m-0.list-view-text > a',
                                 gpu_price_tag='div.short-desc-attr ~ p',retailer_name='Ryans Computer')
 
-logging.info(msg=f'Ryans Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(ryans_df)}')
+logging.info(msg=f'\nRyans Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(ryans_df)}')
 
 # Startech Engineering
 startech_pages = get_pages(first_pg_link='https://www.startech.com.bd/component/graphics-card?filter_status=7&sort=p.price&order=ASC',
@@ -114,9 +114,9 @@ creatus_df = woocommerce_gpu_dataframe_card_instock(card_list=creatus_card_list,
 logging.info(msg=f'Cretaus Computer data scraped and stored to a dataframe successfully; length of dataframe = {len(creatus_df)}')
 
 # UCC BD
-uccbd_pages = [bsoup(requests.get('https://www.ucc-bd.com/pc-components/graphics-card-gpu.html?product_list_limit=all&product_list_order=price').content,features='html.parser')]
-uccbd_card_list = get_card_list(pages_list=uccbd_pages,card_tag='div.images-container')
-uccbd_df = gpu_dataframe_card(card_list=uccbd_card_list,gpu_name_tag='h2 > a.product-item-link',gpu_price_tag='span.price',retailer_name='UCC-BD')
+uccbd_pages = [bsoup(requests.get('https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=1&fmax=236900&limit=100').content,features='html.parser')]
+uccbd_card_list = get_card_list(pages_list=uccbd_pages,card_tag='div.product-thumb')
+uccbd_df = gpu_dataframe_card(card_list=uccbd_card_list,gpu_name_tag='div.caption > div.name > a',gpu_price_tag='div.price > div > span',retailer_name='UCC-BD')
 
 logging.info(msg=f'UCC-BD data scraped and stored to a dataframe successfully; length of dataframe = {len(uccbd_df)}')
 
@@ -266,7 +266,7 @@ with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx', mode="a", engine="ope
     lowest_price_df.to_excel(writer_lowest,sheet_name='lowest_price',startrow=writer_lowest.sheets['lowest_price'].max_row,header=not os.path.exists('./output_files/gpu_of_interest.xlsx'))
     writer_lowest.close
 
-logging.info(f'Written lowest_price_df to excel file')
+logging.info('Written lowest_price_df to excel file')
 
 # creating a tiered lowest_prices table
 
@@ -279,6 +279,16 @@ lowest_prices_tiered=pd.merge(
     )
 
 logging.info(f'lowest_prices_tiered dataframe created with {len(lowest_prices_tiered)} rows and {len(lowest_prices_tiered.columns)} column')
+
+# adding price per tier score columns to dataframe
+
+lowest_prices_tiered['price_per_base_tier'] = lowest_prices_tiered['gpu_price']/lowest_prices_tiered['base_tier_score']
+lowest_prices_tiered['price_per_net_tier'] = lowest_prices_tiered.gpu_price/lowest_prices_tiered.net_tier_score
+lowest_prices_tiered['price_per_non_rt_tier'] = lowest_prices_tiered.gpu_price/lowest_prices_tiered.non_rt_net_score
+
+logging.info(
+    f'3 columns added to lowest_prices_tiered dataframe being {lowest_prices_tiered.columns[-3]}, {lowest_prices_tiered.columns[-2]} and {lowest_prices_tiered.columns[-1]}')
+
 # loading the previous dataframes into databases
 
 load_dotenv()
