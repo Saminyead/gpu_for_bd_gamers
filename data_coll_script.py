@@ -307,4 +307,4 @@ gpu_of_interest_df.to_sql(name='gpu_of_interest',con=pgsql_db_engine,if_exists='
 lowest_price_df.to_sql(name='lowest_prices',con=pgsql_db_engine,if_exists='append',index=False)
 lowest_prices_tiered.to_sql(name='lowest_prices_tiered',con=pgsql_db_engine,if_exists='replace',index=False)
 
-logging.info(msg='All dataframes written to database')
+logging.info(msg='All dataframes written to database\n')
