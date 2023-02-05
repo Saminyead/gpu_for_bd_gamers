@@ -249,7 +249,7 @@ gpu_of_interest_df.reset_index(drop=True,inplace=True)
 logging.info(f'gpu_of_interest_df created with {len(gpu_of_interest_df)} entries')
 
 # temporarily adding to excel files for gpu_of_interest_df
-with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx', mode="a", engine="openpyxl",if_sheet_exists='overlay') as writer:
+with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx', mode="a", engine="openpyxl",if_sheet_exists='replace') as writer:
     gpu_of_interest_df.to_excel(writer,startrow=writer.sheets['Sheet1'].max_row,header=not os.path.exists('./output_files/gpu_of_interest.xlsx'))
     writer.close
 
