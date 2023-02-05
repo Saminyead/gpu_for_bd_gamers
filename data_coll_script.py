@@ -252,7 +252,7 @@ logging.info(f'gpu_of_interest_df created with {len(gpu_of_interest_df)} entries
 
 # temporarily adding to excel files for gpu_of_interest_df
 with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx', mode="a", engine="openpyxl",if_sheet_exists='replace') as writer:
-    gpu_of_interest_df.to_excel(writer,startrow=writer.sheets['Sheet1'].max_row,header=True)
+    gpu_of_interest_df.to_excel(writer,sheet_name='Sheet1',header=True)
     writer.close
 
 logging.info(f'Written gpu_of_interest_df to excel file')
