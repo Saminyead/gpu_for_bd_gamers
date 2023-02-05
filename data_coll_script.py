@@ -126,6 +126,8 @@ master_df = pd.concat(list_of_df)
 logging.info(msg=f'All dataframes compiled into master_df of length {len(master_df)}')
 logging.info(msg=f'Number of retailers in master df is {len(master_df.retailer_name.unique())}, while length of list_of_df is {len(list_of_df)}')
 
+# any row which has a GPU price of 0 should be discarded
+master_df = master_df.loc[master_df.gpu_price!=0]
 
 # list of all gpu units of interest
 with open('./gpu_units_of_interest/geforce_gpu_units.txt','r') as reader_geforce:
@@ -250,7 +252,7 @@ logging.info(f'gpu_of_interest_df created with {len(gpu_of_interest_df)} entries
 
 # temporarily adding to excel files for gpu_of_interest_df
 with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx', mode="a", engine="openpyxl",if_sheet_exists='replace') as writer:
-    gpu_of_interest_df.to_excel(writer,startrow=writer.sheets['Sheet1'].max_row,header=not os.path.exists('./output_files/gpu_of_interest.xlsx'))
+    gpu_of_interest_df.to_excel(writer,startrow=writer.sheets['Sheet1'].max_row,header=True)
     writer.close
 
 logging.info(f'Written gpu_of_interest_df to excel file')
@@ -288,6 +290,16 @@ lowest_prices_tiered['price_per_non_rt_tier'] = lowest_prices_tiered.gpu_price/l
 
 logging.info(
     f'3 columns added to lowest_prices_tiered dataframe being {lowest_prices_tiered.columns[-3]}, {lowest_prices_tiered.columns[-2]} and {lowest_prices_tiered.columns[-1]}')
+
+with pd.ExcelWriter('./output_files/gpu_of_interest.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as lowest_price_tier_writer:
+    lowest_prices_tiered.to_excel(
+        lowest_price_tier_writer,
+        sheet_name='lowest_prices_tiered'
+    )
+    lowest_price_tier_writer.close
+
+logging.info(f'lowest_prices_tiered dataframe written to Excel file with {len(lowest_prices_tiered)} rows')
+
 
 # loading the previous dataframes into databases
 
