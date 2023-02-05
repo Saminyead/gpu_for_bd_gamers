@@ -1,72 +1,75 @@
-# importing the necessary libraries
 import requests
 from bs4 import BeautifulSoup as bsoup
 import pandas as pd
 import re
 import time
 import os
-# defining the functions
-# --new function--
+
+
 # function to get all the gpu pages of a website
 # returns both a list of gpu pages url and the gpu pages as BeautifulSoup objects
 def get_pages(first_pg_link,url_tag_tag,url_tag_str):
+    """gets all the pages with the list of gpu's for that website from the first page link, and the html element 
+       for going to the next page
+
+    Args:
+        first_pg_link (string): the link of the first page for the list of gpu's in that website 
+                                (i.e. page 1 of x, for x pages containing the entire list of gpu's)
+        url_tag_tag (string): the html tag which contains the link to the next page
+        url_tag_str (string): the string used on the page to indicate next page (e.g. '>' or 'NEXT')
+
+    Returns:
+        dict: a dictionary containing the list of url's of each page as key, and the list of pages (as BeautifulSoup objects) as values
+    """
     next_pg_link = first_pg_link
-    # list of each gpu pages url
     url_list = [first_pg_link]
     # list of pages as BeautifulSoup objects
     pages_list = []
+
     while(True):
-        # getting the page content
         page_content = requests.get(next_pg_link).content
-        # turn the page content into BeautifulSoup object
         page_soup = bsoup(page_content,features='html.parser')
-        # add the page
         pages_list.append(page_soup)
-        # get the link to the next page
-        # finding the tag with a particular string, that will contain our next page link
         link_tag = page_soup.find_all(url_tag_tag,string=url_tag_str)
-        # if link_tag produces an empty list, the loop breaks
         if link_tag == []:
             break
-        # storing the next page link
         next_pg_link = link_tag[0]['href']
-        # adding the link to the url_list
         url_list.append(next_pg_link)
         # execution delay (so I don't accidentally ddos them :|)
         time.sleep(1)
-        # a dictionary containing both the list of urls and the list of soups, to be the return value of the method
         url_and_pages_dict = {'url_list':url_list,'soup_list':pages_list}
+        
     return url_and_pages_dict
-# --new function--
-# function to get all the gpu pages of a website using the select() method in BeatifulSoup
-# returns both a list of gpu pages url and the gpu pages as BeautifulSoup objects
+
+
 def get_pages_select(first_pg_link,url_tag):
+    """ similar to get_pages, gets all the pages with the list of gpu's for that website from the first page link, and the html element 
+       for going to the next page, but with BeautifulSoup's select() method
+
+    Args:
+        first_pg_link (string): the link of the first page for the list of gpu's in that website 
+        url_tag (string): the interactible html tag to go the next page
+
+    Returns:
+        dict: a dictionary containing the list of url's of each page as key, and the list of pages (as BeautifulSoup objects) as values
+    """
     next_pg_link = first_pg_link
-    # list of each gpu pages url
     url_list = [first_pg_link]
     # list of pages as BeautifulSoup objects
     pages_list = []
     while(True):
-        # getting the page content
         page_content = requests.get(next_pg_link).content
-        # turn the page content into BeautifulSoup object
         page_soup = bsoup(page_content,features='html.parser')
-        # add the page
         pages_list.append(page_soup)
-        # get the link to the next page
-        # finding the tag with a particular string, that will contain our next page link
         link_tag = page_soup.select(url_tag)
-        # if link_tag produces an empty list, the loop breaks
         if link_tag == []:
             break
-        # storing the next page link
         next_pg_link = link_tag[0]['href']
-        # adding the link to the url_list
         url_list.append(next_pg_link)
         # execution delay (so I don't accidentally ddos them :|)
         time.sleep(1)
-        # a dictionary containing both the list of urls and the list of soups, to be the return value of the method
         url_and_pages_dict = {'url_list':url_list,'soup_list':pages_list}
+
     return url_and_pages_dict
 # --new function--
 # function to get the list of all tags containing the gpu names
