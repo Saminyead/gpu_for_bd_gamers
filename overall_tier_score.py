@@ -1,7 +1,6 @@
 import pandas as pd
 from openpyxl import load_workbook
 import logging
-import sqlalchemy
 from dotenv import load_dotenv
 
 # setting up logging
@@ -85,4 +84,4 @@ logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(over
 # writing overall_tier_score_df to tier_score excel file
 with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
     overall_tier_score_df.to_excel(excel_writer=overall_tier_score_writer,sheet_name='overall_tier_scores')
-    overall_tier_score_writer.close()
+    overall_tier_score_writer.close
