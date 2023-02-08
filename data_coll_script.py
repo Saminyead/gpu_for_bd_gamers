@@ -272,7 +272,7 @@ logging.info('Written lowest_price_df to excel file')
 
 # creating a tiered lowest_prices table
 
-from overall_tier_score import overall_tier_score_df
+overall_tier_score_df =pd.read_excel('tier_score.xlsx',sheet_name='overall_tier_scores',index_col=[0])
 
 lowest_prices_tiered=pd.merge(
     left=lowest_price_df,
