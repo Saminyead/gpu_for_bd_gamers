@@ -77,8 +77,8 @@ for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str
 overall_tier_score_df['non_rt_positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier,args=(non_rt_comment_table,))
 overall_tier_score_df['non_rt_additional_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] + overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
 
-overall_tier_score_df['non_rt_net_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] - overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
-logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df)} columns')
+overall_tier_score_df['non_rt_net_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['non_rt_additional_score']
+logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df.columns)} columns')
 
 
 # writing overall_tier_score_df to tier_score excel file
