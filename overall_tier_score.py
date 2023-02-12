@@ -58,7 +58,7 @@ logging.info('mutliplier column for positive comment code added')
 overall_tier_score_df['negative_additional_score_multiplier'] = overall_tier_score_df['negative_comment_code'].apply(get_additional_score_multiplier)
 logging.info('mutliplier column for negative comment code added')
 
-overall_tier_score_df['overall_additional_score'] = (overall_tier_score_df['positive_additional_score_multiplier'] + overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
+overall_tier_score_df['overall_additional_score_multiplier'] = (overall_tier_score_df['positive_additional_score_multiplier'] + overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
 logging.info('overall_additional_tier_score column added')
 
 overall_tier_score_df['net_tier_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['overall_additional_score']
