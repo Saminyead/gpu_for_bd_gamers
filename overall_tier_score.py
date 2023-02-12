@@ -53,13 +53,14 @@ def get_additional_score_multiplier(desc,comment_table_df=comment_table):
 
 # adding the columns to be calculated
 
-overall_tier_score_df['positive_additional_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier)
+overall_tier_score_df['positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier)
 logging.info('mutliplier column for positive comment code added')
-overall_tier_score_df['negative_additional_score_multiplier'] = overall_tier_score_df['negative_comment_code'].apply(get_additional_score_multiplier)
+overall_tier_score_df['negative_score_multiplier'] = overall_tier_score_df['negative_comment_code'].apply(get_additional_score_multiplier)
 logging.info('mutliplier column for negative comment code added')
 
-overall_tier_score_df['overall_additional_score_multiplier'] = (overall_tier_score_df['positive_additional_score_multiplier'] + overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
-logging.info('overall_additional_tier_score column added')
+overall_tier_score_df['overall_score_multiplier'] = overall_tier_score_df['positive_score_multiplier'] + overall_tier_score_df['negative_score_multiplier']
+overall_tier_score_df['overall_additional_score'] = overall_tier_score_df['overall_score_multiplier'] * overall_tier_score_df['base_tier_score']
+logging.info('overall_score_multiplier column added')
 
 overall_tier_score_df['net_tier_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['overall_additional_score']
 logging.info('net_tier_score column added')
@@ -75,7 +76,7 @@ for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str
 
 # non-rt score positive score multiplier has to get scores from non_rt_comment_table
 overall_tier_score_df['non_rt_positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier,args=(non_rt_comment_table,))
-overall_tier_score_df['non_rt_additional_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] + overall_tier_score_df['negative_additional_score_multiplier']) * overall_tier_score_df['base_tier_score']
+overall_tier_score_df['non_rt_additional_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] + overall_tier_score_df['negative_score_multiplier']) * overall_tier_score_df['base_tier_score']
 
 overall_tier_score_df['non_rt_net_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['non_rt_additional_score']
 logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df.columns)} columns')
