@@ -7,3 +7,4 @@ flex.ipynb
 gpu_data_nb.ipynb
 techpowerup_tier_to_db.py
 *.pgsql
+update_db.ipynb

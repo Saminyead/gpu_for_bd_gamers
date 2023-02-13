@@ -46,10 +46,9 @@ def get_additional_score_multiplier(desc,comment_table_df=comment_table):
     add_score = 0
     for indi_desc in list_desc:
         temp_df = comment_table_df[comment_table_df['comment_code']==indi_desc].reset_index(drop=True)
-        add_score = add_score + temp_df['score'][0]
+        add_score = add_score + temp_df['weight_score'][0]
     return add_score/100
 
-# function to calculate non
 
 # adding the columns to be calculated
 
