@@ -67,10 +67,10 @@ logging.info('net_tier_score column added')
 # to calculate the non-rt overall tier scores
 
 non_rt_comment_table = comment_table
-non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'score'] = 0
+non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'weight_score'] = 0
 
 for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')].iterrows():
-    logging.info(f'{row.comment_code} score set to {row.score} in non_rt_comment_table')
+    logging.info(f'{row.comment_code} score set to {row.weight_score} in non_rt_comment_table')
 
 
 # non-rt score positive score multiplier has to get scores from non_rt_comment_table
