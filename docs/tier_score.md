@@ -7,7 +7,8 @@ Base Tier Score is the performance of a Graphics Card relative to the GeForce GT
 our list of GPU's of interest. It indicates how much more average FPS could be achieved compared to a GTX 1050 Ti across a variety of different games. This is considering
 that the GPU's are not bottlenecked by CPU during gaming, and the games are run on the same graphics setting on each of the cards. Also, all ray tracing and hardware specific
 upscaling (e.g. DLSS) are turned off. Mathematically, the Base Tier Score can be expressed as:
-						base_tier_score = performance of the gpu of interest / performance of the GTX 1050 Ti
+
+			base_tier_score = performance of the gpu of interest / performance of the GTX 1050 Ti
 
 To give an example of how it works, the Base Tier Score of the GTX 1660 Ti is 2.15. That means, the GTX 1650 GDDR6 will have 2.15 times higher average FPS across a variety of 
 games compared to the GTX 1050 Ti. Also, by this definition, the Base Tier Score of the GTX 1050 Ti will always be 1.
@@ -24,9 +25,10 @@ are assigned to these positive and negative special traits respectively, which a
 dividing them by 100 is because the weights are meant to be expressed as percentages of the Base Tier Score. The Score Multipliers are then added together to obtain the Overall 
 Tier Score Multiplier, which is then multiplied with the Base Tier Score to obtain the Overall Additional Score. Thereafter, Overall Additional Score is added to the Base Tier Score 
 to obtain the Net Tier Score. Mathematically:
-							overall_score_multiplier = positive_score_multiplier + negative_score_multiplier
-								overall_additional_score = base_tier_score * overall_score_multiplier
-									net_tier_score = base_tier_score + overall_additional_score
+
+				overall_score_multiplier = positive_score_multiplier + negative_score_multiplier
+				    overall_additional_score = base_tier_score * overall_score_multiplier
+					net_tier_score = base_tier_score + overall_additional_score
 
 Examples of some of the positive special traits include 2nd generation ray tracing and DLSS for the GeForce RTX 3060 Ti; and the low power consumption of 75 watts for the GTX 
 1650. Examples of the notable negative traits include the persistent driver issues of the Intel Arc GPU's (Intel has made a lot of improvements, and they said they would improve
@@ -36,7 +38,7 @@ the weight score of 1st generation ray tracing is 5. Thus, the assumption here i
 than a GPU with similar specs but has no ray tracing. Thus, 1st generation ray tracing is said to increase the value of the GPU by 5%, thereby giving it a net tier score 5% higher
 than the base tier score. 
 
-A list of these special positive and negative traits and their weight scores can be found in the 'comment_table' sheet of the <a>tier_score.xlsx</a> Excel file in the 'docs'
+A list of these special positive and negative traits and their weight scores can be found in the 'comment_table' sheet of the <a href="https://github.com/Saminyead/gpu_for_bd_gamers/blob/master/tier_score.xlsx">tier_score.xlsx</a> Excel file in the 'docs'
 folder of this repository. The comment_code column contains a short-hand code for each of the positive and negative traits. The comment_desc column contains a description for
 each trait, and the weight_score column contains the weight scores assigned to each of the trait.
 
