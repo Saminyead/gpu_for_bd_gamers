@@ -2,7 +2,8 @@ Tier scores are a measure of the performance and value offered by a Graphics Car
 Score (base_tier_score). The 2 other tier scores based on it are Net Tier Score (net_tier_score) and Non-RT Net Tier Score (non_rt_net_score). Given below are descriptions of
 how they are calculated and what they signify:
 
-Base Tier Score:
+<b><u>Base Tier Score:</b></u>
+
 Base Tier Score is the performance of a Graphics Card relative to the GeForce GTX 1050 Ti, i.e. how much faster it is compared to the GTX 1050 Ti — the least powerful card in
 our list of GPU's of interest. It indicates how much more average FPS could be achieved compared to a GTX 1050 Ti across a variety of different games. This is considering
 that the GPU's are not bottlenecked by CPU during gaming, and the games are run on the same graphics setting on each of the cards. Also, all ray tracing and hardware specific
@@ -19,7 +20,8 @@ performance of all graphics car with a percentage point. This is the relative pe
 the 1660 Ti has 215% the performance of the GTX 1050 Ti. The GTX 1050 Ti is rated at 100%. As a result, dividing 215% by 100% would result in 2.15, which is the tier score of
 the 1660 Ti.
 
-Net Tier Score:
+<b><u>Net Tier Score:</b></u>
+
 The Net Tier Score is the tier score obtained when the Base Tier Score is adjusted for a GPU's notable positive and negative special traits. Some positive and negative weight scores
 are assigned to these positive and negative special traits respectively, which are then divided by 100 to obtain Positive and Negative Score Multipliers respectively. The reason for 
 dividing them by 100 is because the weights are meant to be expressed as percentages of the Base Tier Score. The Score Multipliers are then added together to obtain the Overall 
@@ -44,7 +46,8 @@ each trait, and the weight_score column contains the weight scores assigned to e
 
 The sheet named 'tier_score_sheet' in the tier_score.xlsx file contains the Tier Scores, the positive and negative traits they possess, and their calculated net_tier_score.
 
-Non-RT Net Tier Score:
+<b><u>Non-RT Net Tier Score:</b></u>
+
 There are some people who do not consider ray tracing to be such an important trait, that it deserves a premium over similar-specification non-raytracing cards. It is for them
 that this tier score is created. Basically, Non-RT Net Tier Score is calculated in the exact same way as Net Tier Score with one exception — the weight scores assigned to first, 
 second and third generation ray tracing is 0. All other positive and negative weight scores are kept exactly the same.
