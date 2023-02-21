@@ -114,7 +114,7 @@ creatus_df = woocommerce_gpu_dataframe_card_instock(card_list=creatus_card_list,
 logging.info(msg=f'Cretaus Computer data scraped and stored to a dataframe successfully; length of dataframe = {len(creatus_df)}')
 
 # UCC BD
-uccbd_pages = [bsoup(requests.get('https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=1&fmax=236900&limit=100').content,features='html.parser')]
+uccbd_pages = [bsoup(requests.get('https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100').content,features='html.parser')]
 uccbd_card_list = get_card_list(pages_list=uccbd_pages,card_tag='div.product-thumb')
 uccbd_df = gpu_dataframe_card(card_list=uccbd_card_list,gpu_name_tag='div.caption > div.name > a',gpu_price_tag='div.price > div > span',retailer_name='UCC-BD')
 
@@ -128,6 +128,10 @@ logging.info(msg=f'Number of retailers in master df is {len(master_df.retailer_n
 
 # any row which has a GPU price of 0 should be discarded
 master_df = master_df.loc[master_df.gpu_price!=0]
+
+# rounding the GPU Prices to their nearest hundreds
+import math
+master_df['gpu_price']=master_df['gpu_price'].apply(lambda x: 100 * math.ceil(x/100))
 
 # list of all gpu units of interest
 with open('./gpu_units_of_interest/geforce_gpu_units.txt','r') as reader_geforce:
