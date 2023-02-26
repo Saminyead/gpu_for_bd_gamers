@@ -6,8 +6,7 @@ import time
 import os
 
 
-# function to get all the gpu pages of a website
-# returns both a list of gpu pages url and the gpu pages as BeautifulSoup objects
+
 def get_pages(first_pg_link,url_tag_tag,url_tag_str):
     """gets all the pages with the list of gpu's for that website from the first page link, and the html element 
        for going to the next page
@@ -71,25 +70,40 @@ def get_pages_select(first_pg_link,url_tag):
         url_and_pages_dict = {'url_list':url_list,'soup_list':pages_list}
 
     return url_and_pages_dict
-# --new function--
+
+
 # function to get the list of all tags containing the gpu names
 def gpu_names_tags_select(pages_list,gpu_names_tag):
-    # making a list containing all the gpu names obtained from the above line
+    """gets a list of all tags containing the GPU names in a page
+
+    Args:
+        pages_list (list): list of pages (generally, the output of get_pages() or get_pages_select()), each page being a BeautifulSoup object
+        gpu_names_tag (string): tag denoting the GPU names
+
+    Returns:
+        list: list of tags containing the GPU names in their texts
+    """
     name_tag_list = []
     for page in pages_list:
-        # finding all tags with the attributes containing gpu names
         name_tag_list.extend(page.select(gpu_names_tag))
     return name_tag_list
-# --new function--
-# function to get the list of gpu names from the list of gpu name tags
+
+
 def gpu_names(name_tag_list):
-    # empty list for storing gpu names
+    """gets the list of GPU names from a list of GPU names tags
+
+    Args:
+        name_tag_list (list): list of tags where the inner texts are the GPU names
+
+    Returns:
+        list: list of GPU names
+    """
     gpu_names_list = []
-    # loop through every entry in the name_tag_list and append to a gpu_names_list
     for gpu_name in name_tag_list:
         gpu_names_list.append(gpu_name.get_text())
     return gpu_names_list
-# --new function--
+
+
 # function to get the list of all tags containing prices
 def gpu_price_tags_select(pages_list,price_tag):
     # making an empty list to append price tag list of every pages to
