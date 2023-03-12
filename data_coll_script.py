@@ -24,7 +24,7 @@ logging.basicConfig(
 #--scraping through all the websites
 
 # Ryan's Computer
-ryans_pages = get_pages(first_pg_link='https://www.ryanscomputers.com/category/desktop-component-graphics-card?sort=LH&osp=0&page=1',
+ryans_pages = get_pages(first_pg_link='https://www.ryanscomputers.com/category/desktop-component-graphics-card?sort=LH&osp=1&page=1',
                         url_tag_tag='a',
                         url_tag_str='›')['soup_list']
 ryans_card_list = get_card_list(pages_list=ryans_pages,card_tag='div.card-body.text-center')
