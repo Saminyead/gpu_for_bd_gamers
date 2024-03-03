@@ -33,7 +33,6 @@ def _create_gpu_units_of_interest_test_file(
 
 
 def test_check_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
-        filename:str,
         gpu_unit_of_interest_list:list[str] = GPU_UNITS_EXISTING,
 ) -> None:
     """Checks if add_unit_to_gpu_units_of_interests_file checks if
@@ -44,4 +43,4 @@ def test_check_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
 
     for gpu_unit in gpu_unit_of_interest_list:
         with pytest.raises(GPUAlreadyExistsError):
-            add_to_gpu_units_interest_file(filename=filedir)
+            add_to_gpu_units_interest_file(filename=filedir,gpu_unit=gpu_unit)
