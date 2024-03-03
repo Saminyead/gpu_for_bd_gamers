@@ -1,6 +1,7 @@
 import pytest
 
-from new_gpu_unit import add_to_gpu_units_of_interest_file, GPUAlreadyExistsError
+from new_gpu_unit import add_to_gpu_units_of_interest_file
+from exceptions import GPUAlreadyExistsError
 
 TEST_DATA_DIR:str = "./test_data_dir"
 EXISTS_FILE:str = "exists.txt"
@@ -42,3 +43,12 @@ def test_check_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
     for gpu_unit in gpu_unit_of_interest_list:
         with pytest.raises(GPUAlreadyExistsError):
             add_to_gpu_units_of_interest_file(full_filename=filedir,gpu_unit=gpu_unit)
+
+
+
+# This should be for a different function, not 
+# add_to_gpu_units_of_interest_file, this should just be for the 
+# input function you will use in main
+def test_input_format_is_valid_input_gpu_unit_name() -> None:
+    """Checks if the format of the gpu_unit_name input is valid"""
+    # with pytest.raises(In)

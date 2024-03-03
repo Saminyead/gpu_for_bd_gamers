@@ -1,6 +1,7 @@
+from exceptions import GPUAlreadyExistsError, InvalidGpuUnitFormatError
+
 # TODO:
-#       - add gpu unit to one of the gpu_units_of_interest/ files
-#       - a check to see if the gpu unit already exists
+#       -check to see if input format is valid
 #       - add to excel file
 #       - check if already exists
 #       - push to db
@@ -11,30 +12,17 @@ GPU_UNITS_OF_INTEREST_DIR = "../gpu_units_of_interest"
 GEFORCE_GPU_UNITS_OF_INTEREST_FILE = "geforce_gpu_units.txt"
 
 
-
-class GPUAlreadyExistsError(Exception):
-    def __init__(self, gpu_unit_name:str, filename:str):
-        self.gpu_unit_name = gpu_unit_name
-        self.filename = filename
-        super().__init__(f"{gpu_unit_name} already exists in file {filename}")
-
-
-class InvalidGpuUnitFormatError(Exception):
-    def __init__(self, gpu_unit_name:str) -> None:
-        super().__init__(f"""The name {gpu_unit_name} is not a valid 
-                         GPU unit name. Please use the following format:
-                         - 'RTX ****'/'GTX ****' for GeForce GPUs
-                         - 'RX ****' for Radeon GPUs
-                         - 'Arc ****' for Arc GPUs
-                         If there has been a new release lineups, then please
-                         change the _check_gpu_unit_name_valid_input function
-                         in the new_gpu_unit module""")
-
-
 def _check_gpu_unit_name_valid_input(gpu_unit_name:str) -> bool:
     """Checks if the gpu_unit_name is formatted correctly. Else,
     InvalidGpuUnitFormatError is raised."""
+    pass
 
+
+def input_gpu_unit_name(gpu_unit_name:str) -> str:
+    # TODO: - tie the filename to the gpu_unit 
+    #       (e.g. if RTX|GTX then geforce file etc.)
+    #       - add test to see if this is being ensured
+    pass
 
 def _check_does_not_exists_gpu_unit_of_interest_in_file(
         gpu_unit:str,
@@ -56,11 +44,7 @@ def add_to_gpu_units_of_interest_file(
         gpu_unit:str,
         full_filename:str,
 ) -> None:
-    """Adds a new gpu unit to the appropriate file"""
-    # TODO: - tie the filename to the gpu_unit 
-    #       (e.g. if RTX|GTX then geforce file etc.)
-    #       - add test to see if this is being ensured
-    # 
+    """Adds a new gpu unit to the appropriate file""" 
     _check_does_not_exists_gpu_unit_of_interest_in_file(gpu_unit,full_filename)
     
     with open(full_filename,"a") as gpu_unit_writer:
