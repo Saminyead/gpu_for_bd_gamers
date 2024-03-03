@@ -1,3 +1,3 @@
-Radeon RX 6950 XT
-GeForce RTX 4070
+RX 6950 XT
+RTX 4070
 Arc A770

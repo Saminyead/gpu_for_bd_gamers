@@ -6,14 +6,14 @@ TEST_DATA_DIR:str = "./test_data_dir"
 EXISTS_FILE:str = "exists.txt"
 
 GPU_UNITS_EXISTING:list[str] = [
-    "Radeon RX 6950 XT",
-    "GeForce RTX 4070",
+    "RX 6950 XT",
+    "RTX 4070",
     "Arc A770"
 ]
 
 GPU_UNITS_NOT_EXISTING:list[str] = [
-    "Radeon RX 6900 XT",
-    "GeForce RTX 4070 Ti",
+    "RX 6900 XT",
+    "RTX 4070 Ti",
     "Arc A380"
 ]
 
