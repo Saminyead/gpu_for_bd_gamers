@@ -1,6 +1,6 @@
 import pytest
 
-from new_gpu_unit import add_to_gpu_units_interest_file, GPUAlreadyExistsError
+from new_gpu_unit import add_to_gpu_units_of_interest_file, GPUAlreadyExistsError
 
 TEST_DATA_DIR:str = "./test_data_dir"
 EXISTS_FILE:str = "exists.txt"
@@ -43,4 +43,4 @@ def test_check_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
 
     for gpu_unit in gpu_unit_of_interest_list:
         with pytest.raises(GPUAlreadyExistsError):
-            add_to_gpu_units_interest_file(filename=filedir,gpu_unit=gpu_unit)
+            add_to_gpu_units_of_interest_file(filename=filedir,gpu_unit=gpu_unit)
