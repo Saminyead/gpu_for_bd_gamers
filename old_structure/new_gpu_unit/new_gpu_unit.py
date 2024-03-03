@@ -35,8 +35,14 @@ def _check_if_exists_gpu_units_of_interest_file(
         return False
 
 
-def add_to_gpu_units_interest_file(
-        filename:str,
-        gpu_unit:str
+def add_to_gpu_units_of_interest_file(
+        gpu_unit:str,
+        full_filename:str,
 ) -> None:
-    pass
+    """Adds a new gpu unit to the appropriate file"""
+    if _check_if_exists_gpu_units_of_interest_file(gpu_unit,full_filename):
+        raise GPUAlreadyExistsError
+    
+    else:
+        with open(full_filename,"a") as gpu_unit_writer:
+            gpu_unit_writer.write(f"\n{gpu_unit}")
