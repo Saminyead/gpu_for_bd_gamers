@@ -1,6 +1,7 @@
 import pytest
 
-from new_gpu_unit import add_to_gpu_units_of_interest_file, input_gpu_unit_name
+from add_to_txt import add_to_gpu_units_of_interest_file 
+from new_gpu_unit import input_gpu_unit_name
 from exceptions import GPUAlreadyExistsError, InvalidGpuUnitFormatError
 
 TEST_DATA_DIR:str = "./test_data_dir"
