@@ -6,6 +6,12 @@
 #       - push to db
 #       - check if already exists
 
+# CONFIGS
+GPU_UNITS_OF_INTEREST_DIR = "../gpu_units_of_interest"
+GEFORCE_GPU_UNITS_OF_INTEREST_FILE = "geforce_gpu_units.txt"
+
+
+
 class GPUAlreadyExistsError(Exception):
     def __init__(self, gpu_name:str, filename:str):
         self.gpu_name = gpu_name
@@ -14,10 +20,19 @@ class GPUAlreadyExistsError(Exception):
 
 
 def _check_if_exists_gpu_units_of_interest_file(
+        gpu_unit:str,
         filename:str,
-        gpu_unit:str
 ) -> bool:
-    pass
+    """Checks if a particular gpu unit exists in a
+    particular file name"""
+    with open(filename,"r") as reader:
+        gpu_units = reader.read()
+        gpu_unit_list = gpu_units.splitlines()
+
+    if gpu_unit in gpu_unit_list:
+        return True
+    else:
+        return False
 
 
 def add_to_gpu_units_interest_file(
