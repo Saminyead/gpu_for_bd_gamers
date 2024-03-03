@@ -21,13 +21,13 @@ GPU_UNITS_NOT_EXISTING:list[str] = [
 def _create_gpu_units_of_interest_test_file(
         filedir:str = f"{TEST_DATA_DIR}/{EXISTS_FILE}",
         gpu_units_of_interest_list:list[str] = GPU_UNITS_EXISTING
-    ) -> None:
+    ) -> str:
     """Creates a file with a number of gpu units for the
     tests"""
     
     with open(filedir,mode="w",encoding="utf-8") as writer:
         for gpu_unit in gpu_units_of_interest_list:
-            writer.write(gpu_unit)
+            writer.write(f"{gpu_unit}\n")
 
     return filedir
 
