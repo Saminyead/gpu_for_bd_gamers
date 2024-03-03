@@ -71,6 +71,14 @@ def test_adding_to_file_add_to_gpu_units_of_interest_file(
     assert gpu_units_of_interest_list == gpu_units_list
 
 
+def test_adding_to_file_add_to_excel(
+        filename:str,
+        gpu_units_of_interest:list[str],
+) -> None:
+    """Checks if gpu unit names are being properly added to 
+    excel file"""
+
+
 # This should be for a different function, not 
 # add_to_gpu_units_of_interest_file, this should just be for the 
 # input function you will use in main

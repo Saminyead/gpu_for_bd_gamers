@@ -23,3 +23,11 @@ def input_gpu_unit_name(gpu_unit_name:str) -> str:
     #       (e.g. if RTX|GTX then geforce file etc.)
     #       - add test to see if this is being ensured
     pass
+
+
+def add_to_excel(
+        gpu_unit_name:str,
+        filename:str,
+) -> None:
+    """Adds gpu unit to the excel file."""
+    pass
