@@ -30,13 +30,16 @@ class InvalidGpuUnitFormatError(Exception):
                          change the _check_gpu_unit_name_valid_input function
                          in the new_gpu_unit module""")
 
-# TODO: define another exception to be raised if gpu_unit_name does not
-        # start with RTX/RX and so on
 
-def _check_if_exists_gpu_units_of_interest_file(
+def _check_gpu_unit_name_valid_input(gpu_unit_name:str) -> bool:
+    """Checks if the gpu_unit_name is formatted correctly. Else,
+    InvalidGpuUnitFormatError is raised."""
+
+
+def _check_does_not_exists_gpu_unit_of_interest_in_file(
         gpu_unit:str,
         filename:str,
-) -> bool:
+) -> bool|Exception:
     """Checks if a particular gpu unit exists in a
     particular file name"""
     with open(filename,"r") as reader:
@@ -44,9 +47,9 @@ def _check_if_exists_gpu_units_of_interest_file(
         gpu_unit_list = gpu_units.splitlines()
 
     if gpu_unit in gpu_unit_list:
-        return True
+        raise GPUAlreadyExistsError(gpu_unit,filename)
     else:
-        return False
+        return True
 
 
 def add_to_gpu_units_of_interest_file(
@@ -58,9 +61,7 @@ def add_to_gpu_units_of_interest_file(
     #       (e.g. if RTX|GTX then geforce file etc.)
     #       - add test to see if this is being ensured
     # 
-    if _check_if_exists_gpu_units_of_interest_file(gpu_unit,full_filename):
-        raise GPUAlreadyExistsError(gpu_unit,full_filename)
+    _check_does_not_exists_gpu_unit_of_interest_in_file(gpu_unit,full_filename)
     
-    else:
-        with open(full_filename,"a") as gpu_unit_writer:
-            gpu_unit_writer.write(f"\n{gpu_unit}")
+    with open(full_filename,"a") as gpu_unit_writer:
+        gpu_unit_writer.write(f"\n{gpu_unit}")

@@ -37,8 +37,6 @@ def test_check_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
 ) -> None:
     """Checks if add_unit_to_gpu_units_of_interests_file checks if
     a gpu unit already exists in the file"""
-    # run add_to_gpu_units_interest_file(exists_file, gpu_unit)
-    # see if gpu_unit exists in exists_file
     filedir = _create_gpu_units_of_interest_test_file()
 
     for gpu_unit in gpu_unit_of_interest_list:
