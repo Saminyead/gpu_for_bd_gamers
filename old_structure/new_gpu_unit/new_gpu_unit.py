@@ -48,4 +48,4 @@ def add_to_gpu_units_of_interest_file(
     _check_does_not_exists_gpu_unit_of_interest_in_file(gpu_unit,full_filename)
     
     with open(full_filename,"a") as gpu_unit_writer:
-        gpu_unit_writer.write(f"\n{gpu_unit}")
+        gpu_unit_writer.write(f"{gpu_unit}\n")
