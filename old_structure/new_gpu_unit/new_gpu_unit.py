@@ -1,5 +1,6 @@
 from exceptions import GPUAlreadyExistsError, InvalidGpuUnitFormatError
 
+import pandas as pd
 # TODO:
 #       -check to see if input format is valid
 #       - add to excel file
@@ -27,10 +28,22 @@ def input_gpu_unit_name(gpu_unit_name:str) -> str:
     pass
 
 
+def auto_add_details_to_gpu_unit(gpu_unit_name:str) -> pd.DataFrame:
+    """To create a series out of a gpu_unit_name, where it will
+    automatically assign the correct prefix e.g. Radeon for RX GPU's,
+    GeForce for RTX/GTX GPU's, and so on, as well as adds performance values,
+    launch prices and so on"""
+    # assigning correct prefixes should probably be a separate internal function
+
 def add_to_excel(
         gpu_unit_name:str,
         filename:str,
         sheet_name:str=EXCEL_SHEET_NAME,
 ) -> None:
     """Adds gpu unit to the excel file."""
+    # should contain functionality for automatically adding brand prefix
+    # e.g. GeForce, Radeon, and Intel
+    # should also contain functionality to automatically add some comment codes
+    # based on some naming convention
+    # this probably should be a separate function
     pass
