@@ -17,6 +17,8 @@ import logging
 
 import math
 
+from overall_tier_score import df_overall_tier_score
+
 #--setting up logging
 logging.basicConfig(
     level=logging.INFO,
@@ -162,7 +164,7 @@ nexusbd_card_list = get_card_list(
 
 nexusbd_df = gpu_dataframe_card(
     card_list=nexusbd_card_list,
-    gpu_name_css_sel='div.ut2-gl__name > a',
+    gpu_name_css_sel='h2 > a.product-title',
     gpu_price_css_sel='span.ty-price > bdi > span ~ span',
     retailer_name='Nexus Technology'
 )
@@ -381,7 +383,7 @@ lowest_price_df.reset_index(drop=True,inplace=True)
 
 logging.info(f'lowest_price_df created with {len(lowest_price_df)} entries')
 
-from overall_tier_score import overall_tier_score_df
+overall_tier_score_df = df_overall_tier_score()
 
 lowest_prices_tiered=pd.merge(
     left=lowest_price_df,
