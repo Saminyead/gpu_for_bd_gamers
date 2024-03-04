@@ -1,0 +1,15 @@
+*.env
+*.log
+__pycache__/
+logs/
+flex_functions.py
+flex.ipynb
+gpu_data_nb.ipynb
+techpowerup_tier_to_db.py
+*.pgsql
+update_db.ipynb
+.vscode
+*.egg-info/
+*todo.md
+data_coll_cron.sh
+temp*
