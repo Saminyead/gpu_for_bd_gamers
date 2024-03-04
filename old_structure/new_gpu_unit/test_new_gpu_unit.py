@@ -1,7 +1,7 @@
 import pytest
 
 from add_to_txt import add_to_gpu_units_of_interest_file 
-from new_gpu_unit import input_gpu_unit_name
+from new_gpu_unit import input_gpu_unit_name, add_to_excel
 from exceptions import GPUAlreadyExistsError, InvalidGpuUnitFormatError
 
 import pandas as pd
@@ -11,6 +11,11 @@ import math
 TEST_DATA_DIR:str = "./test_data_dir"
 EXISTS_FILE_GPU_UNITS_OF_INTEREST:str = "exists.txt"
 DOES_NOT_EXIST_FILE_GPU_UNITS_OF_INTEREST:str = "not_exist.txt"
+
+# we will have two sheets in the same excel file for add_to_excel() tests
+EXCEL_FILE:str = "gpu_units_excel.xlsx"
+SHEET_NAME_EXISTS:str = "sheet_exists"
+SHEET_NAME_NOT_EXISTS:str = "sheet_not_exists"
 
 GPU_UNITS_EXISTING:list[str] = [
     "RX 6950 XT",
@@ -71,11 +76,11 @@ def _create_excel(
 ) -> None:
     """Creates an excel file with GPU units of interest."""
     
-    
     with pd.ExcelWriter(
-        path=filedir,mode='a',
+        path=filedir,
+        mode='a',
         engine='openpyxl',
-        if_sheet_exists='overlay'
+        if_sheet_exists='replace'
     ) as excel_writer:
         df_gpu_units.to_excel(
             excel_writer=excel_writer,
@@ -121,15 +126,44 @@ def test_adding_to_file_add_to_gpu_units_of_interest_file(
 
 
 def test_adding_to_file_add_to_excel(
-        filename:str,
+        filename:str=f"{TEST_DATA_DIR}/{EXCEL_FILE}",
+        gpu_units_existing:list[str]=GPU_UNITS_EXISTING,
         gpu_units_of_interest:list[str]=GPU_UNITS_NOT_EXISTING,
+        sheet_name:str=SHEET_NAME_NOT_EXISTS
 ) -> None:
     """Checks if gpu unit names are being properly added to 
     excel file"""
-    # - create excel file with existing gpu units 
-    # (but not ones in the non-existing list)
-    # - try out the function add_to_excel()
-    # - assert if gpu_units are found in the list
+    df_existing = _create_df_for_excel(gpu_units_existing)
+    _create_excel(df_existing,filename,sheet_name)
+    
+    for gpu_unit in gpu_units_of_interest:
+        add_to_excel(gpu_unit,filename,sheet_name)
+
+    df_for_assert = pd.read_excel(
+        io=filename,
+        sheet_name=sheet_name,
+        usecols='A:G'   
+    )
+    # for some reason, keeps reading extra rows and columns
+    # TODO: try this out in a notebook
+    df_for_assert = df_for_assert.dropna(axis=0,how='all')
+
+    assert gpu_units_of_interest in df_for_assert['gpu_unit_name']
+    assert None not in df_for_assert.loc[
+        df_for_assert.gpu_unit_name in gpu_units_of_interest
+    ]['performance']
+    
+    assert None not in df_for_assert.loc[
+        df_for_assert.gpu_unit_name in gpu_units_of_interest
+    ]['base_tier_score']
+    
+    assert None not in df_for_assert.loc[
+        df_for_assert.gpu_unit_name in gpu_units_of_interest
+    ]['launch_msrp_usd']
+    
+    assert None not in df_for_assert.loc[
+        df_for_assert.gpu_unit_name in gpu_units_of_interest
+    ]['launch_msrp_bdt_current_market']
 
 
 
