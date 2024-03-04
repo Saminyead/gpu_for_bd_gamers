@@ -15,6 +15,8 @@ from functools import partial
 
 import logging
 
+import math
+
 #--setting up logging
 logging.basicConfig(
     level=logging.INFO,
@@ -250,7 +252,7 @@ logging.info(msg=f'Number of retailers in master df is {len(master_df.retailer_n
 master_df = master_df.loc[master_df.gpu_price!=0]
 
 # rounding the GPU Prices to their nearest hundreds
-import math
+
 master_df['gpu_price']=master_df['gpu_price'].apply(lambda x: 100 * math.ceil(x/100))
 
 # list of all gpu units of interest
