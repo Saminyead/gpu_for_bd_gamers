@@ -4,9 +4,13 @@ from add_to_txt import add_to_gpu_units_of_interest_file
 from new_gpu_unit import input_gpu_unit_name
 from exceptions import GPUAlreadyExistsError, InvalidGpuUnitFormatError
 
+import pandas as pd
+import numpy as np
+import math
+
 TEST_DATA_DIR:str = "./test_data_dir"
-EXISTS_FILE:str = "exists.txt"
-DOES_NOT_EXIST_FILE:str = "not_exist.txt"
+EXISTS_FILE_GPU_UNITS_OF_INTEREST:str = "exists.txt"
+DOES_NOT_EXIST_FILE_GPU_UNITS_OF_INTEREST:str = "not_exist.txt"
 
 GPU_UNITS_EXISTING:list[str] = [
     "RX 6950 XT",
@@ -21,8 +25,9 @@ GPU_UNITS_NOT_EXISTING:list[str] = [
 ]
 
 
+
 def _create_gpu_units_of_interest_test_file(
-        filedir:str = f"{TEST_DATA_DIR}/{EXISTS_FILE}",
+        filedir:str = f"{TEST_DATA_DIR}/{EXISTS_FILE_GPU_UNITS_OF_INTEREST}",
         gpu_units_of_interest_list:list[str] = GPU_UNITS_EXISTING
     ) -> str:
     """Creates a file with a number of gpu units for the
@@ -33,6 +38,49 @@ def _create_gpu_units_of_interest_test_file(
             writer.write(f"{gpu_unit}\n")
 
     return filedir
+
+
+def _create_df_for_excel(
+        gpu_unit_list:list[str]
+):
+    """creates a dataframe for testing the add_to_excel() function."""
+    performance_list = np.random.randint(250,600,size=len(gpu_unit_list))
+    launch_msrp = math.ceil(
+        np.random.randint(300,500,size=len(gpu_unit_list))/10
+    ) * 10
+
+    df = pd.DataFrame(
+        {
+            "gpu_unit_name":gpu_unit_list,
+            "performance":performance_list,
+            "base_tier_score":performance_list/100,
+            "positive_comment_code":[None] * len(gpu_unit_list),
+            "negative_comment_code":[None] * len(gpu_unit_list),
+            "launch_msrp_usd": launch_msrp,
+            "launch_msrp_bdt_current_market":launch_msrp * 125
+        }
+    )
+
+    return df
+
+
+def _create_excel(
+        df_gpu_units:pd.DataFrame,
+        filedir:str,
+        sheet_name:str,
+) -> None:
+    """Creates an excel file with GPU units of interest."""
+    
+    
+    with pd.ExcelWriter(
+        path=filedir,mode='a',
+        engine='openpyxl',
+        if_sheet_exists='overlay'
+    ) as excel_writer:
+        df_gpu_units.to_excel(
+            excel_writer=excel_writer,
+            sheet_name=sheet_name
+        )
 
 
 def test_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
@@ -51,7 +99,8 @@ def test_does_not_add_to_existing_add_to_gpu_units_of_interest_file(
 
 
 def test_adding_to_file_add_to_gpu_units_of_interest_file(
-        filename:str = f"{TEST_DATA_DIR}/{DOES_NOT_EXIST_FILE}",
+        filename:str = f"""{TEST_DATA_DIR}/
+            {DOES_NOT_EXIST_FILE_GPU_UNITS_OF_INTEREST}""",
         gpu_units_of_interest_list:list[str] = GPU_UNITS_NOT_EXISTING
 ) -> None:
     """Checks if gpu unit names are being properly added to
@@ -73,10 +122,17 @@ def test_adding_to_file_add_to_gpu_units_of_interest_file(
 
 def test_adding_to_file_add_to_excel(
         filename:str,
-        gpu_units_of_interest:list[str],
+        gpu_units_of_interest:list[str]=GPU_UNITS_NOT_EXISTING,
 ) -> None:
     """Checks if gpu unit names are being properly added to 
     excel file"""
+    # - create excel file with existing gpu units 
+    # (but not ones in the non-existing list)
+    # - try out the function add_to_excel()
+    # - assert if gpu_units are found in the list
+
+
+
 
 
 # This should be for a different function, not 
