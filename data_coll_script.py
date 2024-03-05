@@ -414,7 +414,7 @@ def main(
 
     load_dotenv()
 
-    new_db_url = os.getenv('db_url_new')
+    new_db_url = db_url
 
     pgsql_db_engine = sqlalchemy.create_engine(new_db_url)
 
