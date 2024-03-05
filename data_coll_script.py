@@ -13,7 +13,7 @@ from sqlalchemy import Table, Column, MetaData, String
 
 from functools import partial
 
-import logging
+from logger import setup_logging
 
 import math
 
@@ -28,17 +28,9 @@ def main(
 
     db_url(str): the database url where the gpu data will be pushed."""
 
-    #--setting up logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler("./logs/gpu_data_coll_script.log",mode="a+"),
-            logging.StreamHandler()
-        ]
-    )
-
     load_dotenv()
+
+    logging = setup_logging()
 
     # --constants
     FIRST_PAGES = {
