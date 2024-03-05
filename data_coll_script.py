@@ -20,7 +20,14 @@ import math
 from overall_tier_score import df_overall_tier_score
 
 
-def main():
+def main(
+        db_url:str
+) -> None:
+    """The main function containing all the code. 
+    For now, will take the following arg:
+
+    db_url(str): the database url where the gpu data will be pushed."""
+
     #--setting up logging
     logging.basicConfig(
         level=logging.INFO,
@@ -439,4 +446,5 @@ def main():
 
 
 if __name__=="__main__":
-    main()
+    load_dotenv()
+    main(db_url=os.getenv("db_url_new"))
