@@ -20,15 +20,7 @@ from overall_tier_score import df_overall_tier_score
 from database import push_to_db, replace_previous_date_data_table_db
 
 
-
-def main(
-        db_url:str
-) -> None:
-    """The main function containing all the code. 
-    For now, will take the following arg:
-
-    db_url(str): the database url where the gpu data will be pushed."""
-
+def data_collection_to_df() -> dict[pd.DataFrame]:
     logging = setup_logging()
 
     # --constants
@@ -401,18 +393,35 @@ def main(
 
     logging.info(
         f'3 columns added to lowest_prices_tiered dataframe being {lowest_prices_tiered.columns[-3]}, {lowest_prices_tiered.columns[-2]} and {lowest_prices_tiered.columns[-1]}')
+    
+    return {
+        "gpu_of_interest" : gpu_of_interest_df,
+        "lowest_prices" : lowest_price_df,
+        "lowest_prices_tiered" : lowest_prices_tiered
+    }
+
+def main(
+        db_url:str,
+        df_table_to_append_dict: dict[pd.DataFrame],
+        df_table_to_replace_dict: dict[pd.DataFrame]
+) -> None:
+    """The main function containing all the code. 
+    For now, will take the following arg:
+
+    db_url(str): the database url where the gpu data will be pushed."""
+
+    df_for_db_dict = data_collection_to_df()
 
 
     conn = sqlalchemy.create_engine(db_url).connect()
     push_to_db(
         conn=conn,
-        gpu_of_interest = gpu_of_interest_df,
-        lowest_prices = lowest_price_df
+        **df_table_to_append_dict
     )
 
     replace_previous_date_data_table_db(
         conn=conn,
-        lowest_prices_tiered = lowest_prices_tiered
+        **df_table_to_replace_dict
     )
 
 
