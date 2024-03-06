@@ -53,7 +53,7 @@ def replace_previous_date_data_table_db(
     logging = setup_logging()
     push_to_db(conn,**df_kwargs)
 
-    for table_name, df in df_kwargs:
+    for table_name, df in df_kwargs.items():
         # deleting all rows written before today
         today = date.today().strftime('%Y-%m-%d')
         metadata = sqlalchemy.MetaData()
