@@ -6,8 +6,15 @@ from logger import setup_logging
 def push_to_db(
         db_url:str,
         **df_dict:dict[pd.DataFrame]
-):
+) -> None:
+    """Pushes dataframe to database
 
+    Args:
+        db_url (str): the database connection url
+        
+        **df_dict (dict[pd.DataFrame]): a dictionary of dataframes as 
+        keyword arguments
+    """
     logging = setup_logging()
 
     pgsql_db_engine = sqlalchemy.create_engine(db_url).connect()
