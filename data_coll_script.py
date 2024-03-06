@@ -13,11 +13,12 @@ from sqlalchemy import Table, Column, MetaData, String
 
 from functools import partial
 
-from logger import setup_logging
-
 import math
 
+from logger import setup_logging
 from overall_tier_score import df_overall_tier_score
+from database import push_to_db, replace_previous_date_data_table_db
+
 
 
 def main(
@@ -27,8 +28,6 @@ def main(
     For now, will take the following arg:
 
     db_url(str): the database url where the gpu data will be pushed."""
-
-    load_dotenv()
 
     logging = setup_logging()
 
@@ -404,37 +403,17 @@ def main(
         f'3 columns added to lowest_prices_tiered dataframe being {lowest_prices_tiered.columns[-3]}, {lowest_prices_tiered.columns[-2]} and {lowest_prices_tiered.columns[-1]}')
 
 
-    load_dotenv()
-
-    new_db_url = db_url
-
-    pgsql_db_engine = sqlalchemy.create_engine(new_db_url)
-
-    logging.info(msg='Connection to database established')
-
-    gpu_of_interest_df.to_sql(name='gpu_of_interest',con=pgsql_db_engine,if_exists='append',index=False)
-    logging.info(msg=f'Data appended to table gpu_of_interest; number of rows = {len(gpu_of_interest_df)}')
-
-    lowest_price_df.to_sql(name='lowest_prices',con=pgsql_db_engine,if_exists='append',index=False)
-    logging.info(msg=f'Data appended to table lowest_prices; number of rows = {len(lowest_price_df)}')
-
-    lowest_prices_tiered.to_sql(name='lowest_prices_tiered',con=pgsql_db_engine,if_exists='append',index=False)
-    logging.info(msg=f'Data appended to lowest_prices_tiered; number of rows = {len(lowest_prices_tiered)}')
-
-
-    # deleting all rows written before today
-    today = date.today().strftime('%Y-%m-%d')
-    metadata = MetaData()
-    lowest_prices_tiered_sqlalchemy = Table(
-        "lowest_prices_tiered",metadata,
-        Column('retail_url',String,primary_key=True),
-        Column('data_collection_date',String)
+    conn = sqlalchemy.create_engine(db_url).connect()
+    push_to_db(
+        conn=conn,
+        gpu_of_interest = gpu_of_interest_df,
+        lowest_prices = lowest_price_df
     )
-    delete_previous_date_data = lowest_prices_tiered_sqlalchemy.delete().where(lowest_prices_tiered_sqlalchemy.c.data_collection_date!=today)
-    pgsql_db_engine.connect().execute(delete_previous_date_data)
-    logging.info(msg= 'Data of previous dates deleted.')
 
-    logging.info(msg=f'All dataframes written to database for {today}\n')
+    replace_previous_date_data_table_db(
+        conn=conn,
+        lowest_prices_tiered = lowest_prices_tiered
+    )
 
 
 if __name__=="__main__":
