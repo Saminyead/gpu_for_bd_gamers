@@ -1,4 +1,4 @@
-from data_coll_script import main
+from data_coll_script import data_collection_to_df, data_collection_to_db
 
 import os
 import dotenv
@@ -22,7 +22,23 @@ def test_main(
     ):
     """Directly tests main on a test database"""
 
-    main(test_db_url)
+    # TODO: implement the two data_collection funcs
+    test_df_dict = data_collection_to_df()
+    
+    test_df_dict_to_append = {
+        "gpu_of_interest": test_df_dict['gpu_of_interest'],
+        "lowest_prices" : test_df_dict['lowest_prices'],
+    }
+
+    test_df_dict_to_replace = {
+        "lowest_prices_tiered": test_df_dict['lowest_prices_tiered']
+    }
+
+    data_collection_to_db(
+        test_db_url,
+        test_df_dict_to_append,
+        test_df_dict_to_replace
+    )
 
     db_conn = sqlalchemy.create_engine(test_db_url).connect()
 

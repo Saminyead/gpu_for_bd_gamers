@@ -425,9 +425,9 @@ def data_collection_to_db(
     )
 
 
-def main(db_url:str) -> None:
-    # load_dotenv()
-    # db_url = os.getenv("db_url_new")
+def main() -> None:
+    load_dotenv()
+    db_url = os.getenv("db_url_new")
 
     df_dict = data_collection_to_df()
 
@@ -448,5 +448,4 @@ def main(db_url:str) -> None:
 
 
 if __name__=="__main__":
-    load_dotenv()
-    main(os.getenv("db_url_new"))
+    main()
