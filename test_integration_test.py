@@ -15,17 +15,7 @@ dotenv.load_dotenv("test.env")
 test_db_url = os.getenv("test_db_url")
 
 
-
-def df_dict_test(
-) -> dict[str,pd.DataFrame]:
-    """Fixture for getting the dictionary of dataframes to
-    either push to database, or append them"""
-    # the data_collection_to_db needs to be tested in the future
-    # fixture will need to change then
-    return data_collection_to_df()
-
-
-TEST_DF_DICT = df_dict_test()
+TEST_DF_DICT = data_collection_to_df()
 TEST_DF_DICT_TO_APPEND = {
     "gpu_of_interest": TEST_DF_DICT['gpu_of_interest'],
     "lowest_prices" : TEST_DF_DICT['lowest_prices'],
@@ -74,9 +64,10 @@ def test_push_to_db_no_today_data_tables(
     """Tests that pushing to database works when there is no data for
     'today' in the database table"""
 
+    
     with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
-        list_table_names = test_df_dict_to_append.keys() + \
-            test_df_dict_to_replace.keys()
+        list_table_names = list(test_df_dict_to_append.keys()) +\
+            list(test_df_dict_to_replace.keys())
         
         delete_db_today_rows(db_conn,list_table_names)
 
@@ -131,3 +122,8 @@ def test_push_to_db_fail_today_exists(
 
         with pytest.raises(TodayDataAlreadyExistsError):
             push_to_db(db_conn,**test_df_dict)
+
+
+
+if __name__=="__main__":
+    test_push_to_db_no_today_data_tables()
