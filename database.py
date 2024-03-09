@@ -5,6 +5,13 @@ from datetime import date
 
 from logger import setup_logging
 
+
+# TODO: check if today's data already exists on database
+class TodayDataAlreadyExistsInDbError(Exception):
+    def __init__(self, table_name:str) -> None:
+        super().__init__(f"Today's data already exists in {table_name}")
+
+
 def push_to_db(
         conn:sqlalchemy.engine.base.Connection,
         **df_kwargs:pd.DataFrame
