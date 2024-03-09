@@ -1,3 +1,5 @@
+import pytest
+
 from data_coll_script import data_collection_to_df, data_collection_to_db
 
 import os
@@ -6,6 +8,7 @@ import dotenv
 import pandas as pd
 import datetime
 import sqlalchemy
+
 
 dotenv.load_dotenv("test.env")
 test_db_url = os.getenv("test_db_url")
@@ -17,13 +20,29 @@ def sql_query_format(table_name:str):
     return f"SELECT * FROM {table_name} WHERE data_collection_date = '{today}'"
 
 
+# TODO:
+#    - create two database sets of tables for each of the dataframes
+#    - one for no pre-existing data
+#       - test push_to_db, and clear dataframe after the test
+#       - perhaps the existing ones can be cleared for this
+#    - one for pre-existing data
+#       - should raise error when trying to push
+
+@pytest.fixture
+def test_df_dict(
+) -> dict[str,pd.DataFrame]:
+    """Fixture for getting the dictionary of dataframes to
+    either push to database, or append them"""
+    # the data_collection_to_db needs to be tested in the future
+    # fixture will need to change then
+    return data_collection_to_df()
+
+
 def test_main(
-        test_db_url:str = test_db_url
+        test_df_dict:dict[str,pd.DataFrame],
+        test_db_url:str = test_db_url,
     ):
     """Directly tests main on a test database"""
-
-    # TODO: implement the two data_collection funcs
-    test_df_dict = data_collection_to_df()
     
     test_df_dict_to_append = {
         "gpu_of_interest": test_df_dict['gpu_of_interest'],
