@@ -23,13 +23,6 @@ def df_dict_test(
     # fixture will need to change then
     return data_collection_to_df()
 
-# TODO:
-#    - create two database sets of tables for each of the dataframes
-#    - one for no pre-existing data
-#       - test push_to_db, and clear dataframe after the test
-#       - perhaps the existing ones can be cleared for this
-#    - one for pre-existing data
-#       - should raise error when trying to push
 
 TEST_DF_DICT = df_dict_test()
 TEST_DF_DICT_TO_APPEND = {
@@ -48,12 +41,47 @@ def sql_query_format(table_name:str):
     return f"SELECT * FROM {table_name} WHERE data_collection_date = '{today}'"
 
 
-def test_main(
+def delete_db_today_rows(
+        conn:sqlalchemy.engine.base.Connection,
+        list_of_table_names:list[str],
+) -> None:
+    """deletes all rows with today's date in a database table"""
+    today = datetime.datetime.today().strftime("%Y-%m-%d")
+    metadata = sqlalchemy.MetaData()
+    
+    db_table_list = [
+        sqlalchemy.Table(
+            table_name,
+            metadata,
+            sqlalchemy.Column('retail_url',sqlalchemy.String,primary_key=True),
+            sqlalchemy.Column('data_collection_date',sqlalchemy.String),
+        ) 
+        for table_name in list_of_table_names
+    ]
+    
+    for table in db_table_list:
+        delete_rows = table.delete().where(table.c.data_collection_date == today)
+        conn.execute(delete_rows)
+
+
+
+def test_push_to_db_no_today_data_tables(
         test_df_dict_to_append:dict[str,pd.DataFrame]=TEST_DF_DICT_TO_APPEND,
         test_df_dict_to_replace:dict[str,pd.DataFrame]=TEST_DF_DICT_TO_REPLACE,
         test_db_url:str = test_db_url,
     ):
-    """Directly tests main on a test database"""
+    """Tests that pushing to database works when there is no data for
+    'today' in the database table"""
+
+    #    - one for no pre-existing data
+    #       - test push_to_db, and clear dataframe after the test
+    #       - perhaps the existing ones can be cleared for this
+
+    db_conn = sqlalchemy.create_engine(test_db_url).connect()
+    list_table_names = test_df_dict_to_append.keys() + \
+        test_df_dict_to_replace.keys()
+    
+    delete_db_today_rows(db_conn,list_table_names)
 
     data_collection_to_db(
         test_db_url,
@@ -61,7 +89,7 @@ def test_main(
         test_df_dict_to_replace
     )
 
-    db_conn = sqlalchemy.create_engine(test_db_url).connect()
+
 
     gpu_of_interest_df = pd.read_sql(
         sql=sql_query_format("gpu_of_interest"),
@@ -81,3 +109,9 @@ def test_main(
     assert len(gpu_of_interest_df) != 0
     assert len(lowest_prices_df) != 0
     assert len(lowest_prices_tiered) != 0
+
+
+# TODO:
+#    - create two database sets of tables for each of the dataframes
+#    - one for pre-existing data
+#       - should raise error when trying to push
