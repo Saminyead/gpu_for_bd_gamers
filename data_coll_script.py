@@ -9,7 +9,6 @@ from datetime import date
 from data_coll_funcs import *
 
 import sqlalchemy
-from sqlalchemy import Table, Column, MetaData, String
 
 from functools import partial
 
@@ -405,8 +404,8 @@ def data_collection_to_df() -> dict[pd.DataFrame]:
 
 def data_collection_to_db(
         db_url:str,
-        df_table_to_append_dict: dict[pd.DataFrame],
-        df_table_to_replace_dict: dict[pd.DataFrame]
+        df_table_to_append_dict: dict[str,pd.DataFrame],
+        df_table_to_replace_dict: dict[str,pd.DataFrame]
 ) -> None:
     """The main function containing all the code. 
     For now, will take the following arg:
