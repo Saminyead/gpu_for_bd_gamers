@@ -1,6 +1,7 @@
 import pytest
 
 from data_coll_script import data_collection_to_df, data_collection_to_db
+from database import push_to_db, TodayDataAlreadyExistsError
 
 import os
 import dotenv
@@ -106,11 +107,6 @@ def test_push_to_db_no_today_data_tables(
         assert len(lowest_prices_df) != 0
         assert len(lowest_prices_tiered) != 0
 
-
-# TODO:
-#    - create two database sets of tables for each of the dataframes
-#    - one for pre-existing data
-#       - should raise error when trying to push
     
 
 def test_push_to_db_fail_today_exists(
@@ -118,6 +114,20 @@ def test_push_to_db_fail_today_exists(
     test_df_dict:dict[str,pd.DataFrame] = TEST_DF_DICT
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
-    # TODO: push to db using pandas
+    list_df_name_today_exists = [
+        f"{df_name}_today_exists" for df_name in test_df_dict.keys()
+    ]
 
+    with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
+        for df_name_today,df_name_og in \
+            zip(list_df_name_today_exists, test_df_dict.keys()):
 
+            test_df_dict[df_name_og].to_sql(
+                name=df_name_today,
+                con=db_conn,
+                if_exists='append',
+                index=False
+            )
+
+        with pytest.raises(TodayDataAlreadyExistsError):
+            push_to_db(db_conn,**test_df_dict)
