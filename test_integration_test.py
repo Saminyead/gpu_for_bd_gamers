@@ -73,45 +73,51 @@ def test_push_to_db_no_today_data_tables(
     """Tests that pushing to database works when there is no data for
     'today' in the database table"""
 
-    #    - one for no pre-existing data
-    #       - test push_to_db, and clear dataframe after the test
-    #       - perhaps the existing ones can be cleared for this
+    with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
+        list_table_names = test_df_dict_to_append.keys() + \
+            test_df_dict_to_replace.keys()
+        
+        delete_db_today_rows(db_conn,list_table_names)
 
-    db_conn = sqlalchemy.create_engine(test_db_url).connect()
-    list_table_names = test_df_dict_to_append.keys() + \
-        test_df_dict_to_replace.keys()
-    
-    delete_db_today_rows(db_conn,list_table_names)
-
-    data_collection_to_db(
-        test_db_url,
-        test_df_dict_to_append,
-        test_df_dict_to_replace
-    )
+        data_collection_to_db(
+            test_db_url,
+            test_df_dict_to_append,
+            test_df_dict_to_replace
+        )
 
 
 
-    gpu_of_interest_df = pd.read_sql(
-        sql=sql_query_format("gpu_of_interest"),
-        con=db_conn
-    )
+        gpu_of_interest_df = pd.read_sql(
+            sql=sql_query_format("gpu_of_interest"),
+            con=db_conn
+        )
 
-    lowest_prices_df = pd.read_sql(
-        sql=sql_query_format("lowest_prices"),
-        con=db_conn
-    )
+        lowest_prices_df = pd.read_sql(
+            sql=sql_query_format("lowest_prices"),
+            con=db_conn
+        )
 
-    lowest_prices_tiered = pd.read_sql(
-        sql=sql_query_format("lowest_prices_tiered"),
-        con=db_conn
-    )
+        lowest_prices_tiered = pd.read_sql(
+            sql=sql_query_format("lowest_prices_tiered"),
+            con=db_conn
+        )
 
-    assert len(gpu_of_interest_df) != 0
-    assert len(lowest_prices_df) != 0
-    assert len(lowest_prices_tiered) != 0
+        assert len(gpu_of_interest_df) != 0
+        assert len(lowest_prices_df) != 0
+        assert len(lowest_prices_tiered) != 0
 
 
 # TODO:
 #    - create two database sets of tables for each of the dataframes
 #    - one for pre-existing data
 #       - should raise error when trying to push
+    
+
+def test_push_to_db_fail_today_exists(
+    test_db_url:str = test_db_url,
+    test_df_dict:dict[str,pd.DataFrame] = TEST_DF_DICT
+) -> None:
+    """Test for pushing to database table where 'today' data already exists"""
+    # TODO: push to db using pandas
+
+
