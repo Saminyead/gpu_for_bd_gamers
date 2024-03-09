@@ -6,10 +6,27 @@ from datetime import date
 from logger import setup_logging
 
 
-# TODO: check if today's data already exists on database
-class TodayDataAlreadyExistsInDbError(Exception):
+class TodayDataAlreadyExistsError(Exception):
     def __init__(self, table_name:str) -> None:
         super().__init__(f"Today's data already exists in {table_name}")
+
+
+# TODO: check if today's data already exists on database
+def _check_if_today_data_exists(
+        conn:sqlalchemy.engine.base.Connection,
+        table_name:str,
+) -> bool:
+    today = date.today().strftime("%Y-%m-%d")
+    df_sql_table = pd.read_sql(
+        sql=f"SELECT * FROM {table_name} WHERE data_collection_date = '{today}'",
+        con=conn,        
+    )
+
+    if len(df_sql_table) == 0:
+        return True     # it means doesn't exist, we can write to table
+    
+    else:
+        raise TodayDataAlreadyExistsError(table_name)
 
 
 def push_to_db(
@@ -30,12 +47,17 @@ def push_to_db(
     logging.info(msg='Connection to database established')
 
     for table_name,df in df_kwargs.items():
+        _check_if_today_data_exists(conn,table_name)
+
+        # TODO: if the check raises error, skip the table
+
         df.to_sql(
             name=table_name,
             con=conn,
             if_exists='append',
             index=False
         )
+        
 
     logging.info(f"Data appended to table {table_name};\
                  number of rows = {len(df)}")
