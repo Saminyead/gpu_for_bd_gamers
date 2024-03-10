@@ -6,7 +6,7 @@ import re
 import pandas as pd
 from datetime import date
 
-from data_coll_funcs import *
+from gpu4bdgamers.data_coll_funcs import *
 
 import sqlalchemy
 
@@ -14,9 +14,9 @@ from functools import partial
 
 import math
 
-from logger import setup_logging
-from overall_tier_score import df_overall_tier_score
-from database import push_to_db, replace_previous_date_data_table_db
+from gpu4bdgamers.logger import setup_logging
+from gpu4bdgamers.overall_tier_score import df_overall_tier_score
+from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 
 
 def data_collection_to_df() -> dict[str,pd.DataFrame]:

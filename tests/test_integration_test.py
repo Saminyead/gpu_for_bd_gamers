@@ -1,7 +1,9 @@
 import pytest
 
-from data_coll_script import data_collection_to_df, data_collection_to_db
-from database import push_to_db, TodayDataAlreadyExistsError
+from gpu4bdgamers.data_coll_script import (
+    data_collection_to_df, data_collection_to_db
+)
+from gpu4bdgamers.database import push_to_db, TodayDataAlreadyExistsError
 
 import os
 import dotenv

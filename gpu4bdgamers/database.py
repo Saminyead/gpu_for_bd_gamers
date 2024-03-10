@@ -3,7 +3,7 @@ import pandas as pd
 
 from datetime import date
 
-from logger import setup_logging
+from gpu4bdgamers.logger import setup_logging
 
 
 class TodayDataAlreadyExistsError(Exception):
