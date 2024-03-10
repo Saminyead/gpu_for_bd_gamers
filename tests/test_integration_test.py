@@ -122,8 +122,3 @@ def test_push_to_db_fail_today_exists(
 
         with pytest.raises(TodayDataAlreadyExistsError):
             push_to_db(db_conn,**test_df_dict)
-
-
-
-if __name__=="__main__":
-    test_push_to_db_no_today_data_tables()
