@@ -11,7 +11,6 @@ class TodayDataAlreadyExistsError(Exception):
         super().__init__(f"Today's data already exists in {table_name}")
 
 
-# TODO: check if today's data already exists on database
 def _check_if_today_data_exists(
         conn:sqlalchemy.engine.base.Connection,
         table_name:str,

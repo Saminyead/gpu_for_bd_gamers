@@ -19,7 +19,7 @@ from overall_tier_score import df_overall_tier_score
 from database import push_to_db, replace_previous_date_data_table_db
 
 
-def data_collection_to_df() -> dict[pd.DataFrame]:
+def data_collection_to_df() -> dict[str,pd.DataFrame]:
     logging = setup_logging()
 
     # --constants
