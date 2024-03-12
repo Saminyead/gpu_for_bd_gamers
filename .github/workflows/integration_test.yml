@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: python3 -m pip install --upgrade pip
-          pip install requirements_dev.txt
+          pip install -r requirements_dev.txt
 
       - name: Run Integration Test
         run: cd tests/integration_test
