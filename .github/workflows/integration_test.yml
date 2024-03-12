@@ -22,5 +22,6 @@ jobs:
           pip install -r requirements_dev.txt
 
       - name: Run Integration Test
-        run: cd tests/integration_test
+        run: |
+          cd tests/integration_test
           pytest
