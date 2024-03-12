@@ -13,7 +13,7 @@ import datetime
 import sqlalchemy
 
 
-dotenv.load_dotenv("test.env")
+dotenv.load_dotenv()
 test_db_url = os.getenv("test_db_url")
 
 
