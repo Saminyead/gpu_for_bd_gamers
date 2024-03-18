@@ -336,9 +336,21 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
         pattern_version_dict={'12gb|12g':'12GB','8gb|8g':'8GB'}
     )
 
+
+    rtx_3050_6_vs_8 = partial(
+        gpu_version_diff,
+        gpu_name="Geforce RTX 3060",
+        pattern_version_dict={'6gb|6g':'6GB','8gb|8g':'8GB'}
+    )
+
     geforce_gpu_df.loc[geforce_gpu_df['gpu_unit_name']=='Geforce GTX 1650','gpu_unit_name'] = geforce_gpu_df['gpu_name'].apply(gddr5_vs_gddr6_1650)
     geforce_gpu_df.loc[geforce_gpu_df['gpu_unit_name']=='Geforce RTX 3080','gpu_unit_name'] = geforce_gpu_df['gpu_name'].apply(rtx_3080_10_vs_12)
     geforce_gpu_df.loc[geforce_gpu_df['gpu_unit_name']=='Geforce RTX 3060','gpu_unit_name'] = geforce_gpu_df['gpu_name'].apply(rtx_3060_8_vs_12)
+    
+    geforce_gpu_df.loc[
+        geforce_gpu_df['gpu_unit_name']=='Geforce RTX 3050','gpu_unit_name'
+    ] = geforce_gpu_df['gpu_name'].apply(rtx_3050_6_vs_8)
+
 
     # all radeon and intel gpu's
     radeon_gpu_df = add_gpu_unit_name(master_df,radeon_gpu_unit_list,'Radeon')
