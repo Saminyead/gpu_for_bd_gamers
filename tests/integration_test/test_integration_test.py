@@ -64,7 +64,8 @@ def test_push_to_db_no_today_data_tables(
         test_db_url:str = test_db_url,
     ):
     """Tests that pushing to database works when there is no data for
-    'today' in the database table"""
+    'today' in the database table. Also tests if GPU units are properly prefixed
+    e.g. Geforce are not prefixed by RX etc."""
 
     
     with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
@@ -96,10 +97,38 @@ def test_push_to_db_no_today_data_tables(
             con=db_conn
         )
 
+        gpu_of_interest_no_nan = gpu_of_interest_df.dropna()
+        
+        radeon_gpus_in_gpu_of_interest_df = gpu_of_interest_no_nan[
+            'gpu_unit_name'
+        ][gpu_of_interest_no_nan["gpu_unit_name"].str.contains('Radeon')]
+
+        geforce_gpus_in_gpu_of_interest_df = gpu_of_interest_no_nan[
+            'gpu_unit_name'
+        ][gpu_of_interest_no_nan["gpu_unit_name"].str.contains('Geforce')]
+
+        intel_gpus_in_gpu_of_interest_df = gpu_of_interest_no_nan[
+            'gpu_unit_name'
+        ][gpu_of_interest_no_nan["gpu_unit_name"].str.contains('Intel')]
+
+        
         assert len(gpu_of_interest_df) != 0
         assert len(lowest_prices_df) != 0
         assert len(lowest_prices_tiered) != 0
 
+        
+        
+        assert len(radeon_gpus_in_gpu_of_interest_df.str.contains(
+            "RTX|GTX|Arc",regex=True
+        ))!=0
+
+        assert len(geforce_gpus_in_gpu_of_interest_df.str.contains(
+                "RX|Arc",regex=True
+        ))!=0
+
+        assert len(intel_gpus_in_gpu_of_interest_df.str.contains(
+                "RX|RTX|GTX",regex=True
+        ))!=0
     
 
 def test_push_to_db_fail_today_exists(
