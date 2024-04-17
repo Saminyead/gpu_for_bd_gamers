@@ -259,21 +259,21 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
     master_df['gpu_price']=master_df['gpu_price'].apply(lambda x: 100 * math.ceil(x/100))
 
     # list of all gpu units of interest
-    with open('./gpu_units_of_interest/geforce_gpu_units.txt','r') as reader_geforce:
-        geforce_gpu_unit_read = reader_geforce.read()
-        geforce_gpu_unit_list = geforce_gpu_unit_read.split('\n')
+    geforce_gpu_unit_list = read_gpu_from_files(
+        './gpu_units_of_interest/geforce_gpu_units.txt'
+    )
 
     logging.info(msg='Added list of Geforce GPUs from file')
 
-    with open('./gpu_units_of_interest/radeon_gpu_units.txt','r') as reader_radeon:
-        radeon_gpu_unit_read = reader_radeon.read()
-        radeon_gpu_unit_list = radeon_gpu_unit_read.split('\n')
+    radeon_gpu_unit_list = read_gpu_from_files(
+        './gpu_units_of_interest/radeon_gpu_units.txt'
+    )
 
     logging.info(msg='Added list of Radeon GPUs from file')
 
-    with open('./gpu_units_of_interest/intel_gpu_units.txt','r') as reader_intel:
-        intel_gpu_unit_read = reader_intel.read()
-        intel_gpu_unit_list = intel_gpu_unit_read.split('\n')
+    intel_gpu_unit_list = read_gpu_from_files(
+        './gpu_units_of_interest/intel_gpu_units.txt'
+    )
 
     logging.info(msg='Added list of Intel GPUs from file')
 
