@@ -19,6 +19,16 @@ from gpu4bdgamers.overall_tier_score import df_overall_tier_score
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 
 
+def read_gpu_from_files(filename:str) -> list[str]:
+    with open(filename,'r') as gpu_reader:
+        gpu_unit_text = gpu_reader.read()
+        gpu_unit_list = gpu_unit_text.splitlines()
+        if "" in gpu_unit_list:
+            gpu_unit_list.remove('')
+        return gpu_unit_list
+
+
+
 def data_collection_to_df() -> dict[str,pd.DataFrame]:
     logging = setup_logging()
 
@@ -252,24 +262,18 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
     with open('./gpu_units_of_interest/geforce_gpu_units.txt','r') as reader_geforce:
         geforce_gpu_unit_read = reader_geforce.read()
         geforce_gpu_unit_list = geforce_gpu_unit_read.split('\n')
-    geforce_gpu_unit_list
-    reader_geforce.close()
 
     logging.info(msg='Added list of Geforce GPUs from file')
 
     with open('./gpu_units_of_interest/radeon_gpu_units.txt','r') as reader_radeon:
         radeon_gpu_unit_read = reader_radeon.read()
         radeon_gpu_unit_list = radeon_gpu_unit_read.split('\n')
-    radeon_gpu_unit_list
-    reader_radeon.close()
 
     logging.info(msg='Added list of Radeon GPUs from file')
 
     with open('./gpu_units_of_interest/intel_gpu_units.txt','r') as reader_intel:
         intel_gpu_unit_read = reader_intel.read()
         intel_gpu_unit_list = intel_gpu_unit_read.split('\n')
-    intel_gpu_unit_list
-    reader_intel.close()
 
     logging.info(msg='Added list of Intel GPUs from file')
 
