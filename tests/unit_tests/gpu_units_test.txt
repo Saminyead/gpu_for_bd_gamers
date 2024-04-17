@@ -1,0 +1,5 @@
+RX 7600 XT
+RTX 2060
+Arc A580
+
+Arc A750
