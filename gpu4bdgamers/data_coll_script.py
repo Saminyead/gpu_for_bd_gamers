@@ -28,8 +28,7 @@ def read_gpu_from_files(filename:str) -> list[str]:
         return gpu_unit_list
 
 
-
-def data_collection_to_df() -> dict[str,pd.DataFrame]:
+def get_master_df() -> pd.DataFrame:
     logging = setup_logging()
 
     # --constants
@@ -40,7 +39,7 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
         "skyland" : "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1",
         "ultratech" : "https://www.ultratech.com.bd/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
         "nexusbd" : "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=64&features_hash=13-Y",
-        "globalbrand" : "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100",
+        "globalbrand" : "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100&fmin=1000",
         "creatus" : "https://creatuscomputer.com/components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=3000&fmax=300000&limit=100",
         "uccbd" : "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
     }
@@ -71,7 +70,7 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
     ryans_df = gpu_dataframe_card(
         card_list=ryans_card_list,
         gpu_name_css_sel='p.card-text.p-0.m-0.grid-view-text > a',
-        gpu_price_css_sel='p.pr-text.cat-sp-text.pb-1',
+        gpu_price_css_sel='a.pr-text.cat-sp-text.pb-1',
         retailer_name='Ryans Computer'
     )
 
@@ -254,6 +253,13 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
     # any row which has a GPU price of 0 should be discarded
     master_df = master_df.loc[master_df.gpu_price!=0]
 
+    return master_df
+
+
+def data_collection_to_df() -> dict[str,pd.DataFrame]:
+    logging = setup_logging()
+    master_df = get_master_df()
+    
     # rounding the GPU Prices to their nearest hundreds
 
     master_df['gpu_price']=master_df['gpu_price'].apply(lambda x: 100 * math.ceil(x/100))
