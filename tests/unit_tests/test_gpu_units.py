@@ -13,16 +13,33 @@ def test_no_empty_str_read_gpu_from_files(
 
 
 def test_add_gpu_unit_name(
-        master_df:pd.DataFrame,
+        master_df_test:pd.DataFrame,
         radeon_gpu_list:list[str],
         geforce_gpu_list:list[str],
         intel_gpu_list:list[str],
-        gpu_unit_index:dict[str,list[int]]
+        gpu_unit_index:dict[str, dict[str, list[int]]]
 ) -> None:
-    radeon_df = add_gpu_unit_name(master_df,radeon_gpu_list,"Radeon")
-    geforce_df = add_gpu_unit_name(master_df,geforce_gpu_list,"Geforce")
-    intel_df = add_gpu_unit_name(master_df,intel_gpu_list,"Intel")
+    radeon_df = add_gpu_unit_name(master_df_test,radeon_gpu_list,"Radeon")
+    geforce_df = add_gpu_unit_name(master_df_test,geforce_gpu_list,"Geforce")
+    intel_df = add_gpu_unit_name(master_df_test,intel_gpu_list,"Intel")
 
-    for gpu_unit_name,index_list in gpu_unit_index.items():
+    for gpu_unit_name,index_list in gpu_unit_index['Radeon'].items():
         for i in index_list:
-            assert master_df['gpu_unit_name'].iloc[i] == gpu_unit_name
+            gpu_name:str = master_df_test.gpu_name.iloc[i]
+            assert radeon_df[
+                radeon_df['gpu_name']==gpu_name
+            ]['gpu_unit_name'].iloc[0] == gpu_unit_name
+    
+    for gpu_unit_name,index_list in gpu_unit_index['Geforce'].items():
+        for i in index_list:
+            gpu_name:str = master_df_test.gpu_name.iloc[i]
+            assert geforce_df[
+                geforce_df['gpu_name']==gpu_name
+            ]['gpu_unit_name'].iloc[0] == gpu_unit_name
+    
+    for gpu_unit_name,index_list in gpu_unit_index['Intel'].items():
+        for i in index_list:
+            gpu_name:str = master_df_test.gpu_name.iloc[i]
+            assert intel_df[
+                intel_df['gpu_name']==gpu_name
+            ]['gpu_unit_name'].iloc[0] == gpu_unit_name
