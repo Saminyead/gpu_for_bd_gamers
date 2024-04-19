@@ -54,7 +54,7 @@ def test_add_gpu_unit_name_default(
             ].iloc[0] == gpu_unit_name
 
 def test_add_gpu_unit_name_gpu_name_nospace(
-        master_df_test_nospace:pd.DataFrame,
+        master_df_test:pd.DataFrame,
         radeon_gpu_list:list[str],
         geforce_gpu_list:list[str],
         intel_gpu_list:list[str],
@@ -62,6 +62,8 @@ def test_add_gpu_unit_name_gpu_name_nospace(
     """Test to check add_gpu_unit_name can correctly identify gpu units
     from gpu names, within which the gpu unit part has no space within it
     e.g. RTX2060"""
+    master_df_test_nospace = master_df_test.iloc[18:25]
+    
     radeon_df_nospace = add_gpu_unit_name(
         master_df_test_nospace,radeon_gpu_list,"Radeon"
     )
