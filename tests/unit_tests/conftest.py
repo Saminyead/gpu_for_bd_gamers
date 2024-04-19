@@ -53,4 +53,4 @@ def gpu_unit_index() -> dict[str, dict[str, list[int]]]:
 
 @pytest.fixture
 def master_df_test_nospace(master_df_test:pd.DataFrame) -> pd.DataFrame:
-    return master_df_test.iloc[-3:]
+    return master_df_test.iloc[18:]
