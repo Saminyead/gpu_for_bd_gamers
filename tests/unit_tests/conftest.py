@@ -6,7 +6,7 @@ MASTER_DF_CSV_FILE = "master_df.csv"
 
 @pytest.fixture
 def radeon_gpu_list() -> list[str]:
-    return ["RX 580", "RX 7600 XT",  "RX 6900 XT", "RX 7600"]
+    return ["RX 580", "RX 6900 XT", "RX 7600", "RX 7600 XT"]
 
 @pytest.fixture
 def geforce_gpu_list() -> list[str]:
@@ -15,8 +15,8 @@ def geforce_gpu_list() -> list[str]:
         "RTX 2060", 
         "RTX 2080 Super", 
         "RTX 3070", 
+        "RTX 4060",
         "RTX 4060 Ti"
-        "RTX 4060"
     ]
 
 @pytest.fixture
