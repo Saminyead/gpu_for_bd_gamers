@@ -1,19 +1,19 @@
-,gpu_name,gpu_price,retail_url,data_collection_date,retailer_name
-11, Peladn AMD Radeon RX580 8G Gaming 8GB GDDR5 G ...,13500,https://www.ryans.com/peladn-amd-radeon-rx580-8g-gaming-8gb-gddr5-graphics-card,2024-04-17,Ryans Computer
-36, Asus Dual Radeon RX 7600 V2 OC Edition 8GB GD ...,45500,https://www.ryans.com/asus-dual-radeon-rx-7600-v2-oc-edition-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
-64,Sapphire PULSE AMD Radeon RX 7600 XT 16GB GDDR6 Graphics Card,49900,https://www.startech.com.bd/sapphire-pulse-amd-radeon-rx-7600-xt-16gb-graphics-card,2024-04-17,Startech Engineering
-89,Sapphire TOXIC AMD Radeon RX 6900 XT Extreme Edition 16GB GDDR6 Graphics Card,88900,https://www.startech.com.bd/sapphire-toxic-radeon-rx-6900-xt-extreme-edition-graphics-card,2024-04-17,Startech Engineering
-58, Gigabyte AORUS AMD Radeon RX 6900 XT XTREME W ...,133000,https://www.ryans.com/gigabyte-aorus-amd-radeon-rx-6900-xt-xtreme-waterforce-wb-16g-16gb-graphics-card,2024-04-17,Ryans Computer
-18, Gigabyte GeForce GTX 1650 D6 OC 4G 4GB GDDR6 ...,19900,https://www.ryans.com/gigabyte-geforce-gtx-1650-d6-oc-4g-4gb-gddr6-graphics-card,2024-04-17,Ryans Computer
-21, OCPC GeForce GTX 1650 XE 4GB GDDR6 Black Grap ...,20500,https://www.ryans.com/ocpc-geforce-gtx-1650-xe-4gb-gddr6-black-graphics-card,2024-04-17,Ryans Computer
-67,EVGA GEFORCE RTX 2060 SC OC GAMING 6GB GDDR6 GRAPHICS CARD,29500,https://www.techlandbd.com/rtx-2060-sc-oc-gddr6-gaming-gpu,2024-04-17,Tech Land BD
-125,PELADN RTX 2080 SUPER 8G GDDR6 256 BIT GAMING GRAPHICS CARD,47500,https://www.techlandbd.com/peladn-gpu-rtx-2080-super-8g-gddr6-graphics-card,2024-04-17,Tech Land BD
-37, Maxsun GeForce RTX 4060 iCraft OC 8G Limited ...,46500,https://www.ryans.com/maxsun-geforce-rtx-4060-icraft-oc-8g-limited-x2-8gb-gddr6-white-graphics-card,2024-04-17,Ryans Computer
-41, Asus ProArt GeForce RTX 4060 OC Edition 8GB G ...,58500,https://www.ryans.com/asus-proart-geforce-rtx-4060-oc-edition-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
-40, Maxsun GeForce RTX 4060 Ti Terminator W 8G 8G ...,58000,https://www.ryans.com/maxsun-geforce-rtx-4060-ti-terminator-w-8g-8gb-gddr6-white-graphics-card,2024-04-17,Ryans Computer
-42, MSI GeForce RTX 4060 Ti VENTUS 3X E 8G OC 8GB ...,61200,https://www.ryans.com/msi-geforce-rtx-4060-ti-ventus-3x-e-8g-oc-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
-141,ZOTAC Gaming GeForce RTX 3070 Twin Edge 8GB GDDR6 Graphics Card,66500,https://www.ultratech.com.bd/pc-components/graphics-card/zotac-gaming-geforce-rtx-3070-twin-edge-8gb-gddr6-graphics-card?sort=p.price&order=ASC&limit=100,2024-04-17,Ultra Technology
-54,GUNNIR ARC A580 8GB INDEX GRAPHICS CARD,23500,https://www.techlandbd.com/gunnir-arc-a580-8gb-index-graphics-card,2024-04-17,Tech Land BD
-30, Intel Arc A750 Limited Edition 8GB 256-Bit GD ...,28800,https://www.ryans.com/intel-arc-a-series-a750-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
-43,Acer Predator BiFrost Intel Arc A750 OC 8GB GDDR6 Graphics Card,29500,https://www.startech.com.bd/acer-predator-bifrost-arc-a750-oc-8gb-gddr6-graphics-card,2024-04-17,Startech Engineering
-87,GUNNIR INTEL ARC A770 PHOTON 16G OC GRAPHICS CARD,37000,https://www.techlandbd.com/gunnir-intel-arc-a770-photon-16g-oc-graphics-card,2024-04-17,Tech Land BD
+gpu_name,gpu_price,retail_url,data_collection_date,retailer_name
+ Peladn AMD Radeon RX 580 8G Gaming 8GB GDDR5 G ...,13500,https://www.ryans.com/peladn-amd-radeon-rx580-8g-gaming-8gb-gddr5-graphics-card,2024-04-17,Ryans Computer
+ Asus Dual Radeon RX 7600 V2 OC Edition 8GB GD ...,45500,https://www.ryans.com/asus-dual-radeon-rx-7600-v2-oc-edition-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
+Sapphire PULSE AMD Radeon RX 7600 XT 16GB GDDR6 Graphics Card,49900,https://www.startech.com.bd/sapphire-pulse-amd-radeon-rx-7600-xt-16gb-graphics-card,2024-04-17,Startech Engineering
+Sapphire TOXIC AMD Radeon RX 6900 XT Extreme Edition 16GB GDDR6 Graphics Card,88900,https://www.startech.com.bd/sapphire-toxic-radeon-rx-6900-xt-extreme-edition-graphics-card,2024-04-17,Startech Engineering
+ Gigabyte AORUS AMD Radeon RX 6900 XT XTREME W ...,133000,https://www.ryans.com/gigabyte-aorus-amd-radeon-rx-6900-xt-xtreme-waterforce-wb-16g-16gb-graphics-card,2024-04-17,Ryans Computer
+ Gigabyte GeForce GTX 1650 D6 OC 4G 4GB GDDR6 ...,19900,https://www.ryans.com/gigabyte-geforce-gtx-1650-d6-oc-4g-4gb-gddr6-graphics-card,2024-04-17,Ryans Computer
+ OCPC GeForce GTX 1650 XE 4GB GDDR6 Black Grap ...,20500,https://www.ryans.com/ocpc-geforce-gtx-1650-xe-4gb-gddr6-black-graphics-card,2024-04-17,Ryans Computer
+EVGA GEFORCE RTX 2060 SC OC GAMING 6GB GDDR6 GRAPHICS CARD,29500,https://www.techlandbd.com/rtx-2060-sc-oc-gddr6-gaming-gpu,2024-04-17,Tech Land BD
+PELADN RTX 2080 SUPER 8G GDDR6 256 BIT GAMING GRAPHICS CARD,47500,https://www.techlandbd.com/peladn-gpu-rtx-2080-super-8g-gddr6-graphics-card,2024-04-17,Tech Land BD
+ Maxsun GeForce RTX 4060 iCraft OC 8G Limited ...,46500,https://www.ryans.com/maxsun-geforce-rtx-4060-icraft-oc-8g-limited-x2-8gb-gddr6-white-graphics-card,2024-04-17,Ryans Computer
+ Asus ProArt GeForce RTX 4060 OC Edition 8GB G ...,58500,https://www.ryans.com/asus-proart-geforce-rtx-4060-oc-edition-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
+ Maxsun GeForce RTX 4060 Ti Terminator W 8G 8G ...,58000,https://www.ryans.com/maxsun-geforce-rtx-4060-ti-terminator-w-8g-8gb-gddr6-white-graphics-card,2024-04-17,Ryans Computer
+ MSI GeForce RTX 4060 Ti VENTUS 3X E 8G OC 8GB ...,61200,https://www.ryans.com/msi-geforce-rtx-4060-ti-ventus-3x-e-8g-oc-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
+ZOTAC Gaming GeForce RTX 3070 Twin Edge 8GB GDDR6 Graphics Card,66500,https://www.ultratech.com.bd/pc-components/graphics-card/zotac-gaming-geforce-rtx-3070-twin-edge-8gb-gddr6-graphics-card?sort=p.price&order=ASC&limit=100,2024-04-17,Ultra Technology
+GUNNIR ARC A580 8GB INDEX GRAPHICS CARD,23500,https://www.techlandbd.com/gunnir-arc-a580-8gb-index-graphics-card,2024-04-17,Tech Land BD
+ Intel Arc A750 Limited Edition 8GB 256-Bit GD ...,28800,https://www.ryans.com/intel-arc-a-series-a750-8gb-gddr6-graphics-card,2024-04-17,Ryans Computer
+Acer Predator BiFrost Intel Arc A750 OC 8GB GDDR6 Graphics Card,29500,https://www.startech.com.bd/acer-predator-bifrost-arc-a750-oc-8gb-gddr6-graphics-card,2024-04-17,Startech Engineering
+GUNNIR INTEL ARC A770 PHOTON 16G OC GRAPHICS CARD,37000,https://www.techlandbd.com/gunnir-intel-arc-a770-photon-16g-oc-graphics-card,2024-04-17,Tech Land BD
