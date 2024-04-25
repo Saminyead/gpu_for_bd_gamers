@@ -293,7 +293,7 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
 
     # GTX 1050 Ti are written in varying formats across websites (e.g. GTX 1050ti, GTX 1050 Ti, GTX1050Ti)
     # and there are no GTX 1050's available, so it is just easier to make a separate dataframe for it
-    df_1050_ti = master_df.loc[master_df['gpu_name'].str.contains('1050')]
+    df_1050_ti = master_df.loc[master_df['gpu_name'].str.contains('1050')].copy()
     df_1050_ti['gpu_unit_name'] = 'Geforce GTX 1050 Ti'
 
     def gddr5_vs_gddr6_1650(gpu_1650):
