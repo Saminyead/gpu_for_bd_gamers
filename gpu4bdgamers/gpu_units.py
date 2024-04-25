@@ -1,5 +1,28 @@
 import pandas as pd
-import re
+
+def _check_string_in_string(pattern:str,larger_string:str) -> bool:
+    """Check if a smaller string is contained within a larger string"""
+    pattern_lower_nospace = pattern.lower().replace(" ","")
+    larger_string_lower_nospace = larger_string.lower().replace(" ","")
+    if pattern_lower_nospace in larger_string_lower_nospace:
+        return True
+    else:
+        return False
+
+
+def _check_gpu_unit_in_gpu_name(gpu_name:str,gpu_unit_name:str) -> bool:
+    gpu_unit_name_last_word_space = gpu_unit_name.split()[-1] + " "
+    
+    if not _check_string_in_string(
+        pattern=gpu_unit_name_last_word_space,
+        larger_string=gpu_name
+    ):
+        return False
+    
+    if _check_string_in_string(gpu_unit_name,gpu_name):
+        return True
+    else:
+        return False
 
 def add_gpu_unit_name(
         target_df:pd.DataFrame,
@@ -21,18 +44,23 @@ def add_gpu_unit_name(
     """
     gpu_base_name_df = pd.DataFrame()
 
+    target_df = target_df.copy()
     for gpu in gpu_list:
         df_with_gpu_name = target_df.loc[
-            target_df['gpu_name'].str.contains(re.compile(gpu,flags=re.I))
-        ]
-        gpu_nospace = gpu.replace(' ','')
-        df_with_gpu_name_nospace = target_df.loc[
-            target_df['gpu_name'].str.contains(re.compile(gpu_nospace,flags=re.I))
+            target_df['gpu_name'].apply(
+                _check_gpu_unit_in_gpu_name,
+                gpu_unit_name=gpu
+            )
         ]
         
-        df_with_gpu_name = df_with_gpu_name.copy()
+        # to stop complaining about SettingWithCopyWarning
+        df_with_gpu_name  = df_with_gpu_name.copy()
         df_with_gpu_name['gpu_unit_name'] = gpu_brand + ' ' +gpu
-        gpu_base_name_df = pd.concat([gpu_base_name_df,df_with_gpu_name,df_with_gpu_name_nospace])
+        gpu_base_name_df = pd.concat([gpu_base_name_df,df_with_gpu_name])
+        
+        # because in case of naming variant, there will be two gpu's, 
+        # one without a name extension like Ti/Super/XT, and the latter
+        # with it. The latter is correct and should be kept.
         gpu_base_name_df.drop_duplicates(subset='retail_url',keep='last',inplace=True)
     
     return gpu_base_name_df
