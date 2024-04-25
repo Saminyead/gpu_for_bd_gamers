@@ -329,7 +329,7 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
 
     rtx_3050_6_vs_8 = partial(
         gpu_version_diff,
-        gpu_name="Geforce RTX 3060",
+        gpu_name="Geforce RTX 3050",
         pattern_version_dict={'6gb|6g':'6GB','8gb|8g':'8GB'}
     )
 
