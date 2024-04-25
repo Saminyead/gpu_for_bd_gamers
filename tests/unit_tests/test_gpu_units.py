@@ -62,7 +62,7 @@ def test_add_gpu_unit_name_gpu_name_nospace(
     """Test to check add_gpu_unit_name can correctly identify gpu units
     from gpu names, within which the gpu unit part has no space within it
     e.g. RTX2060"""
-    master_df_test_nospace = master_df_test.iloc[18:25]
+    master_df_test_nospace = master_df_test.iloc[18:26]
     
     radeon_df_nospace = add_gpu_unit_name(
         master_df_test_nospace,radeon_gpu_list,"Radeon"
@@ -79,17 +79,11 @@ def test_add_gpu_unit_name_gpu_name_nospace(
     intel_gpu_series = ["Intel Arc A750","Intel Arc A770"]
 
     for i in range(3):
-        gpu_name = master_df_test_nospace.gpu_name.iloc[i]
 
-        assert radeon_df_nospace[
-            radeon_df_nospace['gpu_name']==gpu_name
-        ]['gpu_unit_name'].iloc[i] == radeon_gpu_series[i]
+        assert radeon_df_nospace['gpu_unit_name'].iloc[i] == radeon_gpu_series[i]
         
-        assert geforce_df_nospace[
-            geforce_df_nospace['gpu_name']==gpu_name
-        ]['gpu_unit_name'].iloc[i] == geforce_gpu_series[i]
+        assert geforce_df_nospace['gpu_unit_name'].iloc[i] == geforce_gpu_series[i]
         
-        assert intel_df_nospace[
-            intel_df_nospace['gpu_name']==gpu_name
-        ]['gpu_unit_name'].iloc[i] == intel_gpu_series[i]
+        if i<=1:
+            assert intel_df_nospace['gpu_unit_name'].iloc[i] == intel_gpu_series[i]
 
