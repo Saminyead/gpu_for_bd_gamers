@@ -29,6 +29,8 @@ def add_gpu_unit_name(
         df_with_gpu_name_nospace = target_df.loc[
             target_df['gpu_name'].str.contains(re.compile(gpu_nospace,flags=re.I))
         ]
+        
+        df_with_gpu_name = df_with_gpu_name.copy()
         df_with_gpu_name['gpu_unit_name'] = gpu_brand + ' ' +gpu
         gpu_base_name_df = pd.concat([gpu_base_name_df,df_with_gpu_name,df_with_gpu_name_nospace])
         gpu_base_name_df.drop_duplicates(subset='retail_url',keep='last',inplace=True)
