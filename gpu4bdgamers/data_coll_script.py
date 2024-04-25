@@ -363,7 +363,9 @@ def data_collection_to_df() -> dict[str,pd.DataFrame]:
         pattern_version_dict={"8gb|8g":"8GB","16gb|16g":"16GB"}
     )
 
-    intel_arc_gpu_df.loc[intel_arc_gpu_df['gpu_unit_name']=='Intel Arc A770','gpu_unit_name'] = intel_arc_gpu_df['gpu_unit_name'].apply(arc_a770_8_vs_16)
+    intel_arc_gpu_df.loc[
+        intel_arc_gpu_df['gpu_unit_name']=='Intel Arc A770','gpu_unit_name'
+    ] = intel_arc_gpu_df['gpu_name'].apply(arc_a770_8_vs_16)
 
     # all graphics cards of interest
     gpu_of_interest_df = pd.concat([geforce_gpu_df,radeon_gpu_df,intel_arc_gpu_df,df_1050_ti])
