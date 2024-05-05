@@ -34,7 +34,7 @@ def get_master_df() -> pd.DataFrame:
 
     # --constants
     FIRST_PAGES = {
-        "ryans" : "https://www.ryanscomputers.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1",
+        "ryans" : "https://www.ryans.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1&st=0",
         "startech" : "https://www.startech.com.bd/component/graphics-card?filter_status=7&sort=p.price&order=ASC&limit=90",
         "techlandbd" : "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
         "skyland" : "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1",
