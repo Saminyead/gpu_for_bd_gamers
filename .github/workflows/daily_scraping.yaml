@@ -41,3 +41,7 @@ jobs:
           cd ../../gpu4bdgamers/
           mkdir logs
           python3 main.py
+
+      - name: Upload logs as artifact
+        run: |
+          logs/gpu_data_coll_script.log
