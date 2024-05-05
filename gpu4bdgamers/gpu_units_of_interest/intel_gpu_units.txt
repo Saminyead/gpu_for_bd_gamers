@@ -1,4 +1,3 @@
-Arc A310
 Arc A380
 Arc A580
 Arc A750
