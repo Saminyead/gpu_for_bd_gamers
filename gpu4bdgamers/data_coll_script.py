@@ -20,6 +20,32 @@ from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_d
 from gpu4bdgamers.gpu_units import add_gpu_unit_name
 
 
+# --constants
+FIRST_PAGES = {
+    "ryans" : "https://www.ryans.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1&st=0",
+    "startech" : "https://www.startech.com.bd/component/graphics-card?filter_status=7&sort=p.price&order=ASC&limit=90",
+    "techlandbd" : "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
+    "skyland" : "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1",
+    "ultratech" : "https://www.ultratech.com.bd/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
+    "nexusbd" : "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=64&features_hash=13-Y",
+    "globalbrand" : "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100&fmin=1000",
+    "creatus" : "https://creatuscomputer.com/components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=3000&fmax=300000&limit=100",
+    "uccbd" : "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
+}
+
+CARD_CSS_SELECTORS = {
+    "ryans" : "div.card-body.text-center",
+    "startech" : "div.p-item-details",
+    "techlandbd" : "div.product-thumb > div.caption",
+    "skyland" : "div.product-thumb > div.caption",
+    "ultratech" : "div.product-thumb",
+    "nexusbd" : "div#categories_view_pagination_contents > div.ty-column4",
+    "globalbrand" : "div.caption",
+    "creatus" : "div.product-thumb",
+    "uccbd" : "div.product-thumb"
+}
+
+
 def read_gpu_from_files(filename:str) -> list[str]:
     with open(filename,'r') as gpu_reader:
         gpu_unit_text = gpu_reader.read()
@@ -29,43 +55,20 @@ def read_gpu_from_files(filename:str) -> list[str]:
         return gpu_unit_list
 
 
-def get_master_df() -> pd.DataFrame:
+def get_master_df(
+        first_pg_links:dict[str,str] = FIRST_PAGES,
+        card_css_selectors:dict[str,str] = CARD_CSS_SELECTORS
+) -> pd.DataFrame:
     logging = setup_logging()
-
-    # --constants
-    FIRST_PAGES = {
-        "ryans" : "https://www.ryans.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1&st=0",
-        "startech" : "https://www.startech.com.bd/component/graphics-card?filter_status=7&sort=p.price&order=ASC&limit=90",
-        "techlandbd" : "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
-        "skyland" : "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1",
-        "ultratech" : "https://www.ultratech.com.bd/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
-        "nexusbd" : "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=64&features_hash=13-Y",
-        "globalbrand" : "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100&fmin=1000",
-        "creatus" : "https://creatuscomputer.com/components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=3000&fmax=300000&limit=100",
-        "uccbd" : "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
-    }
-
-    CARD_CSS_SELECTORS = {
-        "ryans" : "div.card-body.text-center",
-        "startech" : "div.p-item-details",
-        "techlandbd" : "div.product-thumb > div.caption",
-        "skyland" : "div.product-thumb > div.caption",
-        "ultratech" : "div.product-thumb",
-        "nexusbd" : "div#categories_view_pagination_contents > div.ty-column4",
-        "globalbrand" : "div.caption",
-        "creatus" : "div.product-thumb",
-        "uccbd" : "div.product-thumb"
-    }
-
 
     #--scraping through all the websites
 
     # Ryan's Computer
-    ryans_pages = get_pages_find_all(first_pg_link=FIRST_PAGES['ryans'],url_tag_str='›')['soup_list']
+    ryans_pages = get_pages_find_all(first_pg_link=first_pg_links['ryans'],url_tag_str='›')['soup_list']
 
     ryans_card_list = get_card_list(
         pages_list=ryans_pages,
-        card_css_selector=CARD_CSS_SELECTORS['ryans']
+        card_css_selector=card_css_selectors['ryans']
     )
 
     ryans_df = gpu_dataframe_card(
@@ -79,11 +82,11 @@ def get_master_df() -> pd.DataFrame:
 
 
     # Startech Engineering
-    startech_pages = get_pages_find_all(first_pg_link=FIRST_PAGES['startech'],url_tag_str='NEXT')['soup_list']
+    startech_pages = get_pages_find_all(first_pg_link=first_pg_links['startech'],url_tag_str='NEXT')['soup_list']
 
     startech_card_list = get_card_list(
         pages_list=startech_pages,
-        card_css_selector=CARD_CSS_SELECTORS['startech']
+        card_css_selector=card_css_selectors['startech']
     )
 
     startech_df = gpu_dataframe_card(
@@ -97,11 +100,11 @@ def get_master_df() -> pd.DataFrame:
 
 
     # Techland BD
-    techlandbd_pages = get_pages_find_all(first_pg_link=FIRST_PAGES['techlandbd'],url_tag_str='>')['soup_list']
+    techlandbd_pages = get_pages_find_all(first_pg_link=first_pg_links['techlandbd'],url_tag_str='>')['soup_list']
 
     techlandbd_card_list = get_card_list(
         pages_list=techlandbd_pages,
-        card_css_selector=CARD_CSS_SELECTORS['techlandbd']
+        card_css_selector=card_css_selectors['techlandbd']
     )
 
     techlandbd_df = gpu_dataframe_card(
@@ -115,11 +118,11 @@ def get_master_df() -> pd.DataFrame:
 
 
     # Skyland Computer BD
-    skyland_pages = get_pages_select(first_pg_link=FIRST_PAGES['skyland'],css_selector='a.next.page-number')['soup_list']
+    skyland_pages = get_pages_select(first_pg_link=first_pg_links['skyland'],css_selector='a.next.page-number')['soup_list']
 
     skyland_card_list = get_card_list(
         pages_list=skyland_pages,
-        card_css_selector=CARD_CSS_SELECTORS['skyland']
+        card_css_selector=card_css_selectors['skyland']
     )
 
     skyland_df = gpu_dataframe_card(
@@ -133,12 +136,12 @@ def get_master_df() -> pd.DataFrame:
 
     # Ultra Technology BD
     ultratech_pages = get_pages_select(
-        first_pg_link=FIRST_PAGES['ultratech'],
+        first_pg_link=first_pg_links['ultratech'],
         css_selector='a.next')['soup_list']
 
     ultratech_card_list = get_card_list(
         pages_list=ultratech_pages,
-        card_css_selector=CARD_CSS_SELECTORS['ultratech']
+        card_css_selector=card_css_selectors['ultratech']
     )
 
     ultratech_df_0 = gpu_dataframe_card(
@@ -155,12 +158,12 @@ def get_master_df() -> pd.DataFrame:
 
     # Nexus Computer Bangladesh
     nexusbd_pages = get_pages_select_pagination(
-        first_pg_link=FIRST_PAGES['nexusbd'],
+        first_pg_link=first_pg_links['nexusbd'],
         css_selector='div#pagination_block_bottom > div.ty-pagination__items ~ a')['soup_list']
 
     nexusbd_card_list = get_card_list(
         pages_list=nexusbd_pages,
-        card_css_selector=CARD_CSS_SELECTORS['nexusbd']
+        card_css_selector=card_css_selectors['nexusbd']
     )
 
     nexusbd_df = gpu_dataframe_card(
@@ -174,11 +177,11 @@ def get_master_df() -> pd.DataFrame:
 
     # Global Brand
     # Global Brand only has a single page
-    globalbrand_pages = get_pages_single_page(FIRST_PAGES['globalbrand'])['soup_list']
+    globalbrand_pages = get_pages_single_page(first_pg_links['globalbrand'])['soup_list']
 
     globalbrand_card_list = get_card_list(
         pages_list=globalbrand_pages,
-        card_css_selector=CARD_CSS_SELECTORS['globalbrand']
+        card_css_selector=card_css_selectors['globalbrand']
     )
 
     # the following dataframe contains rows of '0 price', basically they are the unavailable ones. Thus, filterting them out into a new dataframe
@@ -195,12 +198,12 @@ def get_master_df() -> pd.DataFrame:
 
     # Creatus Computer 
     creatus_pages = get_pages_select(
-        first_pg_link=FIRST_PAGES['creatus'],
+        first_pg_link=first_pg_links['creatus'],
         css_selector='li > a.next')['soup_list']
 
     creatus_card_list = get_card_list(
         pages_list=creatus_pages,
-        card_css_selector=CARD_CSS_SELECTORS['creatus']
+        card_css_selector=card_css_selectors['creatus']
     )
 
     creatus_df = gpu_dataframe_card(
@@ -218,9 +221,9 @@ def get_master_df() -> pd.DataFrame:
         else:
             creatus_df = retry_with_scraperapi_pages_select(
                 scraperapi_api_key=os.getenv("scraperapi_api_key"),
-                first_pg_link=FIRST_PAGES['creatus'],
+                first_pg_link=first_pg_links['creatus'],
                 pages_css_selector='li > a.next',
-                card_css_selector=CARD_CSS_SELECTORS['creatus'],
+                card_css_selector=card_css_selectors['creatus'],
                 gpu_name_css_sel='div.caption > div.name > a',
                 gpu_price_css_sel='div.price > div > span',
                 retailer_name='Creatus Computer'
@@ -229,11 +232,11 @@ def get_master_df() -> pd.DataFrame:
     logging.info(msg=f'Cretaus Computer data scraped and stored to a dataframe successfully; length of dataframe = {len(creatus_df)}')
 
     # UCC BD
-    uccbd_pages = get_pages_single_page(FIRST_PAGES['uccbd'])['soup_list']
+    uccbd_pages = get_pages_single_page(first_pg_links['uccbd'])['soup_list']
 
     uccbd_card_list = get_card_list(
         pages_list=uccbd_pages,
-        card_css_selector=CARD_CSS_SELECTORS['uccbd']
+        card_css_selector=card_css_selectors['uccbd']
     )
 
     uccbd_df = gpu_dataframe_card(
