@@ -38,6 +38,5 @@ jobs:
 
       - name: Run Scraping
         run: |
-          cd ../../gpu_for_bd_gamers/gpu4bdgamers
+          cd ../../
           ls
-          python3 main.py
