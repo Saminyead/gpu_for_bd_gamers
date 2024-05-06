@@ -38,8 +38,9 @@ jobs:
 
       - name: Run Scraping
         run: |
-          cd ../../gpu_for_bd_gamers
+          cd ../../gpu_for_bd_gamers/
           ls
+          python3 main.py
 
       - name: Upload logs as artifact
         run: |
