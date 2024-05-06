@@ -41,10 +41,3 @@ jobs:
           cd ../../gpu_for_bd_gamers/
           ls
           python3 main.py
-
-      - name: Upload logs as artifact
-      - uses: actions/upload-artifact@v3
-        with:
-            name: logs
-            path: |
-              logs/gpu_data_coll_script.log
