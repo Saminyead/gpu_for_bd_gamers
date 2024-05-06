@@ -38,7 +38,7 @@ jobs:
 
       - name: Run Scraping
         run: |
-          cd ../../
+          cd ../../gpu_for_bd_gamers
           ls
 
       - name: Upload logs as artifact
