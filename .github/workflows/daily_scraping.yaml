@@ -42,8 +42,8 @@ jobs:
           ls
           python3 main.py
 
-      - uses: actions/upload-artifact@v3
       - name: Upload logs as artifact
+      - uses: actions/upload-artifact@v3
         with:
             name: logs
             path: |
