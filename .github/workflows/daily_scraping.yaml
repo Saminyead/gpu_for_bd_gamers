@@ -2,7 +2,7 @@ name: Daily Data Scraping
 
 on:
     schedule: 
-        - cron: 10 2 * * *
+        - cron: 30 9 * * *
 
 jobs:
   scraping:
@@ -39,7 +39,7 @@ jobs:
       - name: Run Scraping
         run: |
           cd ../../
-          l
+          ls
 
       - name: Upload logs as artifact
         run: |
