@@ -42,6 +42,9 @@ jobs:
           ls
           python3 main.py
 
+      - uses: actions/upload-artifact@v3
       - name: Upload logs as artifact
-        run: |
-          logs/gpu_data_coll_script.log
+        with:
+            name: logs
+            path: |
+              logs/gpu_data_coll_script.log
