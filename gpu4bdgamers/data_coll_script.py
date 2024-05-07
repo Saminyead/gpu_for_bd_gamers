@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import re
 
 import pandas as pd
-from datetime import date
 
 from gpu4bdgamers.data_coll_funcs import *
 
@@ -19,19 +18,14 @@ from gpu4bdgamers.overall_tier_score import df_overall_tier_score
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 from gpu4bdgamers.gpu_units import add_gpu_unit_name
 
+import toml
+from gpu4bdgamers.dirs import SCRAPING_CONFIG_FILE
 
 # --constants
-FIRST_PAGES = {
-    "ryans" : "https://www.ryans.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1&st=0",
-    "startech" : "https://www.startech.com.bd/component/graphics-card?filter_status=7&sort=p.price&order=ASC&limit=90",
-    "techlandbd" : "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
-    "skyland" : "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1",
-    "ultratech" : "https://www.ultratech.com.bd/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100",
-    "nexusbd" : "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=64&features_hash=13-Y",
-    "globalbrand" : "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100&fmin=1000",
-    "creatus" : "https://creatuscomputer.com/components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=3000&fmax=300000&limit=100",
-    "uccbd" : "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
-}
+with open(SCRAPING_CONFIG_FILE,'r') as f:
+    SCRAPING_CONFIG_CONTENTS = toml.load(f)
+
+FIRST_PAGES = SCRAPING_CONFIG_CONTENTS['first_page_urls']
 
 CARD_CSS_SELECTORS = {
     "ryans" : "div.card-body.text-center",
