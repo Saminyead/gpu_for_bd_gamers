@@ -2,7 +2,7 @@ name: Daily Data Scraping
 
 on:
     schedule: 
-        - cron: 0 6 * * *
+        - cron:  15 * * * *
 
 jobs:
   scraping:
