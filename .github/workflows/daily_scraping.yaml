@@ -38,5 +38,5 @@ jobs:
 
       - name: Run Scraping
         run: |
-          cd ../../gpu_for_bd_gamers
+          cd ../../gpu_for_bd_gamers/gpu_for_bd_gamers
           ls
