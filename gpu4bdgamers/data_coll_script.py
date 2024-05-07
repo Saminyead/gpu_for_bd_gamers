@@ -25,19 +25,8 @@ from gpu4bdgamers.dirs import SCRAPING_CONFIG_FILE
 with open(SCRAPING_CONFIG_FILE,'r') as f:
     SCRAPING_CONFIG_CONTENTS = toml.load(f)
 
-FIRST_PAGES = SCRAPING_CONFIG_CONTENTS['first_page_urls']
-
-CARD_CSS_SELECTORS = {
-    "ryans" : "div.card-body.text-center",
-    "startech" : "div.p-item-details",
-    "techlandbd" : "div.product-thumb > div.caption",
-    "skyland" : "div.product-thumb > div.caption",
-    "ultratech" : "div.product-thumb",
-    "nexusbd" : "div#categories_view_pagination_contents > div.ty-column4",
-    "globalbrand" : "div.caption",
-    "creatus" : "div.product-thumb",
-    "uccbd" : "div.product-thumb"
-}
+FIRST_PAGES:dict[str,str] = SCRAPING_CONFIG_CONTENTS['first_page_urls']
+CARD_CSS_SELECTORS:dict[str,str] = SCRAPING_CONFIG_CONTENTS['card_css_selectors']
 
 
 def read_gpu_from_files(filename:str) -> list[str]:
