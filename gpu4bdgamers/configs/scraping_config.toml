@@ -8,3 +8,14 @@ nexusbd = "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&
 techlandbd = "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
 uccbd = "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
 skyland = "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1"
+
+[card_css_selectors]
+ryans = "div.card-body.text-center"
+startech = "div.p-item-details"
+techlandbd = "div.product-thumb > div.caption"
+skyland = "div.product-thumb > div.caption"
+ultratech = "div.product-thumb"
+nexusbd = "div#categories_view_pagination_contents > div.ty-column4"
+globalbrand = "div.caption"
+creatus = "div.product-thumb"
+uccbd = "div.product-thumb
