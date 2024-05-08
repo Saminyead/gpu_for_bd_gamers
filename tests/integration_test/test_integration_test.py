@@ -16,17 +16,6 @@ import sqlalchemy
 dotenv.load_dotenv()
 test_db_url = os.getenv("test_db_url")
 
-
-TEST_DF_DICT = data_collection_to_df()
-TEST_DF_DICT_TO_APPEND = {
-    "gpu_of_interest": TEST_DF_DICT['gpu_of_interest'],
-    "lowest_prices" : TEST_DF_DICT['lowest_prices'],
-}
-TEST_DF_DICT_TO_REPLACE = {
-    "lowest_prices_tiered": TEST_DF_DICT['lowest_prices_tiered']
-}
-
-
 def sql_query_format(table_name:str):
     """formats the sql query so we can just plug in table_name 
     in test_main"""
@@ -59,8 +48,8 @@ def delete_db_today_rows(
 
 
 def test_push_to_db_no_today_data_tables(
-        test_df_dict_to_append:dict[str,pd.DataFrame]=TEST_DF_DICT_TO_APPEND,
-        test_df_dict_to_replace:dict[str,pd.DataFrame]=TEST_DF_DICT_TO_REPLACE,
+        test_df_dict_to_append:dict[str,pd.DataFrame]=df_dict_to_append_test,
+        test_df_dict_to_replace:dict[str,pd.DataFrame]=df_dict_to_replace_test,
         test_db_url:str = test_db_url,
     ):
     """Tests that pushing to database works when there is no data for
@@ -133,7 +122,7 @@ def test_push_to_db_no_today_data_tables(
 
 def test_push_to_db_fail_today_exists(
     test_db_url:str = test_db_url,
-    test_df_dict:dict[str,pd.DataFrame] = TEST_DF_DICT
+    test_df_dict:dict[str,pd.DataFrame] = df_dict_test
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
     list_df_name_today_exists = [
