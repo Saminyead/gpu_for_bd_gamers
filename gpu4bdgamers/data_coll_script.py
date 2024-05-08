@@ -18,16 +18,6 @@ from gpu4bdgamers.overall_tier_score import df_overall_tier_score
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 from gpu4bdgamers.gpu_units import add_gpu_unit_name
 
-import toml
-from gpu4bdgamers.dirs import SCRAPING_CONFIG_FILE
-
-# --constants
-with open(SCRAPING_CONFIG_FILE,'r') as f:
-    SCRAPING_CONFIG_CONTENTS = toml.load(f)
-
-FIRST_PAGES:dict[str,str] = SCRAPING_CONFIG_CONTENTS['first_page_urls']
-CARD_CSS_SELECTORS:dict[str,str] = SCRAPING_CONFIG_CONTENTS['card_css_selectors']
-
 
 def read_gpu_from_files(filename:str) -> list[str]:
     with open(filename,'r') as gpu_reader:
@@ -39,8 +29,8 @@ def read_gpu_from_files(filename:str) -> list[str]:
 
 
 def get_master_df(
-        first_pg_links:dict[str,str] = FIRST_PAGES,
-        card_css_selectors:dict[str,str] = CARD_CSS_SELECTORS
+        first_pg_links:dict[str,str],
+        card_css_selectors:dict[str,str]
 ) -> pd.DataFrame:
     logging = setup_logging()
 
@@ -243,9 +233,10 @@ def get_master_df(
     return master_df
 
 
-def data_collection_to_df() -> dict[str,pd.DataFrame]:
+def data_collection_to_df(
+        master_df:pd.DataFrame
+) -> dict[str,pd.DataFrame]:
     logging = setup_logging()
-    master_df = get_master_df()
     
     # rounding the GPU Prices to their nearest hundreds
 
