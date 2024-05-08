@@ -48,8 +48,8 @@ def delete_db_today_rows(
 
 
 def test_push_to_db_no_today_data_tables(
-        test_df_dict_to_append:dict[str,pd.DataFrame]=df_dict_to_append_test,
-        test_df_dict_to_replace:dict[str,pd.DataFrame]=df_dict_to_replace_test,
+        df_dict_to_append_test:dict[str,pd.DataFrame],
+        df_dict_to_replace_test:dict[str,pd.DataFrame],
         test_db_url:str = test_db_url,
     ):
     """Tests that pushing to database works when there is no data for
@@ -58,15 +58,15 @@ def test_push_to_db_no_today_data_tables(
 
     
     with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
-        list_table_names = list(test_df_dict_to_append.keys()) +\
-            list(test_df_dict_to_replace.keys())
+        list_table_names = list(df_dict_to_append_test.keys()) +\
+            list(df_dict_to_replace_test.keys())
         
         delete_db_today_rows(db_conn,list_table_names)
 
         data_collection_to_db(
             test_db_url,
-            test_df_dict_to_append,
-            test_df_dict_to_replace
+            df_dict_to_append_test,
+            df_dict_to_replace_test
         )
 
 
@@ -121,19 +121,19 @@ def test_push_to_db_no_today_data_tables(
     
 
 def test_push_to_db_fail_today_exists(
+    df_dict_test:dict[str,pd.DataFrame],
     test_db_url:str = test_db_url,
-    test_df_dict:dict[str,pd.DataFrame] = df_dict_test
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
     list_df_name_today_exists = [
-        f"{df_name}_today_exists" for df_name in test_df_dict.keys()
+        f"{df_name}_today_exists" for df_name in df_dict_test.keys()
     ]
 
     with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
         for df_name_today,df_name_og in \
-            zip(list_df_name_today_exists, test_df_dict.keys()):
+            zip(list_df_name_today_exists, df_dict_test.keys()):
 
-            test_df_dict[df_name_og].to_sql(
+            df_dict_test[df_name_og].to_sql(
                 name=df_name_today,
                 con=db_conn,
                 if_exists='append',
@@ -141,4 +141,4 @@ def test_push_to_db_fail_today_exists(
             )
 
         with pytest.raises(TodayDataAlreadyExistsError):
-            push_to_db(db_conn,**test_df_dict)
+            push_to_db(db_conn,**df_dict_test)
