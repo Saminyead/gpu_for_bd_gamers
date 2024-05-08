@@ -1,0 +1,21 @@
+[first_page_urls]
+ryans = "https://www.ryans.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1&st=0"
+startech = "https://www.startech.com.bd/component/graphics-card?filter_status=7&sort=p.price&order=ASC&limit=90"
+creatus = "https://creatuscomputer.com/components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=3000&fmax=300000&limit=100"
+globalbrand = "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100&fmin=1000"
+ultratech = "https://www.ultratech.com.bd/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
+nexusbd = "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=64&features_hash=13-Y"
+techlandbd = "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
+uccbd = "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
+skyland = "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1"
+
+[card_css_selectors]
+ryans = "div.card-body.text-center"
+startech = "div.p-item-details"
+techlandbd = "div.product-thumb > div.caption"
+skyland = "div.product-thumb > div.caption"
+ultratech = "div.product-thumb"
+nexusbd = "div#categories_view_pagination_contents > div.ty-column4"
+globalbrand = "div.caption"
+creatus = "div.product-thumb"
+uccbd = "div.product-thumb"
