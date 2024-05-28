@@ -4,6 +4,15 @@ WORKDIR /app
 
 COPY . .
 
+RUN apk add --no-cache \
+    build-base \
+    openblas-dev \
+    gfortran \
+    python3-dev \
+    musl-dev \
+    freetype-dev \
+    libpng-dev
+
 RUN python3 -m pip install --upgrade pip
 
 RUN pip install -r requirements.txt &&\
