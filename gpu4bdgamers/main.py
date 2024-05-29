@@ -7,7 +7,10 @@ from gpu4bdgamers.data_coll_script import (
 
 import toml
 from gpu4bdgamers.dirs import (
-    SCRAPING_CONFIG_FILE, GEFORCE_UNITS_FILE, RADEON_UNITS_FILE, INTEL_UNITS_FILE
+    SCRAPING_CONFIG_FILE, 
+    GEFORCE_UNITS_FILE, 
+    RADEON_UNITS_FILE, 
+    INTEL_UNITS_FILE
 )
 
 def main() -> None:

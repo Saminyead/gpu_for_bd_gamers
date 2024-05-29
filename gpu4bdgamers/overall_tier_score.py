@@ -3,16 +3,13 @@ from openpyxl import load_workbook
 import logging
 from dotenv import load_dotenv
 
-# setting up logging
+from gpu4bdgamers.logger import setup_logging
 
-def df_overall_tier_score():
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler('./logs/overall_tier_score.log'),
-            logging.StreamHandler()
-        ])
+# log file
+LOG_FILE = 'overall_tier_score.log'
+
+def df_overall_tier_score(log_file:str=LOG_FILE):
+    setup_logging(log_filename=log_file)
 
     # fetching the tier_score and comment tables
 
