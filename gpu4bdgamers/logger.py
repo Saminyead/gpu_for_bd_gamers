@@ -3,12 +3,15 @@ from gpu4bdgamers.dirs import LOGS_DIR
 
 import pathlib
 
-def setup_logging(log_dir:pathlib.Path = LOGS_DIR) -> logging.RootLogger:
+def setup_logging(
+        log_dir:pathlib.Path = LOGS_DIR,
+        log_filename:str = "gpu_data_coll_script.log"
+) -> logging.RootLogger:
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[
-            logging.FileHandler(log_dir/"gpu_data_coll_script.log",mode="a+"),
+            logging.FileHandler(log_dir/log_filename,mode="a+"),
             logging.StreamHandler()
         ]
     )
