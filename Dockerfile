@@ -27,7 +27,7 @@ RUN pip install .
 
 RUN pwd
 
-RUN cd ./gpu4bdgamers
+WORKDIR /app/gpu4bdgamers
 
 RUN pwd
 
