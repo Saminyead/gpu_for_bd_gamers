@@ -25,10 +25,8 @@ RUN pip install .
 
 # RUN mkdir ./tests/integration_test/logs
 
-RUN pwd
+ENV PROJECT_ROOT=/app/gpu4bdgamers
 
 WORKDIR /app/gpu4bdgamers
-
-RUN pwd
 
 CMD [ "python3", "main.py" ]
