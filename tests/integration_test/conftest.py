@@ -6,7 +6,10 @@ from gpu4bdgamers.data_coll_script import get_master_df, data_collection_to_df
 
 import pytest
 
-with open('scraping_config.toml','r') as f:
+import pathlib
+
+CURRENT_DIR = pathlib.Path(__file__).parent
+with open(CURRENT_DIR/'scraping_config.toml','r') as f:
     scraping_config_contents = toml.load(f)
 
 FIRST_PAGE_URLS = scraping_config_contents['first_page_urls']
