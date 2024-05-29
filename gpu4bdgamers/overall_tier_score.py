@@ -5,18 +5,22 @@ from dotenv import load_dotenv
 
 from gpu4bdgamers.logger import setup_logging
 
-# log file
-LOG_FILE = 'overall_tier_score.log'
 
-def df_overall_tier_score(log_file:str=LOG_FILE):
+LOG_FILE = 'overall_tier_score.log'
+TIER_SCORE_EXCEL_FILE = 'tier_score.xlsx'
+
+def df_overall_tier_score(
+        log_file:str=LOG_FILE,
+        tier_score_excel_file:str=TIER_SCORE_EXCEL_FILE
+) -> pd.DataFrame:
     setup_logging(log_filename=log_file)
 
     # fetching the tier_score and comment tables
 
-    tier_score_table = pd.read_excel(io='tier_score.xlsx',sheet_name='tier_score_sheet',usecols='A:G')
+    tier_score_table = pd.read_excel(io=tier_score_excel_file,sheet_name='tier_score_sheet',usecols='A:G')
     # for some reason it's reading a bunch of blank rows towards the bottom
     overall_tier_score_df = tier_score_table.dropna(axis=0,how='all')
-    comment_table = pd.read_excel(io='tier_score.xlsx',sheet_name='comment_table')
+    comment_table = pd.read_excel(io=tier_score_excel_file,sheet_name='comment_table')
 
     logging.info(f'overall_tier_score_df dataframe created with {len(overall_tier_score_df)} rows')
     logging.info(f'comment_table dataframe created with {len(comment_table)} rows')
@@ -80,7 +84,7 @@ def df_overall_tier_score(log_file:str=LOG_FILE):
 
 
     # writing overall_tier_score_df to tier_score excel file
-    with pd.ExcelWriter(path='tier_score.xlsx',mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
+    with pd.ExcelWriter(path=tier_score_excel_file,mode='a',engine='openpyxl',if_sheet_exists='replace') as overall_tier_score_writer:
         overall_tier_score_df.to_excel(excel_writer=overall_tier_score_writer,sheet_name='overall_tier_scores')
         overall_tier_score_writer.close
 
