@@ -6,7 +6,9 @@ from gpu4bdgamers.data_coll_script import (
 )
 
 import toml
-from gpu4bdgamers.dirs import SCRAPING_CONFIG_FILE
+from gpu4bdgamers.dirs import (
+    SCRAPING_CONFIG_FILE, GEFORCE_UNITS_FILE, RADEON_UNITS_FILE, INTEL_UNITS_FILE
+)
 
 def main() -> None:
     load_dotenv()
@@ -24,7 +26,9 @@ def main() -> None:
         card_css_selectors=CARD_CSS_SELECTORS
     )
 
-    df_dict = data_collection_to_df(master_df)
+    df_dict = data_collection_to_df(
+        master_df,GEFORCE_UNITS_FILE,RADEON_UNITS_FILE,INTEL_UNITS_FILE
+    )
 
     df_dict_to_append = {
         "gpu_of_interest": df_dict['gpu_of_interest'],
