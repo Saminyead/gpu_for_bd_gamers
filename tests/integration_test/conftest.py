@@ -49,14 +49,14 @@ def df_dict_test(
     )
 
 @pytest.fixture
-def df_dict_to_append_test(test_df_dict:dict=DF_DICT_TEST):
+def df_dict_to_append_test(df_dict_test:dict):
     return {
-        "gpu_of_interest": test_df_dict['gpu_of_interest'],
-        "lowest_prices": test_df_dict['lowest_prices']
+        "gpu_of_interest": df_dict_test['gpu_of_interest'],
+        "lowest_prices": df_dict_test['lowest_prices']
     }
 
 @pytest.fixture
-def df_dict_to_replace_test(test_df_dict:dict=DF_DICT_TEST):
+def df_dict_to_replace_test(df_dict_test:dict):
     return {
-        "lowest_prices_tiered": test_df_dict['lowest_prices_tiered']
+        "lowest_prices_tiered": df_dict_test['lowest_prices_tiered']
     }
