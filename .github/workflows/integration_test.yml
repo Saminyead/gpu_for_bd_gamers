@@ -32,6 +32,5 @@ jobs:
       
       - name: Run Integration Test
         run: |
-          cd tests/integration_test
           mkdir logs
           pytest
