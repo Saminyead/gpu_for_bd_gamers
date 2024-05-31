@@ -1,3 +1,4 @@
+from logging import RootLogger
 import pytest
 
 from gpu4bdgamers.data_coll_script import (
@@ -50,6 +51,7 @@ def delete_db_today_rows(
 def test_push_to_db_no_today_data_tables(
         df_dict_to_append_test:dict[str,pd.DataFrame],
         df_dict_to_replace_test:dict[str,pd.DataFrame],
+        gpu_data_coll_test_logger:RootLogger,
         test_db_url:str = test_db_url,
     ):
     """Tests that pushing to database works when there is no data for
@@ -66,7 +68,8 @@ def test_push_to_db_no_today_data_tables(
         data_collection_to_db(
             test_db_url,
             df_dict_to_append_test,
-            df_dict_to_replace_test
+            df_dict_to_replace_test,
+            gpu_data_coll_test_logger
         )
 
 
@@ -122,6 +125,7 @@ def test_push_to_db_no_today_data_tables(
 
 def test_push_to_db_fail_today_exists(
     df_dict_test:dict[str,pd.DataFrame],
+    gpu_data_coll_test_logger: RootLogger,
     test_db_url:str = test_db_url,
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
@@ -141,4 +145,4 @@ def test_push_to_db_fail_today_exists(
             )
 
         with pytest.raises(TodayDataAlreadyExistsError):
-            push_to_db(db_conn,**df_dict_test)
+            push_to_db(db_conn,gpu_data_coll_test_logger,**df_dict_test)
