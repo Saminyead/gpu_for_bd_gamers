@@ -1,5 +1,4 @@
 import pandas as pd
-import requests
 
 import toml
 from gpu4bdgamers.data_coll_script import get_master_df, data_collection_to_df
@@ -11,7 +10,7 @@ import pytest
 
 import pathlib
 
-CURRENT_DIR = pathlib.Path(__file__).parent
+CURRENT_DIR = pathlib.Path(__file__).parent.resolve()
 with open(CURRENT_DIR/'scraping_config.toml','r') as f:
     scraping_config_contents = toml.load(f)
 
@@ -23,7 +22,7 @@ GEFORCE_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'radeon_gpu_uni
 INTEL_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'intel_gpu_units.txt'
 TEST_GPU_EXCEL_FILE = CURRENT_DIR/'tier_score.xlsx'
 
-TEST_LOGS_DIR = pathlib.Path(__file__).parent/'logs'
+TEST_LOGS_DIR = CURRENT_DIR/'logs'
 
 @pytest.fixture
 def gpu_data_coll_test_logger(
