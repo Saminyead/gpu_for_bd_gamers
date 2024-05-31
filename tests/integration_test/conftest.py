@@ -3,6 +3,7 @@ import requests
 
 import toml
 from gpu4bdgamers.data_coll_script import get_master_df, data_collection_to_df
+from gpu4bdgamers.logger import setup_logging
 
 import pytest
 
@@ -19,12 +20,21 @@ RADEON_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'geforce_gpu_uni
 GEFORCE_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'radeon_gpu_units.txt'
 INTEL_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'intel_gpu_units.txt'
 
-master_df:pd.DataFrame = get_master_df(FIRST_PAGE_URLS,CARD_CSS_SELECTORS)
+TEST_LOGS_DIR = pathlib.Path(__file__).parent/'logs'
+GPU_DATA_COLL_TEST_LOGGER = setup_logging(
+    log_dir=TEST_LOGS_DIR,
+    log_filename="gpu_data_coll_script.log"
+)
+
+master_df:pd.DataFrame = get_master_df(
+    FIRST_PAGE_URLS,CARD_CSS_SELECTORS,GPU_DATA_COLL_TEST_LOGGER
+)
 DF_DICT_TEST = data_collection_to_df(
     master_df, 
     RADEON_GPU_LIST_FILE_TEST, 
     GEFORCE_GPU_LIST_FILE_TEST, 
-    INTEL_GPU_LIST_FILE_TEST
+    INTEL_GPU_LIST_FILE_TEST,
+    GPU_DATA_COLL_TEST_LOGGER
 )
 
 @pytest.fixture
