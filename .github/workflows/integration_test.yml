@@ -32,7 +32,7 @@ jobs:
       
       - name: Run Integration Test
         env: 
-          PROJECT_ROOT: ${GITHUB_WORKSPACE}
+          PROJECT_ROOT: ${{github.workspace}}
         run: |
           mkdir logs
           mkdir tests/integration_test/logs
