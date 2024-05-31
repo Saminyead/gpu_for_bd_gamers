@@ -1,20 +1,22 @@
 import pandas as pd
 from openpyxl import load_workbook
-import logging
 from dotenv import load_dotenv
 
 from gpu4bdgamers.logger import setup_logging
+from gpu4bdgamers.dirs import LOGS_DIR
 
 
 LOG_FILE = 'overall_tier_score.log'
 TIER_SCORE_EXCEL_FILE = 'tier_score.xlsx'
+OVERALL_TIER_SCORE_LOGGER = setup_logging(
+    log_dir=LOGS_DIR,
+    log_filename=LOG_FILE
+)
 
 def df_overall_tier_score(
-        log_file:str=LOG_FILE,
+        logger=OVERALL_TIER_SCORE_LOGGER,
         tier_score_excel_file:str=TIER_SCORE_EXCEL_FILE
 ) -> pd.DataFrame:
-    setup_logging(log_filename=log_file)
-
     # fetching the tier_score and comment tables
 
     tier_score_table = pd.read_excel(io=tier_score_excel_file,sheet_name='tier_score_sheet',usecols='A:G')
@@ -22,8 +24,8 @@ def df_overall_tier_score(
     overall_tier_score_df = tier_score_table.dropna(axis=0,how='all')
     comment_table = pd.read_excel(io=tier_score_excel_file,sheet_name='comment_table')
 
-    logging.info(f'overall_tier_score_df dataframe created with {len(overall_tier_score_df)} rows')
-    logging.info(f'comment_table dataframe created with {len(comment_table)} rows')
+    logger.info(f'overall_tier_score_df dataframe created with {len(overall_tier_score_df)} rows')
+    logger.info(f'comment_table dataframe created with {len(comment_table)} rows')
 
     # replace NaN values in positive_comment_code with empty string
 
@@ -31,7 +33,7 @@ def df_overall_tier_score(
     overall_tier_score_df['positive_comment_code'].fillna('',inplace=True)
     overall_tier_score_df['negative_comment_code'].fillna('',inplace=True)
 
-    logging.info('Nan values in comment code columns replaced with empty string')
+    logger.info('Nan values in comment code columns replaced with empty string')
 
     # function to calculate additional score multiplier
     def get_additional_score_multiplier(desc,comment_table_df=comment_table):
@@ -55,24 +57,24 @@ def df_overall_tier_score(
     # adding the columns to be calculated
 
     overall_tier_score_df['positive_score_multiplier'] = overall_tier_score_df['positive_comment_code'].apply(get_additional_score_multiplier)
-    logging.info('mutliplier column for positive comment code added')
+    logger.info('mutliplier column for positive comment code added')
     overall_tier_score_df['negative_score_multiplier'] = overall_tier_score_df['negative_comment_code'].apply(get_additional_score_multiplier)
-    logging.info('mutliplier column for negative comment code added')
+    logger.info('mutliplier column for negative comment code added')
 
     overall_tier_score_df['overall_score_multiplier'] = overall_tier_score_df['positive_score_multiplier'] + overall_tier_score_df['negative_score_multiplier']
     overall_tier_score_df['overall_additional_score'] = overall_tier_score_df['overall_score_multiplier'] * overall_tier_score_df['base_tier_score']
-    logging.info('overall_score_multiplier column added')
+    logger.info('overall_score_multiplier column added')
 
     overall_tier_score_df['net_tier_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['overall_additional_score']
-    logging.info('net_tier_score column added')
+    logger.info('net_tier_score column added')
 
     # to calculate the non-rt overall tier scores
 
     non_rt_comment_table = comment_table
     non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt'),'weight_score'] = 0
 
-    for index, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')].iterrows():
-        logging.info(f'{row.comment_code} score set to {row.weight_score} in non_rt_comment_table')
+    for _, row in non_rt_comment_table.loc[non_rt_comment_table.comment_code.str.contains('rt')].iterrows():
+        logger.info(f'{row.comment_code} score set to {row.weight_score} in non_rt_comment_table')
 
 
     # non-rt score positive score multiplier has to get scores from non_rt_comment_table
@@ -80,7 +82,7 @@ def df_overall_tier_score(
     overall_tier_score_df['non_rt_additional_score'] = (overall_tier_score_df['non_rt_positive_score_multiplier'] + overall_tier_score_df['negative_score_multiplier']) * overall_tier_score_df['base_tier_score']
 
     overall_tier_score_df['non_rt_net_score'] = overall_tier_score_df['base_tier_score'] + overall_tier_score_df['non_rt_additional_score']
-    logging.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df.columns)} columns')
+    logger.info(f'non-rt net scores calculated, overall_tier_score_df has {len(overall_tier_score_df.columns)} columns')
 
 
     # writing overall_tier_score_df to tier_score excel file
