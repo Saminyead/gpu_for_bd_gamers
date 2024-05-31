@@ -4,8 +4,8 @@ from gpu4bdgamers.dirs import LOGS_DIR
 import pathlib
 
 def setup_logging(
+        log_filename:str,
         log_dir:pathlib.Path = LOGS_DIR,
-        log_filename:str = "gpu_data_coll_script.log"
 ) -> logging.RootLogger:
     logging.basicConfig(
         level=logging.INFO,
