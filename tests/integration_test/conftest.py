@@ -23,29 +23,40 @@ GEFORCE_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'radeon_gpu_uni
 INTEL_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'intel_gpu_units.txt'
 
 TEST_LOGS_DIR = pathlib.Path(__file__).parent/'logs'
-GPU_DATA_COLL_TEST_LOGGER = setup_logging(
+
+@pytest.fixture
+def gpu_data_coll_test_logger(
     log_dir=TEST_LOGS_DIR,
     log_filename="gpu_data_coll_script.log"
-)
+) -> RootLogger:
+    return setup_logging(log_filename, log_dir)
 
-master_df:pd.DataFrame = get_master_df(
-    FIRST_PAGE_URLS,CARD_CSS_SELECTORS,GPU_DATA_COLL_TEST_LOGGER
-)
+@pytest.fixture
+def test_master_df(
+    first_pg_urls:dict,
+    card_css_sels:dict,
+    gpu_data_coll_test_logger:RootLogger
+) -> pd.DataFrame:
+    return get_master_df(
+        first_pg_urls, card_css_sels, gpu_data_coll_test_logger
+    )
+
+
 
 @pytest.fixture
 def df_dict_test(
-    master_df:pd.DataFrame = master_df,
+    test_master_df:pd.DataFrame,
+    gpu_data_coll_test_logger:RootLogger,
     geforce_gpu_list_file:pathlib.Path = GEFORCE_GPU_LIST_FILE_TEST,
     radeon_gpu_list_file:pathlib.Path = RADEON_GPU_LIST_FILE_TEST,
     intel_gpu_list_file:pathlib.Path = INTEL_GPU_LIST_FILE_TEST,
-    logger:RootLogger=GPU_DATA_COLL_TEST_LOGGER
 ) -> dict[str, pd.DataFrame]:
     return data_collection_to_df(
-        master_df,
+        test_master_df,
         geforce_gpu_list_file,
         radeon_gpu_list_file,
         intel_gpu_list_file,
-        logger
+        gpu_data_coll_test_logger
     )
 
 @pytest.fixture
