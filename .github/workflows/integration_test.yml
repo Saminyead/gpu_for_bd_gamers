@@ -32,6 +32,7 @@ jobs:
       
       - name: Run Integration Test
         run: |
+          set PROJECT_ROOT=$(pwd)
           mkdir logs
           mkdir tests/integration_test/logs
           pytest
