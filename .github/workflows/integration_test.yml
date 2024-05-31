@@ -31,8 +31,9 @@ jobs:
           pip install .
       
       - name: Run Integration Test
+        env: 
+          PROJECT_ROOT: $(pwd)
         run: |
-          set PROJECT_ROOT=$(pwd)
           mkdir logs
           mkdir tests/integration_test/logs
           pytest
