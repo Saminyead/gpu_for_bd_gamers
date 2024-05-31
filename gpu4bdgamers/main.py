@@ -13,6 +13,9 @@ from gpu4bdgamers.dirs import (
     INTEL_UNITS_FILE
 )
 
+from gpu4bdgamers.logger import setup_logging
+from gpu4bdgamers.dirs import LOGS_DIR
+
 def main() -> None:
     load_dotenv()
     db_url = os.getenv("db_url_new")
@@ -24,13 +27,19 @@ def main() -> None:
     FIRST_PAGES:dict[str,str] = SCRAPING_CONFIG_CONTENTS['first_page_urls']
     CARD_CSS_SELECTORS:dict[str,str] = SCRAPING_CONFIG_CONTENTS['card_css_selectors']
 
+    LOGGER = setup_logging(
+        log_dir=LOGS_DIR,
+        log_filename="gpu_data_coll_script.log"
+    )
+    
     master_df = get_master_df(
         first_pg_links=FIRST_PAGES,
-        card_css_selectors=CARD_CSS_SELECTORS
+        card_css_selectors=CARD_CSS_SELECTORS,
+        logger=LOGGER
     )
 
     df_dict = data_collection_to_df(
-        master_df,GEFORCE_UNITS_FILE,RADEON_UNITS_FILE,INTEL_UNITS_FILE
+        master_df,GEFORCE_UNITS_FILE,RADEON_UNITS_FILE,INTEL_UNITS_FILE,LOGGER
     )
 
     df_dict_to_append = {
