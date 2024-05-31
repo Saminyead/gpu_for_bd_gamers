@@ -21,6 +21,7 @@ CARD_CSS_SELECTORS = scraping_config_contents['card_css_selectors']
 RADEON_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'geforce_gpu_units.txt'
 GEFORCE_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'radeon_gpu_units.txt'
 INTEL_GPU_LIST_FILE_TEST = CURRENT_DIR/'gpu_units_of_interest'/'intel_gpu_units.txt'
+TEST_GPU_EXCEL_FILE = CURRENT_DIR/'tier_score.xlsx'
 
 TEST_LOGS_DIR = pathlib.Path(__file__).parent/'logs'
 
@@ -50,13 +51,15 @@ def df_dict_test(
     geforce_gpu_list_file:pathlib.Path = GEFORCE_GPU_LIST_FILE_TEST,
     radeon_gpu_list_file:pathlib.Path = RADEON_GPU_LIST_FILE_TEST,
     intel_gpu_list_file:pathlib.Path = INTEL_GPU_LIST_FILE_TEST,
+    gpu_excel_file:pathlib.Path = TEST_GPU_EXCEL_FILE
 ) -> dict[str, pd.DataFrame]:
     return data_collection_to_df(
         test_master_df,
         geforce_gpu_list_file,
         radeon_gpu_list_file,
         intel_gpu_list_file,
-        gpu_data_coll_test_logger
+        gpu_data_coll_test_logger,
+        gpu_excel_file
     )
 
 @pytest.fixture

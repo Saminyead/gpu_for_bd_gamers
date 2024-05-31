@@ -10,7 +10,8 @@ from gpu4bdgamers.dirs import (
     SCRAPING_CONFIG_FILE, 
     GEFORCE_UNITS_FILE, 
     RADEON_UNITS_FILE, 
-    INTEL_UNITS_FILE
+    INTEL_UNITS_FILE,
+    GPU_DATA_EXCEL_FILE
 )
 
 from gpu4bdgamers.logger import setup_logging
@@ -39,7 +40,12 @@ def main() -> None:
     )
 
     df_dict = data_collection_to_df(
-        master_df,GEFORCE_UNITS_FILE,RADEON_UNITS_FILE,INTEL_UNITS_FILE,LOGGER
+        master_df,
+        GEFORCE_UNITS_FILE,
+        RADEON_UNITS_FILE,
+        INTEL_UNITS_FILE,
+        LOGGER,
+        GPU_DATA_EXCEL_FILE
     )
 
     df_dict_to_append = {
@@ -54,7 +60,8 @@ def main() -> None:
     data_collection_to_db(
         db_url,
         df_dict_to_append,
-        df_dict_to_replace
+        df_dict_to_replace,
+        LOGGER
     )
 
 if __name__=="__main__":

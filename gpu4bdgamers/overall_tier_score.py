@@ -3,18 +3,12 @@ from openpyxl import load_workbook
 from dotenv import load_dotenv
 
 from gpu4bdgamers.logger import setup_logging
-from gpu4bdgamers.dirs import LOGS_DIR, GPU_DATA_EXCEL_FILE
 import pathlib
 
-LOG_FILE = 'overall_tier_score.log'
-OVERALL_TIER_SCORE_LOGGER = setup_logging(
-    log_dir=LOGS_DIR,
-    log_filename=LOG_FILE
-)
 
 def df_overall_tier_score(
-        logger=OVERALL_TIER_SCORE_LOGGER,
-        tier_score_excel_file:str|pathlib.Path=GPU_DATA_EXCEL_FILE
+        logger,
+        tier_score_excel_file:str|pathlib.Path
 ) -> pd.DataFrame:
     # fetching the tier_score and comment tables
 

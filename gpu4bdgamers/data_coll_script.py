@@ -34,7 +34,7 @@ def read_gpu_from_files(filename:str|pathlib.Path) -> list[str]:
 def get_master_df(
         first_pg_links:dict[str,str],
         card_css_selectors:dict[str,str],
-        logger:RootLogger
+        logger:RootLogger,
 ) -> pd.DataFrame:
     #--scraping through all the websites
 
@@ -240,7 +240,8 @@ def data_collection_to_df(
         geforce_gpu_units_filepath:pathlib.Path,
         radeon_gpu_units_filepath:pathlib.Path,
         intel_gpu_units_filepath:pathlib.Path,
-        logger:RootLogger
+        logger:RootLogger,
+        tier_score_excel_file:pathlib.Path
 ) -> dict[str,pd.DataFrame]:
     
     # rounding the GPU Prices to their nearest hundreds
@@ -360,7 +361,7 @@ def data_collection_to_df(
 
     logger.info(f'lowest_price_df created with {len(lowest_price_df)} entries')
 
-    overall_tier_score_df = df_overall_tier_score()
+    overall_tier_score_df = df_overall_tier_score(logger,tier_score_excel_file)
 
     lowest_prices_tiered=pd.merge(
         left=lowest_price_df,
