@@ -3,8 +3,7 @@ import pandas as pd
 
 from datetime import date
 
-from gpu4bdgamers.logger import setup_logging
-
+from logging import RootLogger
 
 class TodayDataAlreadyExistsError(Exception):
     def __init__(self, table_name:str) -> None:
@@ -30,6 +29,7 @@ def _check_if_today_data_exists(
 
 def push_to_db(
         conn:sqlalchemy.engine.base.Connection,
+        logger:RootLogger,
         **df_kwargs:pd.DataFrame
 ) -> None:
     """Pushes dataframe to database
@@ -41,9 +41,8 @@ def push_to_db(
         **df_kwargs (pd.DataFrame): a dictionary of dataframes as 
         keyword arguments
     """
-    logging = setup_logging()
 
-    logging.info(msg='Connection to database established')
+    logger.info(msg='Connection to database established')
 
     for table_name,df in df_kwargs.items():
         _check_if_today_data_exists(conn,table_name)
@@ -58,7 +57,7 @@ def push_to_db(
         )
         
 
-    logging.info(f"Data appended to table {table_name};\
+    logger.info(f"Data appended to table {table_name};\
                  number of rows = {len(df)}")
     
 
@@ -66,6 +65,7 @@ def push_to_db(
 
 def replace_previous_date_data_table_db(
         conn:sqlalchemy.engine.base.Connection,
+        logger:RootLogger,
         **df_kwargs:pd.DataFrame
 ) -> None:
     """Replace previous date's data with today's data (esp. for 
@@ -78,8 +78,7 @@ def replace_previous_date_data_table_db(
         **df_kwargs (pd.DataFrame): dataframes as keyword arguments (
         so that dataframe data can be pushed to table)
     """
-    logging = setup_logging()
-    push_to_db(conn,**df_kwargs)
+    push_to_db(conn,logger,**df_kwargs)
 
     for table_name, df in df_kwargs.items():
         # deleting all rows written before today
@@ -95,6 +94,6 @@ def replace_previous_date_data_table_db(
         delete_previous_date_data = db_table.delete().\
             where(db_table.c.data_collection_date!=today)
         conn.execute(delete_previous_date_data)
-        logging.info(msg= 'Data of previous dates deleted.')
+        logger.info(msg= 'Data of previous dates deleted.')
 
-        logging.info(msg=f'All dataframes written to database for {today}\n')
+        logger.info(msg=f'All dataframes written to database for {today}\n')
