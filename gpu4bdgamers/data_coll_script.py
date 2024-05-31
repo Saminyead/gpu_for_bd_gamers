@@ -1,3 +1,4 @@
+from logging import RootLogger
 import os
 from dotenv import load_dotenv
 
@@ -32,10 +33,9 @@ def read_gpu_from_files(filename:str|pathlib.Path) -> list[str]:
 
 def get_master_df(
         first_pg_links:dict[str,str],
-        card_css_selectors:dict[str,str]
+        card_css_selectors:dict[str,str],
+        logger:RootLogger
 ) -> pd.DataFrame:
-    logging = setup_logging()
-
     #--scraping through all the websites
 
     # Ryan's Computer
@@ -53,7 +53,7 @@ def get_master_df(
         retailer_name='Ryans Computer'
     )
 
-    logging.info(msg=f'Ryans Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(ryans_df)}')
+    logger.info(msg=f'Ryans Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(ryans_df)}')
 
 
     # Startech Engineering
@@ -71,7 +71,7 @@ def get_master_df(
         retailer_name='Startech Engineering'
     )
 
-    logging.info(msg=f'Startech Engineering BD data scraped and stored to a dataframe successfully; length of dataframe = {len(startech_df)}')
+    logger.info(msg=f'Startech Engineering BD data scraped and stored to a dataframe successfully; length of dataframe = {len(startech_df)}')
 
 
     # Techland BD
@@ -89,7 +89,7 @@ def get_master_df(
         retailer_name='Tech Land BD'
     )
 
-    logging.info(msg=f'Tech Land BD data scraped and stored to a dataframe successfully; length of dataframe = {len(techlandbd_df)}')
+    logger.info(msg=f'Tech Land BD data scraped and stored to a dataframe successfully; length of dataframe = {len(techlandbd_df)}')
 
 
     # Skyland Computer BD
@@ -107,7 +107,7 @@ def get_master_df(
         retailer_name='Skyland Computer Bd'
     )
 
-    logging.info(msg=f'Skyland Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(skyland_df)}')
+    logger.info(msg=f'Skyland Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(skyland_df)}')
 
     # Ultra Technology BD
     ultratech_pages = get_pages_select(
@@ -129,7 +129,7 @@ def get_master_df(
     # since some of the products that are currently not in stock are marked as BDT. 0 in the html code
     ultratech_df = ultratech_df_0.loc[ultratech_df_0['gpu_price']!=0]
 
-    logging.info(msg=f'Ultra Technology data scraped and stored to a dataframe successfully; length of dataframe = {len(ultratech_df)}')
+    logger.info(msg=f'Ultra Technology data scraped and stored to a dataframe successfully; length of dataframe = {len(ultratech_df)}')
 
     # Nexus Computer Bangladesh
     nexusbd_pages = get_pages_select_pagination(
@@ -148,7 +148,7 @@ def get_master_df(
         retailer_name='Nexus Technology'
     )
 
-    logging.info(msg=f'Nexus Technology data scraped and stored to a dataframe successfully; length of dataframe = {len(nexusbd_df)}')
+    logger.info(msg=f'Nexus Technology data scraped and stored to a dataframe successfully; length of dataframe = {len(nexusbd_df)}')
 
     # Global Brand
     # Global Brand only has a single page
@@ -169,7 +169,7 @@ def get_master_df(
 
     globalbrand_df = globalbrand_df_0.loc[globalbrand_df_0['gpu_price']!=0]
 
-    logging.info(msg=f'Global Brand data scraped and stored to a dataframe successfully; length of dataframe = {len(globalbrand_df)}')
+    logger.info(msg=f'Global Brand data scraped and stored to a dataframe successfully; length of dataframe = {len(globalbrand_df)}')
 
     # Creatus Computer 
     creatus_pages = get_pages_select(
@@ -204,7 +204,7 @@ def get_master_df(
                 retailer_name='Creatus Computer'
             )
 
-    logging.info(msg=f'Cretaus Computer data scraped and stored to a dataframe successfully; length of dataframe = {len(creatus_df)}')
+    logger.info(msg=f'Cretaus Computer data scraped and stored to a dataframe successfully; length of dataframe = {len(creatus_df)}')
 
     # UCC BD
     uccbd_pages = get_pages_single_page(first_pg_links['uccbd'])['soup_list']
@@ -221,13 +221,13 @@ def get_master_df(
         retailer_name='UCC-BD'
     )
 
-    logging.info(msg=f'UCC-BD data scraped and stored to a dataframe successfully; length of dataframe = {len(uccbd_df)}')
+    logger.info(msg=f'UCC-BD data scraped and stored to a dataframe successfully; length of dataframe = {len(uccbd_df)}')
 
     list_of_df = [ryans_df,startech_df,techlandbd_df,skyland_df,ultratech_df,nexusbd_df,globalbrand_df,creatus_df,uccbd_df]
     master_df = pd.concat(list_of_df)
 
-    logging.info(msg=f'All dataframes compiled into master_df of length {len(master_df)}')
-    logging.info(msg=f'Number of retailers in master df is {len(master_df.retailer_name.unique())}, while length of list_of_df is {len(list_of_df)}')
+    logger.info(msg=f'All dataframes compiled into master_df of length {len(master_df)}')
+    logger.info(msg=f'Number of retailers in master df is {len(master_df.retailer_name.unique())}, while length of list_of_df is {len(list_of_df)}')
 
     # any row which has a GPU price of 0 should be discarded
     master_df = master_df.loc[master_df.gpu_price!=0]
@@ -239,9 +239,9 @@ def data_collection_to_df(
         master_df:pd.DataFrame,
         geforce_gpu_units_filepath:pathlib.Path,
         radeon_gpu_units_filepath:pathlib.Path,
-        intel_gpu_units_filepath:pathlib.Path
+        intel_gpu_units_filepath:pathlib.Path,
+        logger:RootLogger
 ) -> dict[str,pd.DataFrame]:
-    logging = setup_logging()
     
     # rounding the GPU Prices to their nearest hundreds
 
@@ -252,21 +252,21 @@ def data_collection_to_df(
         geforce_gpu_units_filepath
     )
 
-    logging.info(msg='Added list of Geforce GPUs from file')
+    logger.info(msg='Added list of Geforce GPUs from file')
 
     radeon_gpu_unit_list = read_gpu_from_files(
         radeon_gpu_units_filepath
     )
 
-    logging.info(msg='Added list of Radeon GPUs from file')
+    logger.info(msg='Added list of Radeon GPUs from file')
 
     intel_gpu_unit_list = read_gpu_from_files(
         intel_gpu_units_filepath
     )
 
-    logging.info(msg='Added list of Intel GPUs from file')
+    logger.info(msg='Added list of Intel GPUs from file')
 
-    logging.info(msg=f'Total number of GPUs = {len(geforce_gpu_unit_list+radeon_gpu_unit_list+intel_gpu_unit_list)}')
+    logger.info(msg=f'Total number of GPUs = {len(geforce_gpu_unit_list+radeon_gpu_unit_list+intel_gpu_unit_list)}')
 
 
     # all geforce gpu's
@@ -353,12 +353,12 @@ def data_collection_to_df(
     gpu_of_interest_df = pd.concat([geforce_gpu_df,radeon_gpu_df,intel_arc_gpu_df,df_1050_ti])
     gpu_of_interest_df.reset_index(drop=True,inplace=True)
 
-    logging.info(f'gpu_of_interest_df created with {len(gpu_of_interest_df)} entries')
+    logger.info(f'gpu_of_interest_df created with {len(gpu_of_interest_df)} entries')
 
     lowest_price_df=gpu_of_interest_df[gpu_of_interest_df['gpu_price'] == gpu_of_interest_df.groupby('gpu_unit_name')['gpu_price'].transform(min)]
     lowest_price_df.reset_index(drop=True,inplace=True)
 
-    logging.info(f'lowest_price_df created with {len(lowest_price_df)} entries')
+    logger.info(f'lowest_price_df created with {len(lowest_price_df)} entries')
 
     overall_tier_score_df = df_overall_tier_score()
 
@@ -368,7 +368,7 @@ def data_collection_to_df(
         on='gpu_unit_name'
         )
 
-    logging.info(f'lowest_prices_tiered dataframe created with {len(lowest_prices_tiered)} rows and {len(lowest_prices_tiered.columns)} column')
+    logger.info(f'lowest_prices_tiered dataframe created with {len(lowest_prices_tiered)} rows and {len(lowest_prices_tiered.columns)} column')
 
     # adding price per tier score columns to dataframe
 
@@ -376,7 +376,7 @@ def data_collection_to_df(
     lowest_prices_tiered['price_per_net_tier'] = lowest_prices_tiered.gpu_price/lowest_prices_tiered.net_tier_score
     lowest_prices_tiered['price_per_non_rt_tier'] = lowest_prices_tiered.gpu_price/lowest_prices_tiered.non_rt_net_score
 
-    logging.info(
+    logger.info(
         f'3 columns added to lowest_prices_tiered dataframe being {lowest_prices_tiered.columns[-3]}, {lowest_prices_tiered.columns[-2]} and {lowest_prices_tiered.columns[-1]}')
     
     return {
