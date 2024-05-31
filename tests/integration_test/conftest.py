@@ -33,9 +33,9 @@ def gpu_data_coll_test_logger(
 
 @pytest.fixture
 def test_master_df(
-    first_pg_urls:dict,
-    card_css_sels:dict,
-    gpu_data_coll_test_logger:RootLogger
+    gpu_data_coll_test_logger:RootLogger,
+    first_pg_urls:dict=FIRST_PAGE_URLS,
+    card_css_sels:dict=CARD_CSS_SELECTORS,
 ) -> pd.DataFrame:
     return get_master_df(
         first_pg_urls, card_css_sels, gpu_data_coll_test_logger
