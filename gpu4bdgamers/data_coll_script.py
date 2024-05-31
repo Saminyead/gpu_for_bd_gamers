@@ -391,7 +391,8 @@ def data_collection_to_df(
 def data_collection_to_db(
         db_url:str,
         df_table_to_append_dict: dict[str,pd.DataFrame],
-        df_table_to_replace_dict: dict[str,pd.DataFrame]
+        df_table_to_replace_dict: dict[str,pd.DataFrame],
+        logger:RootLogger
 ) -> None:
     """The main function containing all the code. 
     For now, will take the following arg:
@@ -401,10 +402,12 @@ def data_collection_to_db(
     conn = sqlalchemy.create_engine(db_url).connect()
     push_to_db(
         conn=conn,
+        logger=logger,
         **df_table_to_append_dict
     )
 
     replace_previous_date_data_table_db(
         conn=conn,
+        logger=logger,
         **df_table_to_replace_dict
     )
