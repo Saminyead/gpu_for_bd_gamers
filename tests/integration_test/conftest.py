@@ -3,6 +3,8 @@ import requests
 
 import toml
 from gpu4bdgamers.data_coll_script import get_master_df, data_collection_to_df
+
+from logging import RootLogger
 from gpu4bdgamers.logger import setup_logging
 
 import pytest
@@ -29,17 +31,22 @@ GPU_DATA_COLL_TEST_LOGGER = setup_logging(
 master_df:pd.DataFrame = get_master_df(
     FIRST_PAGE_URLS,CARD_CSS_SELECTORS,GPU_DATA_COLL_TEST_LOGGER
 )
-DF_DICT_TEST = data_collection_to_df(
-    master_df, 
-    RADEON_GPU_LIST_FILE_TEST, 
-    GEFORCE_GPU_LIST_FILE_TEST, 
-    INTEL_GPU_LIST_FILE_TEST,
-    GPU_DATA_COLL_TEST_LOGGER
-)
 
 @pytest.fixture
-def df_dict_test(df_dict:dict=DF_DICT_TEST):
-    return df_dict
+def df_dict_test(
+    master_df:pd.DataFrame = master_df,
+    geforce_gpu_list_file:pathlib.Path = GEFORCE_GPU_LIST_FILE_TEST,
+    radeon_gpu_list_file:pathlib.Path = RADEON_GPU_LIST_FILE_TEST,
+    intel_gpu_list_file:pathlib.Path = INTEL_GPU_LIST_FILE_TEST,
+    logger:RootLogger=GPU_DATA_COLL_TEST_LOGGER
+) -> dict[str, pd.DataFrame]:
+    return data_collection_to_df(
+        master_df,
+        geforce_gpu_list_file,
+        radeon_gpu_list_file,
+        intel_gpu_list_file,
+        logger
+    )
 
 @pytest.fixture
 def df_dict_to_append_test(test_df_dict:dict=DF_DICT_TEST):
