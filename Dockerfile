@@ -8,7 +8,8 @@ RUN apk add build-base\
     python3-dev \
     musl-dev \
     freetype-dev \
-    libpng-dev
+    libpng-dev \
+    --update busybox-suid
 
 RUN python3 -m pip install --upgrade pip
 
@@ -19,6 +20,8 @@ RUN pip install -r requirements.txt &&\
 
 COPY . .
 
+COPY crontab /etc/crontabs/root
+
 RUN pip install .
 
 # RUN mkdir ./gpu4bdgamers/logs
@@ -27,6 +30,6 @@ RUN pip install .
 
 ENV PROJECT_ROOT=/app/gpu4bdgamers
 
-WORKDIR /app/gpu4bdgamers
+RUN pytest
 
-CMD [ "python3", "main.py" ]
+CMD [ "python3", "./gpu4bdgamers/main.py" ]
