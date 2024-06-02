@@ -1,15 +1,6 @@
-FROM python:3.11-alpine
+FROM python:3.11-bookworm
 
 WORKDIR /app
-
-RUN apk add build-base\
-    openblas-dev \
-    gfortran \
-    python3-dev \
-    musl-dev \
-    freetype-dev \
-    libpng-dev \
-    --update busybox-suid
 
 RUN python3 -m pip install --upgrade pip
 
@@ -24,9 +15,9 @@ COPY . .
 
 RUN pip install .
 
-RUN mkdir ./gpu4bdgamers/logs
+# RUN mkdir ./gpu4bdgamers/logs
 
-RUN mkdir ./tests/integration_test/logs
+# RUN mkdir ./tests/integration_test/logs
 
 ENV PROJECT_ROOT=/app/gpu4bdgamers
 
