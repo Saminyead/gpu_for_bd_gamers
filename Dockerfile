@@ -21,6 +21,4 @@ RUN mkdir ./tests/integration_test/logs
 
 ENV PROJECT_ROOT=/app/gpu4bdgamers
 
-RUN pytest
-
 CMD [ "crond", "-f" ]
