@@ -1,4 +1,4 @@
-name: Integration Test
+name: CI/CD
 
 on:
   push:
@@ -37,3 +37,22 @@ jobs:
           mkdir logs
           mkdir tests/integration_test/logs
           pytest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test  
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Railway CLI
+      run: curl -fsSL https://railway.app/install.sh | sh
+
+    - name: Login to Railway
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      run: railway run
+
+    - name: Deploy to Railway
+      run: railway up
