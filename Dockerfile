@@ -18,18 +18,18 @@ COPY requirements.txt requirements_dev.txt ./
 RUN pip install -r requirements.txt &&\
     pip install -r requirements_dev.txt
 
-COPY . .
-
 COPY crontab /etc/crontabs/root
+
+COPY . .
 
 RUN pip install .
 
-# RUN mkdir ./gpu4bdgamers/logs
+RUN mkdir ./gpu4bdgamers/logs
 
-# RUN mkdir ./tests/integration_test/logs
+RUN mkdir ./tests/integration_test/logs
 
 ENV PROJECT_ROOT=/app/gpu4bdgamers
 
 RUN pytest
 
-CMD [ "python3", "./gpu4bdgamers/main.py" ]
+CMD [ "crond", "-f" ]

@@ -1,0 +1,1 @@
+* 6 * * * cd /app && pytest && python3 ./gpu4bdgamers/main.py
