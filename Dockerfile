@@ -15,9 +15,9 @@ COPY . .
 
 RUN pip install .
 
-# RUN mkdir ./gpu4bdgamers/logs
+RUN mkdir ./gpu4bdgamers/logs
 
-# RUN mkdir ./tests/integration_test/logs
+RUN mkdir ./tests/integration_test/logs
 
 ENV PROJECT_ROOT=/app/gpu4bdgamers
 
