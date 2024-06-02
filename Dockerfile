@@ -6,7 +6,7 @@ RUN python3 -m pip install --upgrade pip
 
 COPY requirements.txt requirements_dev.txt ./
 
-RUN pip install -r requirements.txt &&
+RUN pip install -r requirements.txt
 
 COPY . .
 
