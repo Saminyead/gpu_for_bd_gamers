@@ -2,6 +2,14 @@ import dataclasses
 import requests
 from bs4 import BeautifulSoup
 
+class NoUrlTagStrOrCssSelError(Exception):
+    def __init__(self) -> None:
+        super().__init__(
+            """Both next_page_url_tag_str and next_page_url_css_sel cannot be 
+            None."""
+        )
+
+
 
 @dataclasses.dataclass
 class ScrapingAttributes:
@@ -24,3 +32,6 @@ class ScrapingAttributes:
         """Starts with the first page url, and then scrapes all pages until it
         no longer finds a next page. Returns a list of pages as a list of 
         BeautifulSoup objects"""
+        # test cases for if both next_page_url_tag_str and next_page_url_css_sel
+        # are None
+        
