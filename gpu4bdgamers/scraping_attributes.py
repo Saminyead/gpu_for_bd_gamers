@@ -1,4 +1,7 @@
 import dataclasses
+import requests
+from bs4 import BeautifulSoup
+
 
 @dataclasses.dataclass
 class ScrapingAttributes:
@@ -9,3 +12,15 @@ class ScrapingAttributes:
     retailer_name: str
     next_page_url_tag_str: str|None = None
     next_page_url_css_sel: str|None = None
+
+    @staticmethod
+    def _get_page_soup(url:str) -> BeautifulSoup:
+        """Get the contents of a page and return a BeautifulSoup object"""
+        page_content = requests.get(url).content
+        soup = BeautifulSoup(page_content,features='html.parser')
+        return soup
+    
+    def get_pages(self) -> list[BeautifulSoup]:
+        """Starts with the first page url, and then scrapes all pages until it
+        no longer finds a next page. Returns a list of pages as a list of 
+        BeautifulSoup objects"""
