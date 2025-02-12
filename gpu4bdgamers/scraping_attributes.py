@@ -32,6 +32,6 @@ class ScrapingAttributes:
         """Starts with the first page url, and then scrapes all pages until it
         no longer finds a next page. Returns a list of pages as a list of 
         BeautifulSoup objects"""
-        # test cases for if both next_page_url_tag_str and next_page_url_css_sel
-        # are None
+        if not self.next_page_url_css_sel and not self.next_page_url_tag_str:
+            raise NoUrlTagStrOrCssSelError
         
