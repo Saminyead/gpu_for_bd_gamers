@@ -32,7 +32,7 @@ class ScrapingAttributes:
     
     def _scrape_pages(
         self,
-        bs_scrape_method:Callable,
+        search_strategy:Literal['find_all','select'],
         **kwargs
     ) -> list[BeautifulSoup]:
         """Use the find_all() BeautifulSoup method to get a list of soup
@@ -42,8 +42,9 @@ class ScrapingAttributes:
         while True:
             current_page_soup = self._get_page_soup(next_page_url)
             soup_list.append(current_page_soup)
-            # still not sure if this is going to work
-            next_page_url_result_set = bs_scrape_method(**kwargs)
+            # best way to inject find_all/select method
+            search_method = getattr(current_page_soup,search_strategy)
+            next_page_url_result_set = search_method(**kwargs)
             if not next_page_url_result_set:
                 break
             next_page_url = next_page_url_result_set[0]['href']
@@ -54,6 +55,6 @@ class ScrapingAttributes:
         no longer finds a next page. Returns a list of pages as a list of 
         BeautifulSoup objects"""
         if ((
-            not self.next_page_url_css_sel and not self.next_page_url_tag_str
+            not self.next_page_url_tag_str and not self.next_page_url_css_sel
         ) or (self.next_page_url_tag_str and self.next_page_url_css_sel)):
             raise NextPageUrlTagStrCssSelError
