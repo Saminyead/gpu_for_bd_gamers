@@ -8,8 +8,9 @@ from typing import Literal, Callable
 class NextPageUrlTagStrCssSelError(Exception):
     def __init__(self) -> None:
         super().__init__(
-            """Both next_page_url_tag_str and next_page_url_css_sel cannot be 
-            None."""
+            """You have either specified both next_page_url_tag_str and 
+            next_page_url_css_sel or both are None. Please specify a value
+            for one and only one of the fields."""
         )
 
 @dataclasses.dataclass
@@ -47,7 +48,6 @@ class ScrapingAttributes:
                 break
             next_page_url = next_page_url_result_set[0]['href']
         return soup_list
-
     
     def get_pages(self) -> list[BeautifulSoup]:
         """Starts with the first page url, and then scrapes all pages until it
