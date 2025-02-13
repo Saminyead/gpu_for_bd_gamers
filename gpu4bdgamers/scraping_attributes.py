@@ -1,9 +1,11 @@
 import dataclasses
 
 import requests
-from bs4 import BeautifulSoup
 
-from typing import Literal, Callable
+from bs4 import BeautifulSoup, ResultSet
+from bs4.element import Tag
+
+from typing import Literal
 
 class NextPageUrlTagStrCssSelError(Exception):
     def __init__(self) -> None:
@@ -70,3 +72,13 @@ class ScrapingAttributes:
                 selector = self.next_page_url_css_sel
             )
         return pages_list
+    
+    def get_cards(self,pages_list:list[BeautifulSoup]) -> list[Tag]:
+        """Get a list of cards from a list of beautiful soup objects(pages)"""
+        card_list = []
+        for page in pages_list:
+            cards  = page.select(self.card_css_sel)
+            card_list.extend(cards)
+        return card_list
+    
+    
