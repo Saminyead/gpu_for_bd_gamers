@@ -20,3 +20,13 @@ def test_get_pages_no_url_tag_or_css_sel(
     next_page_url_css_sel are None"""
     with pytest.raises(NoUrlTagStrOrCssSelError):
         scraping_attributes_no_tagstr_csssel.get_pages()
+
+def test_get_pages_both_url_and_css_sel(
+    scraping_attributes_no_tagstr_csssel: ScrapingAttributes
+) -> None:
+    """Test to check if error is raised when both next_page_url_tag_str and
+    next_page_url_css_sel are specified"""
+    scraping_attributes_no_tagstr_csssel.next_page_url_tag_str = "some_tag"
+    scraping_attributes_no_tagstr_csssel.next_page_url_css_sel = "some_css"
+    with pytest.raises(NoUrlTagStrOrCssSelError):
+        scraping_attributes_no_tagstr_csssel.get_pages()
