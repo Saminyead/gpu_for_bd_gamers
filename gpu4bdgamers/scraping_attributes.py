@@ -50,7 +50,7 @@ class ScrapingAttributes:
             next_page_url = next_page_url_result_set[0]['href']
         return soup_list
     
-    def get_pages(self) -> list[BeautifulSoup]:
+    def get_pages(self,**kwargs) -> list[BeautifulSoup]:
         """Starts with the first page url, and then scrapes all pages until it
         no longer finds a next page. Returns a list of pages as a list of 
         BeautifulSoup objects"""
@@ -58,3 +58,9 @@ class ScrapingAttributes:
             not self.next_page_url_tag_str and not self.next_page_url_css_sel
         ) or (self.next_page_url_tag_str and self.next_page_url_css_sel)):
             raise NextPageUrlTagStrCssSelError
+        pages_list = []     # without this, pages_list remains out of bounds
+        if self.next_page_url_tag_str:
+            pages_list = self._scrape_pages('find_all',**kwargs)
+        if self.next_page_url_css_sel:
+            pages_list = self._scrape_pages('select',**kwargs)
+        return pages_list
