@@ -1,6 +1,9 @@
 import dataclasses
+
 import requests
 from bs4 import BeautifulSoup
+
+from typing import Literal, Callable
 
 class NoUrlTagStrOrCssSelError(Exception):
     def __init__(self) -> None:
@@ -8,8 +11,6 @@ class NoUrlTagStrOrCssSelError(Exception):
             """Both next_page_url_tag_str and next_page_url_css_sel cannot be 
             None."""
         )
-
-
 
 @dataclasses.dataclass
 class ScrapingAttributes:
@@ -28,7 +29,11 @@ class ScrapingAttributes:
         soup = BeautifulSoup(page_content,features='html.parser')
         return soup
     
-    def _find_all(self) -> list[BeautifulSoup]:
+    def _scrape_pages(
+        self,
+        bs_scrape_method:Callable,
+        **kwargs
+    ) -> list[BeautifulSoup]:
         """Use the find_all() BeautifulSoup method to get a list of soup
         objects from the first page url"""
         next_page_url = self.first_page_url
@@ -36,14 +41,11 @@ class ScrapingAttributes:
         while True:
             current_page_soup = self._get_page_soup(next_page_url)
             soup_list.append(current_page_soup)
-            # part from here 
-            next_page_url_result_set = current_page_soup.find_all(
-                name='a',string=self.next_page_url_tag_str
-            )
+            # still not sure if this is going to work
+            next_page_url_result_set = bs_scrape_method(**kwargs)
             if not next_page_url_result_set:
                 break
             next_page_url = next_page_url_result_set[0]['href']
-            # to here should be a different function
         return soup_list
 
     
@@ -53,4 +55,3 @@ class ScrapingAttributes:
         BeautifulSoup objects"""
         if not self.next_page_url_css_sel and not self.next_page_url_tag_str:
             raise NoUrlTagStrOrCssSelError
-        
