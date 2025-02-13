@@ -55,3 +55,5 @@ class ScrapingAttributes:
         BeautifulSoup objects"""
         if not self.next_page_url_css_sel and not self.next_page_url_tag_str:
             raise NoUrlTagStrOrCssSelError
+        elif self.next_page_url_css_sel and self.next_page_url_tag_str:
+            raise NoUrlTagStrOrCssSelError
