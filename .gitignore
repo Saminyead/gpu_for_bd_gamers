@@ -15,3 +15,4 @@ update_db.ipynb
 data_coll_cron.sh
 temp*
 qnd.py
+*.db
