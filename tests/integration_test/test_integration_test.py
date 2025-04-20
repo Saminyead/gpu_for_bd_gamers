@@ -1,4 +1,5 @@
 from logging import RootLogger
+import pathlib
 import pytest
 
 # TODO: we will add a different test for data_collection_to_df
@@ -40,38 +41,31 @@ def delete_db_today_rows(
 
 
 def test_push_to_db_no_today_data_tables(
-        df_dict_to_append_test:dict[str,pd.DataFrame],
-        df_dict_to_replace_test:dict[str,pd.DataFrame],
-        gpu_data_coll_test_logger:RootLogger,
+        mock_master_df: pd.DataFrame,
+        geforce_units_of_interest_file_path:pathlib.Path,
+        radeon_units_of_interest_file_path:pathlib.Path,
+        intel_units_of_interest_file_path:pathlib.Path,
+        test_logger:RootLogger,
+        test_tier_score_excel_file_path:pathlib.Path,
+        expected_gpu_of_interest_df:pd.DataFrame,
+        expected_lowest_prices_df:pd.DataFrame,
+        expected_lowest_prices_tiered_df:pd.DataFrame,
         test_db_url:str,
-        no_today_tables_conn: sqlalchemy.engine.Connection
     ):
     """Tests that pushing to database works when there is no data for
     'today' in the database table. Also tests if GPU units are properly prefixed
     e.g. Geforce are not prefixed by RX etc."""
-    data_collection_to_db(
-        test_db_url,
-        df_dict_to_append_test,
-        df_dict_to_replace_test,
-        gpu_data_coll_test_logger
+    df_dict_to_push = data_collection_to_df(
+        master_df = mock_master_df,
+        geforce_gpu_units_filepath = geforce_units_of_interest_file_path,
+        radeon_gpu_units_filepath = radeon_units_of_interest_file_path,
+        intel_gpu_units_filepath = intel_units_of_interest_file_path,
+        logger = test_logger,
+        tier_score_excel_file = test_tier_score_excel_file_path
     )
-
-    gpu_of_interest_df = pd.read_sql(
-        sql=sql_query_format("gpu_of_interest"),
-        con=no_today_tables_conn
-    )
-    lowest_prices_df = pd.read_sql(
-        sql=sql_query_format("lowest_prices"),
-        con=no_today_tables_conn
-    )
-    lowest_prices_tiered = pd.read_sql(
-        sql=sql_query_format("lowest_prices_tiered"),
-        con=no_today_tables_conn
-    )
-
-    assert len(gpu_of_interest_df) != 0
-    assert len(lowest_prices_df) != 0
-    assert len(lowest_prices_tiered) != 0
+    assert df_dict_to_push['gpu_of_interest'].equals(expected_gpu_of_interest_df)
+    assert df_dict_to_push['lowest_prices'].equals(expected_lowest_prices_df)
+    assert df_dict_to_push['lowest_prices_tiered'].equals(expected_lowest_prices_tiered_df)
 
 def test_push_to_db_fail_today_exists(
     df_dict_test:dict[str,pd.DataFrame],
