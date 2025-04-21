@@ -9,6 +9,7 @@ from gpu4bdgamers.data_coll_script import (
 from gpu4bdgamers.database import push_to_db, TodayDataAlreadyExistsError
 
 import pandas as pd
+import pandas.testing as pdt
 import datetime
 import sqlalchemy
 
@@ -79,7 +80,10 @@ def test_push_to_db_no_today_data_tables(
 
     assert obtained_gpu_of_interest_df.equals(expected_gpu_of_interest_df_sorted)
     assert obtained_lowest_prices_df.equals(expected_lowest_prices_df_sorted)
-    # assert obtained_lowest_prices_tiered_df.equals(expected_lowest_prices_tiered_sorted)
+    pdt.assert_frame_equal(
+        obtained_lowest_prices_tiered_df, expected_lowest_prices_tiered_sorted,
+        rtol = 0.001, atol = 0.001
+    )
 
 def test_push_to_db_fail_today_exists(
     df_dict_test:dict[str,pd.DataFrame],
