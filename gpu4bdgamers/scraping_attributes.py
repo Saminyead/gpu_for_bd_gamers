@@ -81,4 +81,4 @@ class ScrapingAttributes:
             card_list.extend(cards)
         return card_list
     
-    
+    # TODO: method for getting name and price

@@ -35,9 +35,13 @@ def get_master_df(
         first_pg_links:dict[str,str],
         card_css_selectors:dict[str,str],
         logger:RootLogger,
+        ryans_gpu_name_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a',
+        ryans_gpu_price_css_sel = 'a.pr-text.cat-sp-text.pb-1',
+        ryans_retailer_name = 'Ryans Computer',
+        startech_gpu_name_css_sel = 'h4.p-item-name > a',
+        startech_gpu_price_css_sel = 'div.p-item-price > span',
+        startech_retailer_name = 'Startech Engineering'
 ) -> pd.DataFrame:
-    #--scraping through all the websites
-
     # Ryan's Computer
     ryans_pages = get_pages_find_all(first_pg_link=first_pg_links['ryans'],url_tag_str='›')['soup_list']
 
@@ -48,9 +52,9 @@ def get_master_df(
 
     ryans_df = gpu_dataframe_card(
         card_list=ryans_card_list,
-        gpu_name_css_sel='p.card-text.p-0.m-0.grid-view-text > a',
-        gpu_price_css_sel='a.pr-text.cat-sp-text.pb-1',
-        retailer_name='Ryans Computer'
+        gpu_name_css_sel=ryans_gpu_name_css_sel,
+        gpu_price_css_sel=ryans_gpu_price_css_sel,
+        retailer_name=ryans_retailer_name
     )
 
     logger.info(msg=f'Ryans Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(ryans_df)}')
@@ -66,9 +70,9 @@ def get_master_df(
 
     startech_df = gpu_dataframe_card(
         card_list=startech_card_list,
-        gpu_name_css_sel='h4.p-item-name > a',
-        gpu_price_css_sel='div.p-item-price > span',
-        retailer_name='Startech Engineering'
+        gpu_name_css_sel= startech_gpu_name_css_sel,
+        gpu_price_css_sel = startech_gpu_price_css_sel,
+        retailer_name=startech_retailer_name
     )
 
     logger.info(msg=f'Startech Engineering BD data scraped and stored to a dataframe successfully; length of dataframe = {len(startech_df)}')
@@ -243,6 +247,17 @@ def data_collection_to_df(
         logger:RootLogger,
         tier_score_excel_file:pathlib.Path
 ) -> dict[str,pd.DataFrame]:
+    """Top level function to clean and properly format master_df, and proper
+    naming and prefixes, and finally returns dataframes to be pushed to
+    database.
+
+    Returns a dictionary of dataframes as values:
+        {
+            'gpu_of_interest': gpu_of_interest,
+            'lowest_prices': lowest_prices,
+            'lowest_prices_tiered': lowest_prices_tiered
+        }
+    """
     
     # rounding the GPU Prices to their nearest hundreds
 

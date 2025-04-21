@@ -46,9 +46,7 @@ def push_to_db(
 
     for table_name,df in df_kwargs.items():
         _check_if_today_data_exists(conn,table_name)
-
-        # TODO: if the check raises error, skip the table
-
+        
         df.to_sql(
             name=table_name,
             con=conn,
