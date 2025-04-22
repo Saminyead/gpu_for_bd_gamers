@@ -73,9 +73,10 @@ def test_push_to_db_no_today_data_tables(
 
     assert obtained_gpu_of_interest_df.equals(expected_gpu_of_interest_df)
     assert obtained_lowest_prices_df.equals(expected_lowest_prices_df)
+    # best way to compare dataframes with floating point values
     pdt.assert_frame_equal(
         obtained_lowest_prices_tiered_df, expected_lowest_prices_tiered_df,
-        rtol = 0.001, atol = 0.001
+        rtol = 0.001, atol = 0.001  # for us, max tolerance could be 0.01
     )
 
 def test_push_to_db_fail_today_exists(
