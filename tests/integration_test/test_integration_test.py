@@ -71,17 +71,10 @@ def test_push_to_db_no_today_data_tables(
     obtained_lowest_prices_tiered_df = df_dict_to_push['lowest_prices_tiered'].\
         sort_values(by="gpu_price",ignore_index=True)
 
-    expected_gpu_of_interest_df_sorted = expected_gpu_of_interest_df.\
-        sort_values(by="gpu_price",ignore_index=True)
-    expected_lowest_prices_df_sorted = expected_lowest_prices_df.\
-        sort_values(by="gpu_price",ignore_index=True)
-    expected_lowest_prices_tiered_sorted = expected_lowest_prices_tiered_df.\
-        sort_values(by="gpu_price",ignore_index=True)
-
-    assert obtained_gpu_of_interest_df.equals(expected_gpu_of_interest_df_sorted)
-    assert obtained_lowest_prices_df.equals(expected_lowest_prices_df_sorted)
+    assert obtained_gpu_of_interest_df.equals(expected_gpu_of_interest_df)
+    assert obtained_lowest_prices_df.equals(expected_lowest_prices_df)
     pdt.assert_frame_equal(
-        obtained_lowest_prices_tiered_df, expected_lowest_prices_tiered_sorted,
+        obtained_lowest_prices_tiered_df, expected_lowest_prices_tiered_df,
         rtol = 0.001, atol = 0.001
     )
 

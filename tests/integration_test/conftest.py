@@ -55,20 +55,25 @@ def mock_master_df(filepath:pathlib.Path = DATA_DIR / 'gpu_prices.csv'):
 def expected_gpu_of_interest_df(
     filepath:pathlib.Path = EXPECTED_DATA_DIR / 'gpu_units_of_interest.csv'
 ):
-    return add_data_collection_row(filepath)
+    df = add_data_collection_row(filepath)
+    df = df.sort_values(by = "gpu_price", ignore_index = True)
+    return df
 
 @pytest.fixture
 def expected_lowest_prices_df(
     filepath:pathlib.Path = EXPECTED_DATA_DIR / 'lowest_prices.csv'
 ):
-    return add_data_collection_row(filepath)
-
+    df = add_data_collection_row(filepath)
+    df = df.sort_values(by = "gpu_price", ignore_index = True)
+    return df
 
 @pytest.fixture
 def expected_lowest_prices_tiered_df(
     filepath:pathlib.Path = EXPECTED_DATA_DIR / 'lowest_prices_tiered.csv'
 ):
-    return add_data_collection_row(filepath)
+    df = add_data_collection_row(filepath)
+    df = df.sort_values(by = "gpu_price", ignore_index = True)
+    return df
 
 @pytest.fixture
 def test_logger():
