@@ -133,7 +133,6 @@ def lowest_prices_tiered_table(test_db_metadata:sqlalchemy.MetaData):
     )
     return table
 
-# TODO: make empty tables fixture
 @pytest.fixture(scope = 'function')
 def tables_to_create(
     test_db_metadata:sqlalchemy.MetaData,
@@ -146,7 +145,7 @@ def tables_to_create(
     test_db_metadata.drop_all()
 
 @pytest.fixture(scope = 'function')
-def tables_with_today_data(
+def insert_today_data_stmts(
         test_db_conn:sqlalchemy.engine.mock.MockConnection,
         test_db_metadata: sqlalchemy.MetaData,
         gpu_of_interest_table:sqlalchemy.Table,

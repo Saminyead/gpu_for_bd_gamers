@@ -2,7 +2,6 @@ from logging import RootLogger
 import pathlib
 import pytest
 
-# TODO: we will add a different test for data_collection_to_df
 from gpu4bdgamers.data_coll_script import (
     data_collection_to_df, data_collection_to_db
 )
@@ -10,35 +9,7 @@ from gpu4bdgamers.database import push_to_db, TodayDataAlreadyExistsError
 
 import pandas as pd
 import pandas.testing as pdt
-import datetime
 import sqlalchemy
-
-
-def sql_query_format(table_name:str):
-    """formats the sql query so we can just plug in table_name 
-    in test_main"""
-    today = datetime.datetime.today().strftime("%Y-%m-%d")
-    return f"SELECT * FROM {table_name} WHERE data_collection_date = '{today}'"
-
-
-def delete_db_today_rows(
-        conn:sqlalchemy.engine.base.Connection,
-        list_of_table_names:list[str],
-) -> None:
-    """deletes all rows with today's date in a database table"""
-    today = datetime.datetime.today().strftime("%Y-%m-%d")
-    metadata = sqlalchemy.MetaData(bind = conn)
-
-    metadata.reflect(bind = conn)
-
-    
-    db_table_list = list(metadata.tables.keys())    
-    if not db_table_list:
-        return
-    for table in db_table_list:
-        delete_rows = table.delete().where(table.c.data_collection_date == today)
-        conn.execute(delete_rows)
-
 
 
 def test_push_to_db_no_today_data_tables(
@@ -115,17 +86,16 @@ def test_push_to_db_no_today_data_tables(
         right = expected_lowest_prices_tiered_df
     )
 
-# @pytest.mark.skip
 def test_push_to_db_fail_today_exists(
     expected_gpu_of_interest_df:pd.DataFrame,
     expected_lowest_prices_df:pd.DataFrame,
     expected_lowest_prices_tiered_df:pd.DataFrame,
     test_logger:RootLogger,
     test_db_conn:sqlalchemy.engine.mock.MockConnection,
-    tables_with_today_data:list[str],
+    insert_today_data_stmts:list[str],
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
-    for table in tables_with_today_data:
+    for table in insert_today_data_stmts:
         test_db_conn.execute(table)
     with pytest.raises(TodayDataAlreadyExistsError):
         push_to_db(
