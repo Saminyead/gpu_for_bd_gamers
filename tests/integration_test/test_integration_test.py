@@ -52,6 +52,8 @@ def test_push_to_db_no_today_data_tables(
         expected_lowest_prices_df:pd.DataFrame,
         expected_lowest_prices_tiered_df:pd.DataFrame,
         test_db_url:str,
+        test_db_conn:sqlalchemy.engine.Connection,
+        tables_to_create:None
     ):
     """Tests that pushing to database works when there is no data for
     'today' in the database table. Also tests if GPU units are properly prefixed
@@ -64,12 +66,26 @@ def test_push_to_db_no_today_data_tables(
         logger = test_logger,
         tier_score_excel_file = test_tier_score_excel_file_path
     )
+    df_to_append_dict = {
+        "gpu_of_interest": df_dict_to_push['gpu_of_interest'],
+        "lowest_prices" : df_dict_to_push['lowest_prices'],
+    }
+    df_to_replace_dict = { "lowest_prices_tiered" : df_dict_to_push['lowest_prices_tiered']}
+    data_collection_to_db(
+        db_url = test_db_url,
+        df_table_to_append_dict = df_to_append_dict,
+        df_table_to_replace_dict = df_to_replace_dict,
+        logger = test_logger
+    )
+
     obtained_gpu_of_interest_df = df_dict_to_push['gpu_of_interest'].\
         sort_values(by="gpu_price",ignore_index=True)
     obtained_lowest_prices_df = df_dict_to_push['lowest_prices'].\
         sort_values(by="gpu_price",ignore_index=True)
     obtained_lowest_prices_tiered_df = df_dict_to_push['lowest_prices_tiered'].\
         sort_values(by="gpu_price",ignore_index=True)
+
+    tables_to_create
 
     assert obtained_gpu_of_interest_df.equals(expected_gpu_of_interest_df)
     assert obtained_lowest_prices_df.equals(expected_lowest_prices_df)
@@ -79,6 +95,15 @@ def test_push_to_db_no_today_data_tables(
         rtol = 0.001, atol = 0.001  # for us, max tolerance could be 0.01
     )
 
+    pdt.assert_frame_equal(
+        left = pd.read_sql(
+            sql = "SELECT * FROM gpu_of_interest",
+            con = test_db_conn
+        ).sort_values(by="gpu_price",ignore_index=True),
+        right = expected_gpu_of_interest_df
+    )
+
+@pytest.mark.skip
 def test_push_to_db_fail_today_exists(
     df_dict_test:dict[str,pd.DataFrame],
     gpu_data_coll_test_logger: RootLogger,

@@ -8,6 +8,8 @@ import pathlib
 from logging import RootLogger
 from datetime import datetime
 
+import sqlalchemy
+
 CURRENT_DIR = pathlib.Path(__file__).parent.resolve()
 GPU_OF_INTEREST_FILES_DIR = CURRENT_DIR / 'gpu_units_of_interest'
 DATA_DIR = CURRENT_DIR / 'data'
@@ -74,6 +76,74 @@ def expected_lowest_prices_tiered_df(
     df = add_data_collection_row(filepath)
     df = df.sort_values(by = "gpu_price", ignore_index = True)
     return df
+
+@pytest.fixture
+def test_db_conn(test_db_url:pathlib.Path) -> sqlalchemy.engine.mock.MockConnection:
+    engine = sqlalchemy.create_engine(url = test_db_url)
+    return engine.connect()
+
+@pytest.fixture()
+def test_db_metadata(
+    test_db_conn:sqlalchemy.engine.mock.MockConnection
+) -> sqlalchemy.MetaData:
+    return sqlalchemy.MetaData(bind = test_db_conn)
+
+@pytest.fixture()
+def gpu_of_interest_table(test_db_metadata:sqlalchemy.MetaData):
+    table = sqlalchemy.Table(
+        "gpu_of_interest", test_db_metadata,
+        sqlalchemy.Column("gpu_name", sqlalchemy.String),
+        sqlalchemy.Column("gpu_price", sqlalchemy.Integer),
+        sqlalchemy.Column("retail_url", sqlalchemy.String, primary_key = True),
+        sqlalchemy.Column("data_collection_date", sqlalchemy.String),
+        sqlalchemy.Column("retailer_name", sqlalchemy.String),
+        sqlalchemy.Column("gpu_unit_name", sqlalchemy.String),
+    )
+    return table
+
+@pytest.fixture()
+def lowest_prices_table(test_db_metadata:sqlalchemy.MetaData):
+    table = sqlalchemy.Table(
+        "lowest_prices", test_db_metadata,
+        sqlalchemy.Column("gpu_name", sqlalchemy.String),
+        sqlalchemy.Column("gpu_price", sqlalchemy.Integer),
+        sqlalchemy.Column("retail_url", sqlalchemy.String, primary_key = True),
+        sqlalchemy.Column("data_collection_date", sqlalchemy.String),
+        sqlalchemy.Column("retailer_name", sqlalchemy.String),
+        sqlalchemy.Column("gpu_unit_name", sqlalchemy.String),
+    )
+    return table
+
+@pytest.fixture()
+def lowest_prices_tiered_table(test_db_metadata:sqlalchemy.MetaData):
+    table = sqlalchemy.Table(
+        "lowest_prices_tiered", test_db_metadata,
+        sqlalchemy.Column("gpu_name", sqlalchemy.String),
+        sqlalchemy.Column("gpu_price", sqlalchemy.Integer),
+        sqlalchemy.Column("retail_url", sqlalchemy.String, primary_key = True),
+        sqlalchemy.Column("data_collection_date", sqlalchemy.String),
+        sqlalchemy.Column("retailer_name", sqlalchemy.String),
+        sqlalchemy.Column("gpu_unit_name", sqlalchemy.String),
+        sqlalchemy.Column("base_tier_score", sqlalchemy.Float),
+        sqlalchemy.Column("net_tier_score", sqlalchemy.Float),
+        sqlalchemy.Column("non_rt_net_score", sqlalchemy.Float),
+        sqlalchemy.Column("price_per_base_tier", sqlalchemy.Float),
+        sqlalchemy.Column("price_per_net_tier", sqlalchemy.Float),
+        sqlalchemy.Column("price_per_non_rt_tier", sqlalchemy.Float),
+    )
+    return table
+
+# TODO: make empty tables fixture
+@pytest.fixture(scope = 'function')
+def tables_to_create(
+    test_db_metadata:sqlalchemy.MetaData,
+    gpu_of_interest_table:sqlalchemy.Table,
+    lowest_prices_table:sqlalchemy.Table,
+    lowest_prices_tiered_table:sqlalchemy.Table
+):
+    test_db_metadata.create_all()
+    yield
+    test_db_metadata.drop_all()
 
 @pytest.fixture
 def test_logger():
