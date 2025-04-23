@@ -145,6 +145,48 @@ def tables_to_create(
     yield
     test_db_metadata.drop_all()
 
+@pytest.fixture(scope = 'function')
+def tables_with_today_data(
+        test_db_conn:sqlalchemy.engine.mock.MockConnection,
+        test_db_metadata: sqlalchemy.MetaData,
+        gpu_of_interest_table:sqlalchemy.Table,
+        lowest_prices_table:sqlalchemy.Table,
+        lowest_prices_tiered_table:sqlalchemy.Table
+):
+    test_db_metadata.create_all()
+    gpu_of_interest_insert = sqlalchemy.insert(gpu_of_interest_table).values(
+        gpu_name = "ASUS ROG Geforce RTX 3090 Ti",
+        gpu_price = 200000,
+        retail_url = "https://startechbangladesh.com/product/5870",
+        data_collection_date = datetime.today().strftime("%Y-%m-%d"),
+        retailer_name = "Startech Bangladesh",
+        gpu_unit_name = "Geforce RTX 3090 Ti"
+    )
+    lowest_prices_insert = sqlalchemy.insert(lowest_prices_table).values(
+        gpu_name = "ASUS ROG Geforce RTX 3090 Ti",
+        gpu_price = 200000,
+        retail_url = "https://startechbangladesh.com/product/5870",
+        data_collection_date = datetime.today().strftime("%Y-%m-%d"),
+        retailer_name = "Startech Bangladesh",
+        gpu_unit_name = "Geforce RTX 3090 Ti"
+    )
+    lowest_prices_tiered_insert = sqlalchemy.insert(lowest_prices_tiered_table).values(
+        gpu_name = "ASUS ROG Geforce RTX 3090 Ti",
+        gpu_price = 200000,
+        retail_url = "https://startechbangladesh.com/product/5870",
+        data_collection_date = datetime.today().strftime("%Y-%m-%d"),
+        retailer_name = "Startech Bangladesh",
+        gpu_unit_name = "Geforce RTX 3090 Ti",
+        base_tier_score = 10,
+        net_tier_score = 15,
+        non_rt_net_score = 12.5,
+        price_per_base_tier = 20000,
+        price_per_net_tier = 13333.3333,
+        price_per_non_rt_tier = 16000
+    )
+    yield [gpu_of_interest_insert, lowest_prices_insert, lowest_prices_tiered_insert]
+    test_db_metadata.drop_all()
+
 @pytest.fixture
 def test_logger():
     return RootLogger(0)

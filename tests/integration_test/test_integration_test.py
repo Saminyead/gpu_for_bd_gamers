@@ -115,17 +115,22 @@ def test_push_to_db_no_today_data_tables(
         right = expected_lowest_prices_tiered_df
     )
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_push_to_db_fail_today_exists(
     expected_gpu_of_interest_df:pd.DataFrame,
     expected_lowest_prices_df:pd.DataFrame,
     expected_lowest_prices_tiered_df:pd.DataFrame,
-    gpu_data_coll_test_logger: RootLogger,
-    test_db_url:str,
+    test_logger:RootLogger,
     test_db_conn:sqlalchemy.engine.mock.MockConnection,
+    tables_with_today_data:list[str],
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
-    
-
+    for table in tables_with_today_data:
+        test_db_conn.execute(table)
     with pytest.raises(TodayDataAlreadyExistsError):
-        push_to_db(db_conn,gpu_data_coll_test_logger,**df_dict_test)
+        push_to_db(
+            test_db_conn, test_logger,
+            gpu_of_interest = expected_gpu_of_interest_df,
+            lowest_prices = expected_lowest_prices_df,
+            lowest_prices_tiered = expected_lowest_prices_tiered_df
+        )
