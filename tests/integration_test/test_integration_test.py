@@ -85,8 +85,6 @@ def test_push_to_db_no_today_data_tables(
     obtained_lowest_prices_tiered_df = df_dict_to_push['lowest_prices_tiered'].\
         sort_values(by="gpu_price",ignore_index=True)
 
-    tables_to_create
-
     assert obtained_gpu_of_interest_df.equals(expected_gpu_of_interest_df)
     assert obtained_lowest_prices_df.equals(expected_lowest_prices_df)
     # best way to compare dataframes with floating point values
@@ -119,25 +117,15 @@ def test_push_to_db_no_today_data_tables(
 
 @pytest.mark.skip
 def test_push_to_db_fail_today_exists(
-    df_dict_test:dict[str,pd.DataFrame],
+    expected_gpu_of_interest_df:pd.DataFrame,
+    expected_lowest_prices_df:pd.DataFrame,
+    expected_lowest_prices_tiered_df:pd.DataFrame,
     gpu_data_coll_test_logger: RootLogger,
     test_db_url:str,
+    test_db_conn:sqlalchemy.engine.mock.MockConnection,
 ) -> None:
     """Test for pushing to database table where 'today' data already exists"""
-    list_df_name_today_exists = [
-        f"{df_name}_today_exists" for df_name in df_dict_test.keys()
-    ]
+    
 
-    with sqlalchemy.create_engine(test_db_url).connect() as db_conn:
-        for df_name_today,df_name_og in \
-            zip(list_df_name_today_exists, df_dict_test.keys()):
-
-            df_dict_test[df_name_og].to_sql(
-                name=df_name_today,
-                con=db_conn,
-                if_exists='append',
-                index=False
-            )
-
-        with pytest.raises(TodayDataAlreadyExistsError):
-            push_to_db(db_conn,gpu_data_coll_test_logger,**df_dict_test)
+    with pytest.raises(TodayDataAlreadyExistsError):
+        push_to_db(db_conn,gpu_data_coll_test_logger,**df_dict_test)
