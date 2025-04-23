@@ -4,7 +4,7 @@ numpy==1.26.4
 pandas==2.0.0
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
-Requests==2.31.2
+Requests==2.32.3
 selenium==4.20.0
 setuptools==79.0.0
 SQLAlchemy==1.4.45
