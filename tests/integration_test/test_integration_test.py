@@ -102,6 +102,20 @@ def test_push_to_db_no_today_data_tables(
         ).sort_values(by="gpu_price",ignore_index=True),
         right = expected_gpu_of_interest_df
     )
+    pdt.assert_frame_equal(
+        left = pd.read_sql(
+            sql = "SELECT * FROM lowest_prices",
+            con = test_db_conn
+        ).sort_values(by="gpu_price",ignore_index=True),
+        right = expected_lowest_prices_df
+    )
+    pdt.assert_frame_equal(
+        left = pd.read_sql(
+            sql = "SELECT * FROM lowest_prices_tiered",
+            con = test_db_conn
+        ).sort_values(by="gpu_price",ignore_index=True),
+        right = expected_lowest_prices_tiered_df
+    )
 
 @pytest.mark.skip
 def test_push_to_db_fail_today_exists(
