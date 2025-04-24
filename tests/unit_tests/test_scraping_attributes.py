@@ -1,5 +1,5 @@
 import pytest
-from gpu4bdgamers.scraping_attributes import (
+from gpu4bdgamers.scraping import (
     ScrapingAttributes, NextPageUrlTagStrCssSelError
 )
 
