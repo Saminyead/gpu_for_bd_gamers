@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 
 import subprocess
-from typing import Generator
+from typing import Generator, Any
 
 MASTER_DF_CSV_FILE = "master_df.csv"
 
@@ -60,7 +60,7 @@ def gpu_unit_index() -> dict[str, dict[str, list[int]]]:
 
 
 @pytest.fixture(scope="module")
-def mock_server(html_pages_dir: str = "./mock_pages/", port="5000") -> Generator[None]:
+def mock_server(html_pages_dir: str = "./mock_pages/", port="5000") -> Generator[None, Any, Any]:
     proc = subprocess.Popen(
         ["python3", "-m", "http.server", "-d", html_pages_dir, port]
     )
@@ -69,5 +69,5 @@ def mock_server(html_pages_dir: str = "./mock_pages/", port="5000") -> Generator
 
 
 @pytest.fixture(scope="function")
-def no_next_page() -> str:
+def no_next_page_url() -> str:
     return "http://127.0.0.1:5000/no_next_page.html"
