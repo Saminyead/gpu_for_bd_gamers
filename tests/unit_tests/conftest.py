@@ -2,6 +2,7 @@ import pytest
 import pandas as pd
 
 import subprocess
+import time
 from typing import Generator, Any
 
 MASTER_DF_CSV_FILE = "master_df.csv"
@@ -59,11 +60,12 @@ def gpu_unit_index() -> dict[str, dict[str, list[int]]]:
     }
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def mock_server(html_pages_dir: str = "./mock_pages/", port="5000") -> Generator[None, Any, Any]:
     proc = subprocess.Popen(
         ["python3", "-m", "http.server", "-d", html_pages_dir, port]
     )
+    time.sleep(1)
     yield
     proc.kill()
 
