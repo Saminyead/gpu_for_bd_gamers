@@ -44,18 +44,17 @@ def get_page_soup_list(
     all the GPU listing pages of a retailer website by finding the next
     page URL (through the next_page_url_sel selector) and return a list of
     BeautifulSoup objects of the contents of the pages."""
-    # soup_list = []
-    # next_page_url = first_page_url
-    # while next_page_url:
-    #     page_content = requests.get(next_page_url).content
-    #     soup = BeautifulSoup(page_content, features="html.parser")
-    #     soup_list.append(soup)
-    #     next_page_url_elem = soup.select_one(next_page_url_sel)
-    #     if not next_page_url_elem:
-    #         raise ElementDoesNotExistError(f"Unable to find next page element with selector {next_page_url_sel}")
-    #     next_page_url = next_page_url_elem['href']
-    # return soup_list
-    requests.get(first_page_url)
+    soup_list = []
+    next_page_url = first_page_url
+    while next_page_url:
+        page_content = requests.get(next_page_url).content
+        soup = BeautifulSoup(page_content, features="html.parser")
+        soup_list.append(soup)
+        next_page_url_elem = soup.select_one(next_page_url_sel)
+        if not next_page_url_elem:
+            raise ElementDoesNotExistError(f"Unable to find next page element with selector {next_page_url_sel}")
+        next_page_url = next_page_url_elem['href']
+    return soup_list
 
 class ElementDoesNotExistError(Exception):
     pass
