@@ -8,35 +8,6 @@ from bs4.element import Tag
 from typing import Literal
 
 
-@dataclasses.dataclass(slots=True)
-class ScrapingAttributes:
-    first_page_url: str
-    next_page_css_sel: str
-    card_css_sel: str
-    gpu_name_css_sel: str
-    gpu_price_css_sel: str
-    retailer_name: str
-
-    def get_page_soup(self: "ScrapingAttributes") -> list[BeautifulSoup]:
-        """Get the contents of a page and return a BeautifulSoup object"""
-        soup_list = []
-        next_page_url = self.first_page_url
-        while next_page_url:
-            page_content = requests.get(next_page_url).content
-            soup = BeautifulSoup(page_content, features="html.parser")
-            soup_list.append(soup)
-            next_page_url = soup.select(self.next_page_css_sel)[0]["href"]
-        return soup_list
-
-    def get_cards(self, soup_list: list[BeautifulSoup]) -> list[Tag]:
-        """Get a list of cards from a list of beautiful soup objects(pages)"""
-        card_list = []
-        for page in soup_list:
-            cards = page.select(self.card_css_sel)
-            card_list.extend(cards)
-        return card_list
-
-
 def get_page_soup_list(
     first_page_url: str, next_page_url_sel: str
 ) -> list[BeautifulSoup]:
@@ -62,12 +33,18 @@ def get_page_soup_list(
 def get_card_list(
     soup_list: list[BeautifulSoup],
     card_css_sel: str,
-) -> ResultSet[Tag]:
+):
     """A card is a section of the page that contains all the information
     regarding a listed GPU."""
     card_list = []
     for soup in soup_list:
-        card_list.extend(soup.select(card_css_sel))
+        card_list_in_soup = soup.select(card_css_sel)
+        if not card_list_in_soup:
+            raise ElementDoesNotExistError(
+                f"""Unable to find any card with selector {card_css_sel} in one
+                of the pages."""
+            )
+        card_list.extend(card_list_in_soup)
     return card_list
 
 

@@ -82,6 +82,11 @@ def no_next_page_url() -> str:
 @pytest.fixture
 def missing_card_soup_list():
     return [
-        BeautifulSoup('<section><div class = "card">This is a card</div></section>'),
-        BeautifulSoup("<section><div>This is not a card</div></section>"),
+        BeautifulSoup(
+            '<section><div class = "card">This is a card</div></section>',
+            features="html.parser",
+        ),
+        BeautifulSoup(
+            "<section><div>This is not a card</div></section>", features="html.parser"
+        ),
     ]
