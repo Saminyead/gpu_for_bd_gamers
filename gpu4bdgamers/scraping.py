@@ -1,4 +1,5 @@
 import dataclasses
+import pydantic
 
 import requests
 
@@ -33,7 +34,7 @@ def get_page_soup_list(
 def get_card_list(
     soup_list: list[BeautifulSoup],
     card_css_sel: str,
-):
+) -> list[Tag]:
     """A card is a section of the page that contains all the information
     regarding a listed GPU."""
     card_list = []
@@ -46,6 +47,36 @@ def get_card_list(
             )
         card_list.extend(card_list_in_soup)
     return card_list
+
+
+@dataclasses.dataclass
+class GpuListingAttrs:
+    """CSS selectors of the GPU name, price, and retail url."""
+
+    gpu_name_css_sel: str
+    gpu_price_css_sel: str
+    retail_url_css_sel: str
+
+    def gpu_listing_data(self, card_list: list[Tag]):
+        gpu_listing_list = []
+        for card in card_list:
+            gpu_name_tag = card.select_one(self.gpu_name_css_sel)
+            gpu_name = gpu_name_tag.text
+            gpu_price_tag = card.select_one(self.gpu_name_css_sel)
+            gpu_price = int(gpu_price_tag.text)
+            retail_url_tag = card.select_one(self.retail_url_css_sel)
+            retail_url = retail_url_tag["href"]
+            gpu_listing = GpuListingData(
+                gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
+            )
+            gpu_listing_list.append(gpu_listing)
+        return gpu_listing_list
+
+
+class GpuListingData(pydantic.BaseModel):
+    gpu_name: str
+    gpu_price: int
+    retail_url: pydantic.AnyUrl
 
 
 class ElementDoesNotExistError(Exception):
