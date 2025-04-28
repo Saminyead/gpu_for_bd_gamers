@@ -52,9 +52,24 @@ def get_page_soup_list(
         soup_list.append(soup)
         next_page_url_elem = soup.select_one(next_page_url_sel)
         if not next_page_url_elem:
-            raise ElementDoesNotExistError(f"Unable to find next page element with selector {next_page_url_sel}")
-        next_page_url = next_page_url_elem['href']
+            raise ElementDoesNotExistError(
+                f"Unable to find next page element with selector {next_page_url_sel}"
+            )
+        next_page_url = next_page_url_elem["href"]
     return soup_list
+
+
+def get_card_list(
+    soup_list: list[BeautifulSoup],
+    card_css_sel: str,
+) -> ResultSet[Tag]:
+    """A card is a section of the page that contains all the information
+    regarding a listed GPU."""
+    card_list = []
+    for soup in soup_list:
+        card_list.extend(soup.select(card_css_sel))
+    return card_list
+
 
 class ElementDoesNotExistError(Exception):
     pass

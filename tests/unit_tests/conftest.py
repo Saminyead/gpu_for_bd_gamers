@@ -1,6 +1,8 @@
 import pytest
 import pandas as pd
 
+from bs4 import BeautifulSoup
+
 import subprocess
 import time
 from typing import Generator, Any
@@ -61,7 +63,9 @@ def gpu_unit_index() -> dict[str, dict[str, list[int]]]:
 
 
 @pytest.fixture
-def mock_server(html_pages_dir: str = "./mock_pages/", port="5000") -> Generator[None, Any, Any]:
+def mock_server(
+    html_pages_dir: str = "./mock_pages/", port="5000"
+) -> Generator[None, Any, Any]:
     proc = subprocess.Popen(
         ["python3", "-m", "http.server", "-d", html_pages_dir, port]
     )
@@ -73,3 +77,11 @@ def mock_server(html_pages_dir: str = "./mock_pages/", port="5000") -> Generator
 @pytest.fixture(scope="function")
 def no_next_page_url() -> str:
     return "http://127.0.0.1:5000/no_next_page.html"
+
+
+@pytest.fixture
+def missing_card_soup_list():
+    return [
+        BeautifulSoup('<section><div class = "card">This is a card</div></section>'),
+        BeautifulSoup("<section><div>This is not a card</div></section>"),
+    ]
