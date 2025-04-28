@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 import subprocess
 import time
@@ -88,5 +88,105 @@ def missing_card_soup_list():
         ),
         BeautifulSoup(
             "<section><div>This is not a card</div></section>", features="html.parser"
+        ),
+    ]
+
+
+@pytest.fixture
+def cards_list():
+    soup = """
+            <div class = "card">
+                    <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
+                    <li class = "gpu-price">86000</li>
+                    <li class = "product-url">https://goslinghardware.com/product/3361</li>
+            </div>
+            <div class = "card">
+                    <li class = "gpu-name">MSI Radeon RX 6700 XT</li>
+                    <li class = "gpu-price">68000</li>
+                    <li class = "product-url">https://jerryshardware.com/product/3690</li>,
+            </div>
+            <div class = "card">
+                <li class = "gpu-name">Zotac Geforce RTX 4060</li>
+                <li class = "gpu-price">48000</li>
+                <li class = "product-url">https://powerpc.com/product/3301</li>
+            </div>"""
+    card_list = BeautifulSoup(soup, features="html.parser").select("div.card")
+    return card_list
+
+
+@pytest.fixture
+def missing_gpu_name_in_card():
+    return [
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
+                <li class = "gpu-price">86000</li>
+                <li class = "product-url">https://goslinghardware.com/product/3361</li>""",
+            feautures="html.parser",
+        ),
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">MSI Radeon RX 6700 XT</li>
+                <li class = "gpu-price">68000</li>
+                <li class = "product-url">https://jerryshardware.com/product/3690</li>""",
+            feautures="html.parser",
+        ),
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-price">48000</li>
+                <li class = "product-url">https://powerpc.com/product/3301</li>""",
+            feautures="html.parser",
+        ),
+    ]
+
+
+@pytest.fixture
+def missing_gpu_price_in_card():
+    return [
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
+                <li class = "gpu-price">86000</li>
+                <li class = "product-url">https://goslinghardware.com/product/3361</li>""",
+            feautures="html.parser",
+        ),
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">MSI Radeon RX 6700 XT</li>
+                <li class = "gpu-price">68000</li>
+                <li class = "product-url">https://jerryshardware.com/product/3690</li>""",
+            feautures="html.parser",
+        ),
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">Zotac Geforce RTX 4060</li>
+                <li class = "product-url">https://powerpc.com/product/3301</li>""",
+            feautures="html.parser",
+        ),
+    ]
+
+
+@pytest.fixture
+def missing_gpu_retail_url_in_card():
+    return [
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
+                <li class = "gpu-price">86000</li>
+                <li class = "product-url">https://goslinghardware.com/product/3361</li>""",
+            feautures="html.parser",
+        ),
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">MSI Radeon RX 6700 XT</li>
+                <li class = "gpu-price">68000</li>
+                <li class = "product-url">https://jerryshardware.com/product/3690</li>""",
+            feautures="html.parser",
+        ),
+        BeautifulSoup(
+            """<div class = "card">
+                <li class = "gpu-name">Zotac Geforce RTX 4060</li>
+                <li class = "gpu-price">48000</li>""",
+            feautures="html.parser",
         ),
     ]

@@ -57,7 +57,7 @@ class GpuListingAttrs:
     gpu_price_css_sel: str
     retail_url_css_sel: str
 
-    def gpu_listing_data(self, card_list: list[Tag]):
+    def get_gpu_listing_data(self, card_list: list[Tag]):
         gpu_listing_list = []
         for card in card_list:
             gpu_name_tag = card.select_one(self.gpu_name_css_sel)
