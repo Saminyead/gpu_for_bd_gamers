@@ -3,9 +3,10 @@ from gpu4bdgamers.scraping import (
     get_page_soup_list,
     get_card_list,
     ElementDoesNotExistError,
+    GpuListingAttrs
 )
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 def test_no_next_page_url_element_does_not_exist_error(
@@ -20,3 +21,19 @@ def test_no_card_element_does_not_exist_error(
 ):
     with pytest.raises(ElementDoesNotExistError):
         get_card_list(missing_card_soup_list, "section > div.card")
+
+
+def test_gpu_name_price_retail_url_missing_does_not_exist_error(
+        missing_gpu_name_in_card: list[Tag],
+        missing_gpu_price_in_card: list[Tag],
+        missing_retail_url_in_card: list[Tag]
+):
+    gpu_list_attrs_test = GpuListingAttrs(
+        gpu_name_css_sel = "div.card > li.gpu-name", 
+        gpu_price_css_sel = "div.card > li.gpu-price",
+        retail_url_css_sel = "div.card > li.product-url"
+    )
+    with pytest.raises(ElementDoesNotExistError):
+        gpu_list_attrs_test.get_gpu_listing_data(missing_gpu_name_in_card)
+        gpu_list_attrs_test.get_gpu_listing_data(missing_gpu_price_in_card)
+        gpu_list_attrs_test.get_gpu_listing_data(missing_retail_url_in_card)
