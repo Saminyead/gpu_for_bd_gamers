@@ -61,16 +61,20 @@ class GpuListingAttrs:
         gpu_listing_list = []
         for card in card_list:
             gpu_name_tag = card.select_one(self.gpu_name_css_sel)
-            gpu_name = gpu_name_tag.text
             gpu_price_tag = card.select_one(self.gpu_name_css_sel)
-            gpu_price = int(gpu_price_tag.text)
             retail_url_tag = card.select_one(self.retail_url_css_sel)
+            if not gpu_name_tag or not gpu_price_tag or not retail_url_tag:
+                raise ElementDoesNotExistError(
+                    "Either gpu name, price or retail url does not exist."
+                )
+            gpu_name = gpu_name_tag.text
+            gpu_price = gpu_price_tag.text
             retail_url = retail_url_tag["href"]
-            gpu_listing = GpuListingData(
-                gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
-            )
-            gpu_listing_list.append(gpu_listing)
-        return gpu_listing_list
+            # gpu_listing = GpuListingData(
+            #     gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
+            # )
+            # gpu_listing_list.append(gpu_listing)
+        # return gpu_listing_list
 
 
 class GpuListingData(pydantic.BaseModel):

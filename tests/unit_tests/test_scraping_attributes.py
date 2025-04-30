@@ -29,9 +29,9 @@ def test_gpu_name_price_retail_url_missing_does_not_exist_error(
         missing_retail_url_in_card: list[Tag]
 ):
     gpu_list_attrs_test = GpuListingAttrs(
-        gpu_name_css_sel = "div.card > li.gpu-name", 
-        gpu_price_css_sel = "div.card > li.gpu-price",
-        retail_url_css_sel = "div.card > li.product-url"
+        gpu_name_css_sel = "li.gpu-name", 
+        gpu_price_css_sel = "li.gpu-price",
+        retail_url_css_sel = "li.product-url > a"
     )
     with pytest.raises(ElementDoesNotExistError):
         gpu_list_attrs_test.get_gpu_listing_data(missing_gpu_name_in_card)
