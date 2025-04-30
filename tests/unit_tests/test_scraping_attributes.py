@@ -42,5 +42,5 @@ def test_gpu_name_price_retail_url_missing_does_not_exist_error(
 def test_get_price_int_regex():
     assert get_price_int_regex("28,000") == 28000
     assert get_price_int_regex("69000") == 69000
-    assert get_price_int_regex("BDT. 50,000") == 50000
+    assert get_price_int_regex("BDT. 50000") == 50000
     assert get_price_int_regex("BDT100,000") == 100000

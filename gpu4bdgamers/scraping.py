@@ -92,3 +92,8 @@ class ElementDoesNotExistError(Exception):
 def get_price_int_regex(price_str: str):
     """Gets the price in int format from a string, whatever the format be
     e.g. 28,000 or 9000 etc"""
+    nums = re.findall(pattern = r"\d+", string = price_str)
+    nums_combined = "".join(nums)
+    return int(nums_combined)
+
+
