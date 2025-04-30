@@ -57,6 +57,7 @@ class GpuListingAttrs:
     gpu_name_css_sel: str
     gpu_price_css_sel: str
     retail_url_css_sel: str
+    retailer_name: str
 
     def get_gpu_listing_data(self, card_list: list[Tag]):
         gpu_listing_list = []
@@ -72,11 +73,27 @@ class GpuListingAttrs:
             gpu_price_str = gpu_price_tag.text
             gpu_price = get_price_int_regex(gpu_price_str)
             retail_url = retail_url_tag["href"]
-            gpu_listing = GpuListingData(
+            gpu_listing = self.handle_pydantic_validation_error_gpu_listing(
                 gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
             )
             gpu_listing_list.append(gpu_listing)
         return gpu_listing_list
+
+    def handle_pydantic_validation_error_gpu_listing(
+        self, gpu_name: str, gpu_price: str, retail_url: str
+    ):
+        try:
+            return GpuListingData(
+                gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
+            )
+        except pydantic.ValidationError as e:
+            error_details_dict = e.errors()[0]
+            raise Exception(
+                f"""While getting GPU listing attribute of {self.retailer_name}
+                we got:\n{error_details_dict['loc']=}
+                expected type of{error_details_dict['loc']} should be 
+                {error_details_dict['type']}"""
+            ) from e
 
 
 class GpuListingData(pydantic.BaseModel):
@@ -93,8 +110,19 @@ class ElementDoesNotExistError(Exception):
 def get_price_int_regex(price_str: str):
     """Gets the price in int format from a string, whatever the format be
     e.g. 28,000 or 9000 etc"""
-    nums = re.findall(pattern = r"\d+", string = price_str)
+    nums = re.findall(pattern=r"\d+", string=price_str)
     nums_combined = "".join(nums)
     return nums_combined
 
 
+def handle_pydantic_validation_error_gpu_listing(
+    gpu_name: str, gpu_price: str, retail_url: str
+):
+    try:
+        GpuListingData(gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url)
+    except pydantic.ValidationError as e:
+        error_details_dict = e.errors()[0]
+        raise Exception(
+            f"""{error_details_dict['loc']=}
+            expected type of{error_details_dict['loc']} should be {error_details_dict['type']}"""
+        ) from e
