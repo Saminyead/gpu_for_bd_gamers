@@ -3,7 +3,8 @@ from gpu4bdgamers.scraping import (
     get_page_soup_list,
     get_card_list,
     ElementDoesNotExistError,
-    GpuListingAttrs
+    GpuListingAttrs,
+    get_price_int_regex
 )
 
 from bs4 import BeautifulSoup, Tag
@@ -37,3 +38,9 @@ def test_gpu_name_price_retail_url_missing_does_not_exist_error(
         gpu_list_attrs_test.get_gpu_listing_data(missing_gpu_name_in_card)
         gpu_list_attrs_test.get_gpu_listing_data(missing_gpu_price_in_card)
         gpu_list_attrs_test.get_gpu_listing_data(missing_retail_url_in_card)
+
+def test_get_price_int_regex():
+    assert get_price_int_regex("28,000") == 28000
+    assert get_price_int_regex("69000") == 69000
+    assert get_price_int_regex("BDT. 50,000") == 50000
+    assert get_price_int_regex("BDT100,000") == 100000

@@ -1,9 +1,10 @@
 import dataclasses
 import pydantic
+import re
 
 import requests
 
-from bs4 import BeautifulSoup, ResultSet
+from bs4 import BeautifulSoup
 from bs4.element import Tag
 
 from typing import Literal
@@ -85,3 +86,9 @@ class GpuListingData(pydantic.BaseModel):
 
 class ElementDoesNotExistError(Exception):
     pass
+
+
+# probably best to move to another module
+def get_price_int_regex(price_str: str):
+    """Gets the price in int format from a string, whatever the format be
+    e.g. 28,000 or 9000 etc"""
