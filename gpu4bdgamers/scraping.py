@@ -69,13 +69,14 @@ class GpuListingAttrs:
                     "Either gpu name, price or retail url does not exist."
                 )
             gpu_name = gpu_name_tag.text
-            gpu_price = gpu_price_tag.text
+            gpu_price_str = gpu_price_tag.text
+            gpu_price = get_price_int_regex(gpu_price_str)
             retail_url = retail_url_tag["href"]
-            # gpu_listing = GpuListingData(
-            #     gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
-            # )
-            # gpu_listing_list.append(gpu_listing)
-        # return gpu_listing_list
+            gpu_listing = GpuListingData(
+                gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
+            )
+            gpu_listing_list.append(gpu_listing)
+        return gpu_listing_list
 
 
 class GpuListingData(pydantic.BaseModel):
@@ -94,6 +95,6 @@ def get_price_int_regex(price_str: str):
     e.g. 28,000 or 9000 etc"""
     nums = re.findall(pattern = r"\d+", string = price_str)
     nums_combined = "".join(nums)
-    return int(nums_combined)
+    return nums_combined
 
 
