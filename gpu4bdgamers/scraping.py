@@ -67,7 +67,7 @@ class GpuListingAttrs:
             retail_url_tag = card.select_one(self.retail_url_css_sel)
             if not gpu_name_tag or not gpu_price_tag or not retail_url_tag:
                 raise ElementDoesNotExistError(
-                    "Either gpu name, price or retail url does not exist."
+                    f"Either gpu name, price or retail url does not exist for {self.retailer_name}."
                 )
             gpu_name = gpu_name_tag.text
             gpu_price_str = gpu_price_tag.text
@@ -107,9 +107,9 @@ class ElementDoesNotExistError(Exception):
 
 
 # probably best to move to another module
-def get_price_int_regex(price_str: str):
-    """Gets the price in int format from a string, whatever the format be
-    e.g. 28,000 or 9000 etc"""
+def get_price_int_regex(price_str: str) -> str:
+    """Gets the price in a format which can be easily converted to an int.
+    e.g. 28,000 will be converted to 28000."""
     nums = re.findall(pattern=r"\d+", string=price_str)
     nums_combined = "".join(nums)
     return nums_combined
