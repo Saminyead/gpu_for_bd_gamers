@@ -87,13 +87,14 @@ class GpuListingAttrs:
                 gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
             )
         except pydantic.ValidationError as e:
-            error_details_dict = e.errors()[0]
-            raise Exception(
-                f"""While getting GPU listing attribute of {self.retailer_name}
-                we got:\n{error_details_dict['loc']=}
-                expected type of{error_details_dict['loc']} should be 
-                {error_details_dict['type']}"""
-            ) from e
+            error_details_dict_list = e.errors()
+            for error_details_dict in error_details_dict_list:
+                raise Exception(
+                    f"""While getting GPU listing attribute of {self.retailer_name}
+                    we got:\n{error_details_dict['loc']=}
+                    expected type of{error_details_dict['loc']} should be 
+                    {error_details_dict['type']}"""
+                ) from e
 
 
 class GpuListingData(pydantic.BaseModel):
