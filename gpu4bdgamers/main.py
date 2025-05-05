@@ -26,7 +26,7 @@ def main() -> None:
         SCRAPING_CONFIG_CONTENTS = toml.load(f)
 
     FIRST_PAGES:dict[str,str] = SCRAPING_CONFIG_CONTENTS['first_page_urls']
-    CARD_CSS_SELECTORS:dict[str,str] = SCRAPING_CONFIG_CONTENTS['card_css_selectors']
+    CARD_CSS_SELECTORS:dict[str,str] = SCRAPING_CONFIG_CONTENTS['card_sels']
 
     LOGGER = setup_logging(
         log_dir=LOGS_DIR,
