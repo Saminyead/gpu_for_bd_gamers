@@ -4,10 +4,12 @@ from gpu4bdgamers.scraping import (
     get_card_list,
     ElementDoesNotExistError,
     GpuListingAttrs,
+    GpuListingData,
     get_price_int_regex,
 )
 
 from bs4 import BeautifulSoup, Tag
+import pydantic
 
 
 def test_no_next_page_url_element_does_not_exist_error(
@@ -22,6 +24,33 @@ def test_no_card_element_does_not_exist_error(
 ):
     with pytest.raises(ElementDoesNotExistError):
         get_card_list(missing_card_soup_list, "section > div.card")
+
+
+def test_get_gpu_listing_data(no_missing_in_card: list[Tag]):
+    gpu_list_attrs_test = GpuListingAttrs(
+        gpu_name_css_sel="li.gpu-name",
+        gpu_price_css_sel="li.gpu-price",
+        retail_url_css_sel="li.product-url > a",
+        retailer_name="Jerry's Hardware",
+    )
+    gpu_listing_data = gpu_list_attrs_test.get_gpu_listing_data(no_missing_in_card)
+    assert gpu_listing_data == [
+        GpuListingData(
+            gpu_name="Asus ROG Geforce RTX 3080",
+            gpu_price=86000,
+            retail_url=pydantic.AnyUrl("https://goslinghardware.com/product/3361"),
+        ),
+        GpuListingData(
+            gpu_name="MSI Radeon RX 6700 XT",
+            gpu_price=68000,
+            retail_url=pydantic.AnyUrl("https://jerryshardware.com/product/3690"),
+        ),
+        GpuListingData(
+            gpu_name="Zotac Geforce RTX 4060",
+            gpu_price=48000,
+            retail_url=pydantic.AnyUrl("https://powerpc.com/product/3301"),
+        ),
+    ]
 
 
 def test_gpu_name_price_retail_url_missing_does_not_exist_error(
@@ -59,3 +88,6 @@ def test_get_price_int_regex():
     assert get_price_int_regex("69000") == "69000"
     assert get_price_int_regex("BDT. 50000") == "50000"
     assert get_price_int_regex("BDT100,000") == "100000"
+
+
+# TODO: need to add a test where all the texts are complete

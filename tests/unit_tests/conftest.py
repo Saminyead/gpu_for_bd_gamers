@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, Tag, ResultSet
 
 import subprocess
 import time
@@ -93,7 +93,29 @@ def missing_card_soup_list():
 
 
 @pytest.fixture
-def missing_gpu_name_in_card():
+def no_missing_in_card() -> ResultSet[Tag] | list[Tag]:
+    soup = """
+            <div class = "card">
+                    <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
+                    <li class = "gpu-price">86000</li>
+                    <li class = "product-url"><a href="https://goslinghardware.com/product/3361">Buy Now</a></li>
+            </div>
+            <div class = "card">
+                    <li class = "gpu-name">MSI Radeon RX 6700 XT</li>
+                    <li class = "gpu-price">68000</li>
+                    <li class = "product-url"><a href="https://jerryshardware.com/product/3690">Buy Now</a></li>,
+            </div>
+            <div class = "card">
+                <li class = "gpu-name">Zotac Geforce RTX 4060</li>
+                <li class = "gpu-price">48000</li>
+                <li class = "product-url"><a href="https://powerpc.com/product/3301">Buy Now</a></li>
+            </div>"""
+    card_list = BeautifulSoup(soup, features="html.parser").select("div.card")
+    return card_list
+
+
+@pytest.fixture
+def missing_gpu_name_in_card() -> ResultSet[Tag] | list[Tag]:
     soup = """
             <div class = "card">
                     <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
@@ -114,7 +136,7 @@ def missing_gpu_name_in_card():
 
 
 @pytest.fixture
-def missing_gpu_price_in_card():
+def missing_gpu_price_in_card() -> ResultSet[Tag] | list[Tag]:
     soup = """
             <div class = "card">
                     <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
@@ -135,7 +157,7 @@ def missing_gpu_price_in_card():
 
 
 @pytest.fixture
-def missing_retail_url_in_card():
+def missing_retail_url_in_card() -> ResultSet[Tag] | list[Tag]:
     soup = """
             <div class = "card">
                     <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>
@@ -156,7 +178,7 @@ def missing_retail_url_in_card():
 
 
 @pytest.fixture
-def missing_multipe_in_card():
+def missing_multipe_in_card() -> ResultSet[Tag] | list[Tag]:
     soup = """
             <div class = "card">
                     <li class = "gpu-name">Asus ROG Geforce RTX 3080</li>

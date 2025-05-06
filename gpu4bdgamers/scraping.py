@@ -59,11 +59,11 @@ class GpuListingAttrs:
     retail_url_css_sel: str
     retailer_name: str
 
-    def get_gpu_listing_data(self, card_list: list[Tag]):
+    def get_gpu_listing_data(self, card_list: list[Tag]) -> list["GpuListingData"]:
         gpu_listing_list = []
         for card in card_list:
             gpu_name_tag = card.select_one(self.gpu_name_css_sel)
-            gpu_price_tag = card.select_one(self.gpu_name_css_sel)
+            gpu_price_tag = card.select_one(self.gpu_price_css_sel)
             retail_url_tag = card.select_one(self.retail_url_css_sel)
             if not gpu_name_tag or not gpu_price_tag or not retail_url_tag:
                 raise ElementDoesNotExistError(
