@@ -19,3 +19,51 @@ nexusbd = "div.ut2-gl__body"
 techlandbd = "div.product-thumb"
 uccbd = "div.product-thumb"
 skyland = "div.product-thumb"
+
+[gpu_listing_attrs]
+
+[ryans]
+gpu_name_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a'
+gpu_price_css_sel = 'a.pr-text.cat-sp-text.pb-1'
+retailer_name = 'Ryans Computer'
+
+[startech]
+gpu_name_css_sel = 'h4.p-item-name > a'
+gpu_price_css_sel = 'div.p-item-price > span'
+retailer_name = 'Startech Engineering'
+
+[techlandbd]
+gpu_name_css_sel = 'div.name > a'
+gpu_price_css_sel = 'div.price > div > span'
+retailer_name = 'Tech Land BD'
+
+[skyland]
+gpu_name_css_sel = 'div.name > a'
+gpu_price_css_sel = 'div.price > div > span'
+retailer_name = 'Skyland Computer Bd'
+
+[ultratech]
+gpu_name_css_sel = 'div.name > a'
+gpu_price_css_sel = 'div.price > div > span'
+retailer_name = 'Ultra Technology'
+
+[nexusbd]
+gpu_name_css_sel = 'h2 > a.product-title'
+gpu_price_css_sel = 'span.ty-price > bdi > span ~ span'
+retailer_name = 'Nexus Technology'
+
+[globalbrand]
+gpu_name_css_sel = 'div.name > a'
+gpu_price_css_sel = 'div.price > div > span'
+retailer_name = 'Global Brand'
+
+[uccbd]
+gpu_name_css_sel = 'div.caption > div.name > a'
+gpu_price_css_sel = 'div.price > div > span'
+retailer_name = 'UCC-BD'
+
+[creatus]
+gpu_name_css_sel = 'div.caption > div.name > a'
+gpu_price_css_sel = 'div.price > div > span'
+retailer_name = 'Creatus Computer'
+
