@@ -15,6 +15,7 @@ import sqlalchemy
 
 def test_get_master_df(
     scraping_config_test_file_path: pathlib.Path,
+    mock_retailer_server: None,
     mock_master_df: pd.DataFrame
 ):
     master_df_test = get_master_df(scraping_config_file=scraping_config_test_file_path)

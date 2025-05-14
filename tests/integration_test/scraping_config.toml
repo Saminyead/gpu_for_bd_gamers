@@ -1,21 +1,52 @@
 [first_page_urls]
-ryans = "https://www.ryans.com/category/desktop-component-graphics-card?limit=100&sort=LH&osp=1&st=0"
+ryans = "http://localhost:5000/ryans"
+startech = "http://localhost:5000/startech"
+techlandbd = "http://localhost:5000/techlandbd"
+binary_logic = "http://localhost:5000/binary_logic"
+globalbrand = "http://localhost:5000/globalbrand"
 
 [card_sels]
-ryans = "div.card-body.text-center"
+ryans = "div.product-thumb"
+startech = "div.product-div"
+techlandbd = "div.product-thumb"
+binary_logic = "div.gpu-card"
+globalbrand = "div.gpu-card"
 
 [next_page_url_sels]
-ryans = "div.card.h-100"
-startech = "div.p-item-details"
+ryans = "div.next"
+startech = "div.next"
+techlandbd = "div.next"
+binary_logic = "span#next-pg > a"
+globalbrand = "span#next-pg > a"
 
 [gpu_listing_attrs]
 
 [ryans]
-gpu_name_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a'
-gpu_price_css_sel = 'a.pr-text.cat-sp-text.pb-1'
+gpu_name_css_sel = 'p.product-name > a'
+gpu_price_css_sel = 'p.gpu-price'
+retail_url_css_sel = 'p.product-name > a'
 retailer_name = 'Ryans Computer'
 
 [startech]
-gpu_name_css_sel = 'h4.p-item-name > a'
-gpu_price_css_sel = 'div.p-item-price > span'
+gpu_name_css_sel = 'p.product-name > a'
+gpu_price_css_sel = 'p.product-price'
+retail_url_css_sel = 'p.product-name > a'
 retailer_name = 'Startech Engineering'
+
+[techlandbd]
+gpu_name_css_sel = 'li.product-name > a'
+gpu_price_css_sel = 'li.gpu-price'
+retail_url_css_sel = 'li.product-name > a'
+retailer_name = 'TechLand BD'
+
+[binary_logic]
+gpu_name_css_sel = 'p.gpu-name > a'
+gpu_price_css_sel = 'p.gpu-price'
+retail_url_css_sel = 'p.gpu-name > a'
+retailer_name = 'Binary Logic'
+
+[globalbrand]
+gpu_name_css_sel = 'p.gpu-name > a'
+gpu_price_css_sel = 'p.gpu-price'
+retail_url_css_sel = 'p.gpu-name > a'
+retailer_name = 'Global Brand'

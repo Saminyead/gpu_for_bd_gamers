@@ -1,8 +1,9 @@
-import pandas as pd
-
 import pytest
 
 import pandas as pd
+
+import subprocess
+import time
 
 import pathlib
 from logging import RootLogger
@@ -28,6 +29,14 @@ def scraping_config_test_file_path(
     filepath: pathlib.Path | str = CURRENT_DIR / "scraping_config.toml",
 ):
     return filepath
+
+
+@pytest.fixture
+def mock_retailer_server(server_path: pathlib.Path = CURRENT_DIR / "mock_retailers"):
+    proc = subprocess.Popen(["python3", "-m", "http.server", "-d", server_path, "5000"])
+    time.sleep(1)
+    yield proc
+    proc.kill()
 
 
 @pytest.fixture
