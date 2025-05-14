@@ -20,50 +20,70 @@ techlandbd = "div.product-thumb"
 uccbd = "div.product-thumb"
 skyland = "div.product-thumb"
 
+[next_page_url_sels]
+ryans = "div.card.h-100"
+startech = "div.p-item-details"
+creatus = "div.product-thumb"
+globalbrand = "div.product-thumb"
+ultratech = "div.product-thumb"
+nexusbd = "div.ut2-gl__body"
+techlandbd = "div.product-thumb"
+uccbd = "div.product-thumb"
+skyland = "div.product-thumb"
+
 [gpu_listing_attrs]
 
 [ryans]
 gpu_name_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a'
 gpu_price_css_sel = 'a.pr-text.cat-sp-text.pb-1'
+retail_url_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a'
 retailer_name = 'Ryans Computer'
 
 [startech]
 gpu_name_css_sel = 'h4.p-item-name > a'
 gpu_price_css_sel = 'div.p-item-price > span'
+retail_url_css_sel = 'h4.p-item-name > a'
 retailer_name = 'Startech Engineering'
 
 [techlandbd]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
+retail_url_css_sel = 'div.name > a'
 retailer_name = 'Tech Land BD'
 
 [skyland]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
+retail_url_css_sel = 'div.name > a'
 retailer_name = 'Skyland Computer Bd'
 
 [ultratech]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
+retail_url_css_sel = 'div.name > a'
 retailer_name = 'Ultra Technology'
 
 [nexusbd]
 gpu_name_css_sel = 'h2 > a.product-title'
 gpu_price_css_sel = 'span.ty-price > bdi > span ~ span'
+retail_url_css_sel = 'h2 > a.product-title'
 retailer_name = 'Nexus Technology'
 
 [globalbrand]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
+retail_url_css_sel = 'div.name > a'
 retailer_name = 'Global Brand'
 
 [uccbd]
 gpu_name_css_sel = 'div.caption > div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
+retail_url_css_sel = 'div.caption > div.name > a'
 retailer_name = 'UCC-BD'
 
 [creatus]
 gpu_name_css_sel = 'div.caption > div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
+retail_url_css_sel = 'div.caption > div.name > a'
 retailer_name = 'Creatus Computer'
 
