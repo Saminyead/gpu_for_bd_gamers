@@ -2,6 +2,7 @@ from logging import RootLogger
 import pathlib
 import pytest
 
+from gpu4bdgamers.master_df import get_master_df
 from gpu4bdgamers.data_coll_script import (
     data_collection_to_df, data_collection_to_db
 )
@@ -11,6 +12,14 @@ import pandas as pd
 import pandas.testing as pdt
 import sqlalchemy
 
+
+def test_get_master_df(
+    scraping_config_test_file_path: pathlib.Path,
+    mock_master_df: pd.DataFrame
+):
+    master_df_test = get_master_df(scraping_config_file=scraping_config_test_file_path)
+    assert master_df_test == mock_master_df
+    
 
 def test_push_to_db_no_today_data_tables(
         mock_master_df: pd.DataFrame,
