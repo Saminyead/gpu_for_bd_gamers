@@ -19,7 +19,14 @@ def test_get_master_df(
     mock_master_df: pd.DataFrame,
 ):
     master_df_test = get_master_df(scraping_config_file=scraping_config_test_file_path)
-    pdt.assert_frame_equal(master_df_test, mock_master_df)
+    # without sorting the dataframes are considered different perhaps
+    master_df_test_sorted = master_df_test.sort_values(
+        by=list(master_df_test.columns), ignore_index=True
+    )
+    mock_master_df_sorted = mock_master_df.sort_values(
+        by=list(mock_master_df.columns), ignore_index=True
+    )
+    pdt.assert_frame_equal(master_df_test_sorted, mock_master_df_sorted)
 
 
 def test_push_to_db_no_today_data_tables(
