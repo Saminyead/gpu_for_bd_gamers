@@ -13,39 +13,35 @@ binary_logic = "div.gpu-card"
 globalbrand = "div.gpu-card"
 
 [next_page_url_sels]
-ryans = "div.next"
-startech = "div.next"
-techlandbd = "div.next"
 binary_logic = "span#next-pg > a"
 globalbrand = "span#next-pg > a"
 
-[gpu_listing_attrs]
 
-[ryans]
+[gpu_listing_attrs.ryans]
 gpu_name_css_sel = 'p.product-name > a'
 gpu_price_css_sel = 'p.gpu-price'
 retail_url_css_sel = 'p.product-name > a'
 retailer_name = 'Ryans Computer'
 
-[startech]
+[gpu_listing_attrs.startech]
 gpu_name_css_sel = 'p.product-name > a'
 gpu_price_css_sel = 'p.product-price'
 retail_url_css_sel = 'p.product-name > a'
 retailer_name = 'Startech Engineering'
 
-[techlandbd]
+[gpu_listing_attrs.techlandbd]
 gpu_name_css_sel = 'li.product-name > a'
 gpu_price_css_sel = 'li.gpu-price'
 retail_url_css_sel = 'li.product-name > a'
 retailer_name = 'TechLand BD'
 
-[binary_logic]
+[gpu_listing_attrs.binary_logic]
 gpu_name_css_sel = 'p.gpu-name > a'
 gpu_price_css_sel = 'p.gpu-price'
 retail_url_css_sel = 'p.gpu-name > a'
 retailer_name = 'Binary Logic'
 
-[globalbrand]
+[gpu_listing_attrs.globalbrand]
 gpu_name_css_sel = 'p.gpu-name > a'
 gpu_price_css_sel = 'p.gpu-price'
 retail_url_css_sel = 'p.gpu-name > a'

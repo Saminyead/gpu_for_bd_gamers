@@ -39,16 +39,19 @@ def test_get_gpu_listing_data(no_missing_in_card: list[Tag]):
             gpu_name="Asus ROG Geforce RTX 3080",
             gpu_price=86000,
             retail_url=pydantic.AnyUrl("https://goslinghardware.com/product/3361"),
+            retailer_name="Jerry's Hardware"
         ),
         GpuListingData(
             gpu_name="MSI Radeon RX 6700 XT",
             gpu_price=68000,
             retail_url=pydantic.AnyUrl("https://jerryshardware.com/product/3690"),
+            retailer_name="Jerry's Hardware"
         ),
         GpuListingData(
             gpu_name="Zotac Geforce RTX 4060",
             gpu_price=48000,
             retail_url=pydantic.AnyUrl("https://powerpc.com/product/3301"),
+            retailer_name="Jerry's Hardware"
         ),
     ]
 
