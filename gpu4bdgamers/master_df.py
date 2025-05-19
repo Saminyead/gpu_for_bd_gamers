@@ -2,6 +2,7 @@ from gpu4bdgamers.scraping import (
     get_page_soup_list,
     get_card_list,
     GpuListingAttrs,
+    GpuListingData
 )
 import pandas as pd
 from datetime import datetime
@@ -34,9 +35,18 @@ def get_master_df(scraping_config_file: str | Path):
     all_gpu_listing_data = [
         gpu_listing_data.model_dump() for gpu_listing_data in all_gpu_listing_data
     ]
-    df = pd.DataFrame(all_gpu_listing_data)
+    df = create_df_from_gpu_listing_data(all_gpu_listing_data)
+    return df
+
+
+def create_df_from_gpu_listing_data(
+    gpu_listing_data_list: list[GpuListingData],
+    date_col_pos: int = 3,
+    date_col_name="data_collection_date",
+) -> pd.DataFrame:
+    df = pd.DataFrame(gpu_listing_data_list)
+    # needs to be converted to string from AnyUrl for compatibility with database
     df["retail_url"] = df["retail_url"].apply(lambda x: str(x))
     date_col = [datetime.today().strftime("%Y-%m-%d")] * len(df)
-    # TODO: move another function. The following line has a magic number and I have a bad feeling about this
-    df.insert(loc=3, column="data_collection_date", value=date_col)
+    df.insert(loc=date_col_pos, column=date_col_name, value=date_col)
     return df
