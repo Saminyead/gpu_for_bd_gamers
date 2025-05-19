@@ -27,7 +27,7 @@ retailer_name = 'Ryans Computer'
 gpu_name_css_sel = 'p.product-name > a'
 gpu_price_css_sel = 'p.product-price'
 retail_url_css_sel = 'p.product-name > a'
-retailer_name = 'Startech Engineering'
+retailer_name = 'Startech Bangladesh'
 
 [gpu_listing_attrs.techlandbd]
 gpu_name_css_sel = 'li.product-name > a'

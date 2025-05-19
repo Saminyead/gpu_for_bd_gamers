@@ -7,11 +7,9 @@ import requests
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
-from typing import Literal
-
 
 def get_page_soup_list(
-    first_page_url: str, next_page_url_sel: str
+    first_page_url: str, next_page_url_sel: str | None = None
 ) -> list[BeautifulSoup]:
     """Starting from the first page, this function will navigate through
     all the GPU listing pages of a retailer website by finding the next
@@ -19,16 +17,24 @@ def get_page_soup_list(
     BeautifulSoup objects of the contents of the pages."""
     soup_list = []
     next_page_url = first_page_url
+    i = 0  # to check if next_page_url_elem exists in the first page
+    # if next_page_url_elem does not exist in the latter pages, it means
+    # we will have reached the last page
     while next_page_url:
         page_content = requests.get(next_page_url).content
         soup = BeautifulSoup(page_content, features="html.parser")
         soup_list.append(soup)
+        if not next_page_url_sel:
+            break
         next_page_url_elem = soup.select_one(next_page_url_sel)
-        if not next_page_url_elem:
+        if i == 0 and not next_page_url_elem:
             raise ElementDoesNotExistError(
                 f"Unable to find next page element with selector {next_page_url_sel}"
             )
+        if not next_page_url_elem:  # for when we reach the last page
+            break
         next_page_url = next_page_url_elem["href"]
+        i += 1
     return soup_list
 
 
@@ -74,17 +80,23 @@ class GpuListingAttrs:
             gpu_price = get_price_int_regex(gpu_price_str)
             retail_url = retail_url_tag["href"]
             gpu_listing = self.handle_pydantic_validation_error_gpu_listing(
-                gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
+                gpu_name=gpu_name,
+                gpu_price=gpu_price,
+                retail_url=retail_url,
+                retailer_name=self.retailer_name,
             )
             gpu_listing_list.append(gpu_listing)
         return gpu_listing_list
 
     def handle_pydantic_validation_error_gpu_listing(
-        self, gpu_name: str, gpu_price: str, retail_url: str
+        self, gpu_name: str, gpu_price: str, retail_url: str, retailer_name: str
     ):
         try:
             return GpuListingData(
-                gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url
+                gpu_name=gpu_name,
+                gpu_price=gpu_price,
+                retail_url=retail_url,
+                retailer_name=retailer_name,
             )
         except pydantic.ValidationError as e:
             error_details_dict_list = e.errors()
@@ -101,6 +113,7 @@ class GpuListingData(pydantic.BaseModel):
     gpu_name: str
     gpu_price: int
     retail_url: pydantic.AnyUrl
+    retailer_name: str
 
 
 class ElementDoesNotExistError(Exception):
@@ -117,13 +130,19 @@ def get_price_int_regex(price_str: str) -> str:
 
 
 def handle_pydantic_validation_error_gpu_listing(
-    gpu_name: str, gpu_price: str, retail_url: str
+    gpu_name: str, gpu_price: str, retail_url: str, retailer_name: str
 ):
     try:
-        GpuListingData(gpu_name=gpu_name, gpu_price=gpu_price, retail_url=retail_url)
+        GpuListingData(
+            gpu_name=gpu_name,
+            gpu_price=gpu_price,
+            retail_url=retail_url,
+            retailer_name=retailer_name,
+        )
     except pydantic.ValidationError as e:
         error_details_dict = e.errors()[0]
         raise Exception(
             f"""{error_details_dict['loc']=}
-            expected type of{error_details_dict['loc']} should be {error_details_dict['type']}"""
+            expected type of{error_details_dict['loc']} should be 
+            {error_details_dict['type']}"""
         ) from e
