@@ -4,7 +4,7 @@ startech = "https://www.startech.com.bd/component/graphics-card?filter_status=7&
 creatus = "https://creatuscomputer.com/components/graphics-card?sort=p.price&order=ASC&fq=1&fmin=3000&fmax=300000&limit=100"
 globalbrand = "https://www.globalbrand.com.bd/graphics-card?sort=p.price&order=ASC&limit=100&fmin=1000"
 ultratech = "https://www.ultratech.com.bd/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
-nexusbd = "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=64&features_hash=13-Y"
+nexusbd = "https://www.nexus.com.bd/graphics-card/?sort_by=price&sort_order=asc&layout=products_multicolumns&items_per_page=128&features_hash=2-10-430000-"
 techlandbd = "https://www.techlandbd.com/pc-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
 uccbd = "https://www.ucc.com.bd/category-store/computer-components/graphics-card?sort=p.price&order=ASC&fq=1&limit=100"
 skyland = "https://www.skyland.com.bd/components/graphics-card?sort=p.price&order=ASC&limit=100&fq=1"
@@ -21,67 +21,62 @@ uccbd = "div.product-thumb"
 skyland = "div.product-thumb"
 
 [next_page_url_sels]
-ryans = "div.card.h-100"
-startech = "div.p-item-details"
-creatus = "div.product-thumb"
-globalbrand = "div.product-thumb"
-ultratech = "div.product-thumb"
-nexusbd = "div.ut2-gl__body"
-techlandbd = "div.product-thumb"
-uccbd = "div.product-thumb"
-skyland = "div.product-thumb"
+startech = "ul.pagination>li.active~li~li>a"
+creatus = "li>a.next"
+ultratech = "li>a.next"
+nexusbd = "a.ty-pagination__next"
+techlandbd = "li>a.next"
+skyland = "li>a.next"
 
-[gpu_listing_attrs]
-
-[ryans]
+[gpu_listing_attrs.ryans]
 gpu_name_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a'
 gpu_price_css_sel = 'a.pr-text.cat-sp-text.pb-1'
 retail_url_css_sel = 'p.card-text.p-0.m-0.grid-view-text > a'
 retailer_name = 'Ryans Computer'
 
-[startech]
+[gpu_listing_attrs.startech]
 gpu_name_css_sel = 'h4.p-item-name > a'
 gpu_price_css_sel = 'div.p-item-price > span'
 retail_url_css_sel = 'h4.p-item-name > a'
 retailer_name = 'Startech Engineering'
 
-[techlandbd]
+[gpu_listing_attrs.techlandbd]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
 retail_url_css_sel = 'div.name > a'
 retailer_name = 'Tech Land BD'
 
-[skyland]
+[gpu_listing_attrs.skyland]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
 retail_url_css_sel = 'div.name > a'
 retailer_name = 'Skyland Computer Bd'
 
-[ultratech]
+[gpu_listing_attrs.ultratech]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
 retail_url_css_sel = 'div.name > a'
 retailer_name = 'Ultra Technology'
 
-[nexusbd]
+[gpu_listing_attrs.nexusbd]
 gpu_name_css_sel = 'h2 > a.product-title'
 gpu_price_css_sel = 'span.ty-price > bdi > span ~ span'
 retail_url_css_sel = 'h2 > a.product-title'
 retailer_name = 'Nexus Technology'
 
-[globalbrand]
+[gpu_listing_attrs.globalbrand]
 gpu_name_css_sel = 'div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
 retail_url_css_sel = 'div.name > a'
 retailer_name = 'Global Brand'
 
-[uccbd]
+[gpu_listing_attrs.uccbd]
 gpu_name_css_sel = 'div.caption > div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
 retail_url_css_sel = 'div.caption > div.name > a'
 retailer_name = 'UCC-BD'
 
-[creatus]
+[gpu_listing_attrs.creatus]
 gpu_name_css_sel = 'div.caption > div.name > a'
 gpu_price_css_sel = 'div.price > div > span'
 retail_url_css_sel = 'div.caption > div.name > a'

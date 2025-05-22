@@ -2,8 +2,9 @@ import os
 from dotenv import load_dotenv
 
 from gpu4bdgamers.data_coll_script import (
-    get_master_df,data_collection_to_df, data_collection_to_db
+    data_collection_to_df, data_collection_to_db
 )
+from gpu4bdgamers.master_df import get_master_df
 
 import toml
 from gpu4bdgamers.dirs import (
@@ -21,23 +22,12 @@ def main() -> None:
     load_dotenv()
     db_url = os.getenv("db_url_new")
 
-    # --constants
-    with open(SCRAPING_CONFIG_FILE,'r') as f:
-        SCRAPING_CONFIG_CONTENTS = toml.load(f)
-
-    FIRST_PAGES:dict[str,str] = SCRAPING_CONFIG_CONTENTS['first_page_urls']
-    CARD_CSS_SELECTORS:dict[str,str] = SCRAPING_CONFIG_CONTENTS['card_sels']
-
     LOGGER = setup_logging(
         log_dir=LOGS_DIR,
         log_filename="gpu_data_coll_script.log"
     )
     
-    master_df = get_master_df(
-        first_pg_links=FIRST_PAGES,
-        card_css_selectors=CARD_CSS_SELECTORS,
-        logger=LOGGER
-    )
+    master_df = get_master_df(SCRAPING_CONFIG_FILE)
 
     df_dict = data_collection_to_df(
         master_df,
