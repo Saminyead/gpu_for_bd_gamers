@@ -17,3 +17,4 @@ temp*
 qnd.py
 *.db
 *.~lock*
+ci_local/*
