@@ -120,7 +120,7 @@ def test_get_gpu_listing_data_one_missing(
     ]
 
 
-def test_gpu_name_price_retail_url_missing_does_not_exist_error(
+def test_wrong_tag_name_elem_does_not_exist_error(
     no_missing_in_card: list[Tag],
 ):
     gpu_list_attrs_test = GpuListingAttrs(
@@ -133,7 +133,7 @@ def test_gpu_name_price_retail_url_missing_does_not_exist_error(
         gpu_list_attrs_test.get_gpu_listing_data(no_missing_in_card)
 
 
-def test_multiple_gpu_attrs_missing_does_not_exist_error(
+def test_multiple_gpu_attrs_missing(
     missing_multipe_in_card: list[Tag],
 ):
     gpu_list_attrs_test = GpuListingAttrs(
@@ -142,8 +142,17 @@ def test_multiple_gpu_attrs_missing_does_not_exist_error(
         retail_url_css_sel="li.product-url > a",
         retailer_name="Jerry's Hardware",
     )
-    with pytest.raises(ElementDoesNotExistError):
-        gpu_list_attrs_test.get_gpu_listing_data(missing_multipe_in_card)
+    gpu_listing_data_multi_missing = gpu_list_attrs_test.get_gpu_listing_data(
+        missing_multipe_in_card
+    )
+    assert gpu_listing_data_multi_missing == [
+        GpuListingData(
+            gpu_name="Zotac Geforce RTX 4060",
+            gpu_price=48000,
+            retail_url=pydantic.AnyUrl("https://powerpc.com/product/3301"),
+            retailer_name="Jerry's Hardware",
+        ),
+    ]
 
 
 def test_get_price_int_regex():
