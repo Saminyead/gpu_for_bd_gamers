@@ -72,9 +72,7 @@ class GpuListingAttrs:
             gpu_price_tag = card.select_one(self.gpu_price_css_sel)
             retail_url_tag = card.select_one(self.retail_url_css_sel)
             if not gpu_name_tag or not gpu_price_tag or not retail_url_tag:
-                raise ElementDoesNotExistError(
-                    f"Either gpu name, price or retail url does not exist for {self.retailer_name}."
-                )
+                continue
             gpu_name = gpu_name_tag.text
             gpu_price_str = gpu_price_tag.text
             gpu_price = get_price_int_regex(gpu_price_str)
@@ -85,7 +83,13 @@ class GpuListingAttrs:
                 retail_url=retail_url,
                 retailer_name=self.retailer_name,
             )
+            if not gpu_listing:
+                continue
             gpu_listing_list.append(gpu_listing)
+        if not gpu_listing_list: 
+            raise ElementDoesNotExistError(
+                f"Either gpu name, price or retail url does not exist for {self.retailer_name}."
+            )
         return gpu_listing_list
 
     def handle_pydantic_validation_error_gpu_listing(
@@ -99,15 +103,7 @@ class GpuListingAttrs:
                 retailer_name=retailer_name,
             )
         except pydantic.ValidationError as e:
-            error_details_dict_list = e.errors()
-            for error_details_dict in error_details_dict_list:
-                raise Exception(
-                    f"""While getting GPU listing attribute of {self.retailer_name}
-                    we got:\n{error_details_dict['loc']=}
-                    expected type of{error_details_dict['loc']} should be 
-                    {error_details_dict['type']}"""
-                ) from e
-
+            return
 
 class GpuListingData(pydantic.BaseModel):
     gpu_name: str
