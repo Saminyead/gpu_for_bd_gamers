@@ -34,7 +34,9 @@ def get_master_df(scraping_config_file: str | Path, logger: Logger):
         logger.info(f"Number of cards for {retailer} = {len(card_list)}")
         gpu_listing_data = gpu_listing_attrs.get_gpu_listing_data(card_list)
         all_gpu_listing_data.extend(gpu_listing_data)
-        logger.info(f"Total number of gpu's found for {retailer} = {len(gpu_listing_data)}")
+        logger.info(
+            f"Total number of gpu's found for {retailer} = {len(gpu_listing_data)}"
+        )
 
     all_gpu_listing_data_dict = [
         gpu_listing_data.model_dump() for gpu_listing_data in all_gpu_listing_data

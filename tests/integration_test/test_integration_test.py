@@ -1,4 +1,4 @@
-from logging import RootLogger
+from logging import RootLogger, Logger
 import pathlib
 import pytest
 
@@ -19,7 +19,10 @@ def test_get_master_df(
     mock_retailer_server: None,
     mock_master_df: pd.DataFrame,
 ):
-    master_df_test = get_master_df(scraping_config_file=scraping_config_test_file_path)
+    master_df_test = get_master_df(
+        scraping_config_file=scraping_config_test_file_path,
+        logger=Logger(name="some logger"),
+    )
     # without sorting the dataframes are considered different perhaps
     master_df_test_sorted = master_df_test.sort_values(
         by=list(master_df_test.columns), ignore_index=True
