@@ -17,7 +17,7 @@ import math
 from gpu4bdgamers.logger import setup_logging
 from gpu4bdgamers.overall_tier_score import df_overall_tier_score
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
-from gpu4bdgamers.gpu_units import add_gpu_unit_name
+from gpu4bdgamers.naming import add_gpu_unit_name
 
 import pathlib
 
@@ -289,11 +289,6 @@ def data_collection_to_df(
     geforce_gpu_df = add_gpu_unit_name(master_df,geforce_gpu_unit_list,'Geforce')
     geforce_gpu_df.reset_index(drop=True,inplace=True)
 
-    # GTX 1050 Ti are written in varying formats across websites (e.g. GTX 1050ti, GTX 1050 Ti, GTX1050Ti)
-    # and there are no GTX 1050's available, so it is just easier to make a separate dataframe for it
-    df_1050_ti = master_df.loc[master_df['gpu_name'].str.contains('1050')].copy()
-    df_1050_ti['gpu_unit_name'] = 'Geforce GTX 1050 Ti'
-
     def gddr5_vs_gddr6_1650(gpu_1650):
         """since there are both gddr5 and gddr6 versions of the GTX 1650 with significant performance difference,
         this function distinguishes between them (to be applied with the .apply() method in dataframe)
@@ -366,7 +361,7 @@ def data_collection_to_df(
     ] = intel_arc_gpu_df['gpu_name'].apply(arc_a770_8_vs_16)
 
     # all graphics cards of interest
-    gpu_of_interest_df = pd.concat([geforce_gpu_df,radeon_gpu_df,intel_arc_gpu_df,df_1050_ti])
+    gpu_of_interest_df = pd.concat([geforce_gpu_df,radeon_gpu_df,intel_arc_gpu_df])
     gpu_of_interest_df.reset_index(drop=True,inplace=True)
 
     logger.info(f'gpu_of_interest_df created with {len(gpu_of_interest_df)} entries')
