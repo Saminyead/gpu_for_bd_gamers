@@ -1,8 +1,10 @@
 from gpu4bdgamers.scraping import (
     get_page_soup_list,
     get_card_list,
+    retry_with_scraperapi,
     GpuListingAttrs,
     GpuListingData,
+    ElementDoesNotExistError,
 )
 import pandas as pd
 from datetime import datetime
@@ -11,13 +13,17 @@ from pathlib import Path
 from logging import Logger
 
 
-def get_master_df(scraping_config_file: str | Path, logger: Logger):
+def get_master_df(
+    scraping_config_file: str | Path,
+    logger: Logger,
+    scraperapi_api_key: str | None = None,
+):
     toml_content = toml.load(scraping_config_file)
     first_page_url_dict = toml_content["first_page_urls"]
     card_sel_dict = toml_content["card_sels"]
     next_page_url_sel_dict = toml_content["next_page_url_sels"]
-    retailer_keyword_list = [key for key in first_page_url_dict.keys()]
     gpu_listing_attributes_dict = toml_content["gpu_listing_attrs"]
+    retailer_keyword_list = [key for key in first_page_url_dict.keys()]
     all_gpu_listing_data = []
 
     for retailer in retailer_keyword_list:
@@ -30,8 +36,23 @@ def get_master_df(scraping_config_file: str | Path, logger: Logger):
         gpu_listing_attrs = GpuListingAttrs(**gpu_listing_attrs_retailer)
         page_soup_list = get_page_soup_list(first_page_url, next_page_url)
         logger.info(f"Number of pages for {retailer} = {len(page_soup_list)}")
-        card_list = get_card_list(page_soup_list, card_css_sel)
-        logger.info(f"Number of cards for {retailer} = {len(card_list)}")
+        try:
+            card_list = get_card_list(page_soup_list, card_css_sel)
+            logger.info(f"Number of cards for {retailer} = {len(card_list)}")
+        except ElementDoesNotExistError:
+            page_soup_list = get_page_soup_list(
+                first_page_url,
+                next_page_url,
+                request_func=retry_with_scraperapi,
+                scraperapi_api_key=scraperapi_api_key,
+            )
+            logger.info(
+                f"Number of pages after retrying with scraperapi for {retailer} = {len(page_soup_list)}"
+            )
+            card_list = get_card_list(page_soup_list, card_css_sel)
+            logger.info(
+                f"Number of cards after retrying with scraperapi for {retailer} = {len(card_list)}"
+            )
         gpu_listing_data = gpu_listing_attrs.get_gpu_listing_data(card_list)
         all_gpu_listing_data.extend(gpu_listing_data)
         logger.info(

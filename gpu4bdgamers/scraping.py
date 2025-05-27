@@ -6,10 +6,14 @@ import requests
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from typing import Callable
 
 
 def get_page_soup_list(
-    first_page_url: str, next_page_url_sel: str | None = None
+    first_page_url: str,
+    next_page_url_sel: str | None = None,
+    request_func: Callable = requests.get,
+    **kwargs
 ) -> list[BeautifulSoup]:
     """Starting from the first page, this function will navigate through
     all the GPU listing pages of a retailer website by finding the next
@@ -21,7 +25,7 @@ def get_page_soup_list(
     # if next_page_url_elem does not exist in the latter pages, it means
     # we will have reached the last page
     while next_page_url:
-        page_content = requests.get(next_page_url).content
+        page_content = request_func(next_page_url, allow_redirects=True, **kwargs).content
         soup = BeautifulSoup(page_content, features="html.parser")
         soup_list.append(soup)
         if not next_page_url_sel:
@@ -36,6 +40,11 @@ def get_page_soup_list(
         next_page_url = next_page_url_elem["href"]
         i += 1
     return soup_list
+
+
+def retry_with_scraperapi(url: str, scraperapi_api_key) -> bytes:
+    payload = {"api_key": scraperapi_api_key, "url": url, "render": "true"}
+    return requests.get(url, params=payload).content
 
 
 def get_card_list(
@@ -86,7 +95,7 @@ class GpuListingAttrs:
             if not gpu_listing:
                 continue
             gpu_listing_list.append(gpu_listing)
-        if not gpu_listing_list: 
+        if not gpu_listing_list:
             raise ElementDoesNotExistError(
                 f"Either gpu name, price or retail url does not exist for {self.retailer_name}."
             )
@@ -104,6 +113,7 @@ class GpuListingAttrs:
             )
         except pydantic.ValidationError as e:
             return
+
 
 class GpuListingData(pydantic.BaseModel):
     gpu_name: str
