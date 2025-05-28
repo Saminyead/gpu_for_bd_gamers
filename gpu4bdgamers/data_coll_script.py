@@ -1,11 +1,9 @@
 from logging import RootLogger
-import os
-from dotenv import load_dotenv
 
 
 import pandas as pd
 
-from gpu4bdgamers.data_coll_funcs import *
+from gpu4bdgamers.data_coll_funcs import gpu_version_diff
 
 import sqlalchemy
 
@@ -13,7 +11,6 @@ from functools import partial
 
 import math
 
-from gpu4bdgamers.logger import setup_logging
 from gpu4bdgamers.overall_tier_score import df_overall_tier_score
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 from gpu4bdgamers.naming import add_gpu_unit_name, gddr5_vs_gddr6_1650
@@ -28,245 +25,6 @@ def read_gpu_from_files(filename: str | pathlib.Path) -> list[str]:
         if "" in gpu_unit_list:
             gpu_unit_list.remove("")
         return gpu_unit_list
-
-
-def get_master_df(
-    first_pg_links: dict[str, str],
-    card_css_selectors: dict[str, str],
-    logger: RootLogger,
-    ryans_gpu_name_css_sel="p.card-text.p-0.m-0.grid-view-text > a",
-    ryans_gpu_price_css_sel="a.pr-text.cat-sp-text.pb-1",
-    ryans_retailer_name="Ryans Computer",
-    startech_gpu_name_css_sel="h4.p-item-name > a",
-    startech_gpu_price_css_sel="div.p-item-price > span",
-    startech_retailer_name="Startech Engineering",
-) -> pd.DataFrame:
-    # Ryan's Computer
-    ryans_pages = get_pages_find_all(
-        first_pg_link=first_pg_links["ryans"], url_tag_str="›"
-    )["soup_list"]
-
-    ryans_card_list = get_card_list(
-        pages_list=ryans_pages, card_css_selector=card_css_selectors["ryans"]
-    )
-
-    ryans_df = gpu_dataframe_card(
-        card_list=ryans_card_list,
-        gpu_name_css_sel=ryans_gpu_name_css_sel,
-        gpu_price_css_sel=ryans_gpu_price_css_sel,
-        retailer_name=ryans_retailer_name,
-    )
-
-    logger.info(
-        msg=f"Ryans Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(ryans_df)}"
-    )
-
-    # Startech Engineering
-    startech_pages = get_pages_find_all(
-        first_pg_link=first_pg_links["startech"], url_tag_str="NEXT"
-    )["soup_list"]
-
-    startech_card_list = get_card_list(
-        pages_list=startech_pages, card_css_selector=card_css_selectors["startech"]
-    )
-
-    startech_df = gpu_dataframe_card(
-        card_list=startech_card_list,
-        gpu_name_css_sel=startech_gpu_name_css_sel,
-        gpu_price_css_sel=startech_gpu_price_css_sel,
-        retailer_name=startech_retailer_name,
-    )
-
-    logger.info(
-        msg=f"Startech Engineering BD data scraped and stored to a dataframe successfully; length of dataframe = {len(startech_df)}"
-    )
-
-    # Techland BD
-    techlandbd_pages = get_pages_find_all(
-        first_pg_link=first_pg_links["techlandbd"], url_tag_str=">"
-    )["soup_list"]
-
-    techlandbd_card_list = get_card_list(
-        pages_list=techlandbd_pages, card_css_selector=card_css_selectors["techlandbd"]
-    )
-
-    techlandbd_df = gpu_dataframe_card(
-        card_list=techlandbd_card_list,
-        gpu_name_css_sel="div.name > a",
-        gpu_price_css_sel="div.price > div > span",
-        retailer_name="Tech Land BD",
-    )
-
-    logger.info(
-        msg=f"Tech Land BD data scraped and stored to a dataframe successfully; length of dataframe = {len(techlandbd_df)}"
-    )
-
-    # Skyland Computer BD
-    skyland_pages = get_pages_select(
-        first_pg_link=first_pg_links["skyland"], css_selector="a.next.page-number"
-    )["soup_list"]
-
-    skyland_card_list = get_card_list(
-        pages_list=skyland_pages, card_css_selector=card_css_selectors["skyland"]
-    )
-
-    skyland_df = gpu_dataframe_card(
-        card_list=skyland_card_list,
-        gpu_name_css_sel="div.name > a",
-        gpu_price_css_sel="div.price > div > span",
-        retailer_name="Skyland Computer Bd",
-    )
-
-    logger.info(
-        msg=f"Skyland Computer BD data scraped and stored to a dataframe successfully; length of dataframe = {len(skyland_df)}"
-    )
-
-    # Ultra Technology BD
-    ultratech_pages = get_pages_select(
-        first_pg_link=first_pg_links["ultratech"], css_selector="a.next"
-    )["soup_list"]
-
-    ultratech_card_list = get_card_list(
-        pages_list=ultratech_pages, card_css_selector=card_css_selectors["ultratech"]
-    )
-
-    ultratech_df_0 = gpu_dataframe_card(
-        card_list=ultratech_card_list,
-        gpu_name_css_sel="div.name > a",
-        gpu_price_css_sel="div.price > div > span",
-        retailer_name="Ultra Technology",
-    )
-
-    # since some of the products that are currently not in stock are marked as BDT. 0 in the html code
-    ultratech_df = ultratech_df_0.loc[ultratech_df_0["gpu_price"] != 0]
-
-    logger.info(
-        msg=f"Ultra Technology data scraped and stored to a dataframe successfully; length of dataframe = {len(ultratech_df)}"
-    )
-
-    # Nexus Computer Bangladesh
-    nexusbd_pages = get_pages_select_pagination(
-        first_pg_link=first_pg_links["nexusbd"],
-        css_selector="div#pagination_block_bottom > div.ty-pagination__items ~ a",
-    )["soup_list"]
-
-    nexusbd_card_list = get_card_list(
-        pages_list=nexusbd_pages, card_css_selector=card_css_selectors["nexusbd"]
-    )
-
-    nexusbd_df = gpu_dataframe_card(
-        card_list=nexusbd_card_list,
-        gpu_name_css_sel="h2 > a.product-title",
-        gpu_price_css_sel="span.ty-price > bdi > span ~ span",
-        retailer_name="Nexus Technology",
-    )
-
-    logger.info(
-        msg=f"Nexus Technology data scraped and stored to a dataframe successfully; length of dataframe = {len(nexusbd_df)}"
-    )
-
-    # Global Brand
-    # Global Brand only has a single page
-    globalbrand_pages = get_pages_single_page(first_pg_links["globalbrand"])[
-        "soup_list"
-    ]
-
-    globalbrand_card_list = get_card_list(
-        pages_list=globalbrand_pages,
-        card_css_selector=card_css_selectors["globalbrand"],
-    )
-
-    # the following dataframe contains rows of '0 price', basically they are the unavailable ones. Thus, filterting them out into a new dataframe
-    globalbrand_df_0 = gpu_dataframe_card(
-        card_list=globalbrand_card_list,
-        gpu_name_css_sel="div.name > a",
-        gpu_price_css_sel="div.price > div > span",
-        retailer_name="Global Brand",
-    )
-
-    globalbrand_df = globalbrand_df_0.loc[globalbrand_df_0["gpu_price"] != 0]
-
-    logger.info(
-        msg=f"Global Brand data scraped and stored to a dataframe successfully; length of dataframe = {len(globalbrand_df)}"
-    )
-
-    # Creatus Computer
-    creatus_pages = get_pages_select(
-        first_pg_link=first_pg_links["creatus"], css_selector="li > a.next"
-    )["soup_list"]
-
-    creatus_card_list = get_card_list(
-        pages_list=creatus_pages, card_css_selector=card_css_selectors["creatus"]
-    )
-
-    creatus_df = gpu_dataframe_card(
-        card_list=creatus_card_list,
-        gpu_name_css_sel="div.caption > div.name > a",
-        gpu_price_css_sel="div.price > div > span",
-        retailer_name="Creatus Computer",
-    )
-
-    while True:
-        if len(creatus_df) > 0:
-            break
-
-        else:
-            creatus_df = retry_with_scraperapi_pages_select(
-                scraperapi_api_key=os.getenv("scraperapi_api_key"),
-                first_pg_link=first_pg_links["creatus"],
-                pages_css_selector="li > a.next",
-                card_css_selector=card_css_selectors["creatus"],
-                gpu_name_css_sel="div.caption > div.name > a",
-                gpu_price_css_sel="div.price > div > span",
-                retailer_name="Creatus Computer",
-            )
-
-    logger.info(
-        msg=f"Cretaus Computer data scraped and stored to a dataframe successfully; length of dataframe = {len(creatus_df)}"
-    )
-
-    # UCC BD
-    uccbd_pages = get_pages_single_page(first_pg_links["uccbd"])["soup_list"]
-
-    uccbd_card_list = get_card_list(
-        pages_list=uccbd_pages, card_css_selector=card_css_selectors["uccbd"]
-    )
-
-    uccbd_df = gpu_dataframe_card(
-        card_list=uccbd_card_list,
-        gpu_name_css_sel="div.caption > div.name > a",
-        gpu_price_css_sel="div.price > div > span",
-        retailer_name="UCC-BD",
-    )
-
-    logger.info(
-        msg=f"UCC-BD data scraped and stored to a dataframe successfully; length of dataframe = {len(uccbd_df)}"
-    )
-
-    list_of_df = [
-        ryans_df,
-        startech_df,
-        techlandbd_df,
-        skyland_df,
-        ultratech_df,
-        nexusbd_df,
-        globalbrand_df,
-        creatus_df,
-        uccbd_df,
-    ]
-    master_df = pd.concat(list_of_df)
-
-    logger.info(
-        msg=f"All dataframes compiled into master_df of length {len(master_df)}"
-    )
-    logger.info(
-        msg=f"Number of retailers in master df is {len(master_df.retailer_name.unique())}, while length of list_of_df is {len(list_of_df)}"
-    )
-
-    # any row which has a GPU price of 0 should be discarded
-    master_df = master_df.loc[master_df.gpu_price != 0]
-
-    return master_df
 
 
 def data_collection_to_df(
@@ -297,15 +55,12 @@ def data_collection_to_df(
 
     # list of all gpu units of interest
     geforce_gpu_unit_list = read_gpu_from_files(geforce_gpu_units_filepath)
-
     logger.info(msg="Added list of Geforce GPUs from file")
 
     radeon_gpu_unit_list = read_gpu_from_files(radeon_gpu_units_filepath)
-
     logger.info(msg="Added list of Radeon GPUs from file")
 
     intel_gpu_unit_list = read_gpu_from_files(intel_gpu_units_filepath)
-
     logger.info(msg="Added list of Intel GPUs from file")
 
     logger.info(
