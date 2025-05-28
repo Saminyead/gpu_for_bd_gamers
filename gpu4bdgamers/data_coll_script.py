@@ -27,28 +27,13 @@ def read_gpu_from_files(filename: str | pathlib.Path) -> list[str]:
         return gpu_unit_list
 
 
-def data_collection_to_df(
+def get_gpu_of_interest_df(
     master_df: pd.DataFrame,
-    geforce_gpu_units_filepath: pathlib.Path,
-    radeon_gpu_units_filepath: pathlib.Path,
-    intel_gpu_units_filepath: pathlib.Path,
+    geforce_gpu_units_filepath: str | pathlib.Path,
+    radeon_gpu_units_filepath: str | pathlib.Path,
+    intel_gpu_units_filepath: str | pathlib.Path,
     logger: RootLogger,
-    tier_score_excel_file: pathlib.Path,
-) -> dict[str, pd.DataFrame]:
-    """Top level function to clean and properly format master_df, and proper
-    naming and prefixes, and finally returns dataframes to be pushed to
-    database.
-
-    Returns a dictionary of dataframes as values:
-        {
-            'gpu_of_interest': gpu_of_interest,
-            'lowest_prices': lowest_prices,
-            'lowest_prices_tiered': lowest_prices_tiered
-        }
-    """
-
-    # rounding the GPU Prices to their nearest hundreds
-
+):
     master_df["gpu_price"] = master_df["gpu_price"].apply(
         lambda x: 100 * math.ceil(x / 100)
     )
@@ -70,19 +55,16 @@ def data_collection_to_df(
     # all geforce gpu's
     geforce_gpu_df = add_gpu_unit_name(master_df, geforce_gpu_unit_list, "Geforce")
     geforce_gpu_df.reset_index(drop=True, inplace=True)
-
     rtx_3080_10_vs_12 = partial(
         gpu_version_diff,
         gpu_name="Geforce RTX 3080",
         pattern_version_dict={"12gb|12g": "12GB", "10gb|10g": "10GB"},
     )
-
     rtx_3060_8_vs_12 = partial(
         gpu_version_diff,
         gpu_name="Geforce RTX 3060",
         pattern_version_dict={"12gb|12g": "12GB", "8gb|8g": "8GB"},
     )
-
     rtx_3050_6_vs_8 = partial(
         gpu_version_diff,
         gpu_name="Geforce RTX 3050",
@@ -98,7 +80,6 @@ def data_collection_to_df(
     geforce_gpu_df.loc[
         geforce_gpu_df["gpu_unit_name"] == "Geforce RTX 3060", "gpu_unit_name"
     ] = geforce_gpu_df["gpu_name"].apply(rtx_3060_8_vs_12)
-
     geforce_gpu_df.loc[
         geforce_gpu_df["gpu_unit_name"] == "Geforce RTX 3050", "gpu_unit_name"
     ] = geforce_gpu_df["gpu_name"].apply(rtx_3050_6_vs_8)
@@ -135,17 +116,42 @@ def data_collection_to_df(
     gpu_of_interest_df.reset_index(drop=True, inplace=True)
 
     logger.info(f"gpu_of_interest_df created with {len(gpu_of_interest_df)} entries")
+    return gpu_of_interest_df
 
+
+def data_collection_to_df(
+    master_df: pd.DataFrame,
+    geforce_gpu_units_filepath: pathlib.Path,
+    radeon_gpu_units_filepath: pathlib.Path,
+    intel_gpu_units_filepath: pathlib.Path,
+    logger: RootLogger,
+    tier_score_excel_file: pathlib.Path,
+) -> dict[str, pd.DataFrame]:
+    """Top level function to clean and properly format master_df, and proper
+    naming and prefixes, and finally returns dataframes to be pushed to
+    database.
+
+    Returns a dictionary of dataframes as values:
+        {
+            'gpu_of_interest': gpu_of_interest,
+            'lowest_prices': lowest_prices,
+            'lowest_prices_tiered': lowest_prices_tiered
+        }
+    """
+    gpu_of_interest_df = get_gpu_of_interest_df(
+        master_df,
+        geforce_gpu_units_filepath,
+        radeon_gpu_units_filepath,
+        intel_gpu_units_filepath,
+        logger,
+    )
     lowest_price_df = gpu_of_interest_df[
         gpu_of_interest_df["gpu_price"]
         == gpu_of_interest_df.groupby("gpu_unit_name")["gpu_price"].transform(min)
     ]
     lowest_price_df.reset_index(drop=True, inplace=True)
-
     logger.info(f"lowest_price_df created with {len(lowest_price_df)} entries")
-
     overall_tier_score_df = df_overall_tier_score(logger, tier_score_excel_file)
-
     lowest_prices_tiered = pd.merge(
         left=lowest_price_df,
         right=overall_tier_score_df[
@@ -153,13 +159,10 @@ def data_collection_to_df(
         ],
         on="gpu_unit_name",
     )
-
     logger.info(
         f"lowest_prices_tiered dataframe created with {len(lowest_prices_tiered)} rows and {len(lowest_prices_tiered.columns)} column"
     )
-
     # adding price per tier score columns to dataframe
-
     lowest_prices_tiered["price_per_base_tier"] = (
         lowest_prices_tiered["gpu_price"] / lowest_prices_tiered["base_tier_score"]
     )
