@@ -1,4 +1,4 @@
-from gpu4bdgamers.data_coll_script import read_gpu_from_files
+from gpu4bdgamers.run import read_gpu_from_files
 from gpu4bdgamers.naming import add_gpu_unit_name
 
 import pandas as pd
