@@ -9,7 +9,7 @@ from functools import partial
 
 import math
 
-from gpu4bdgamers.score import df_overall_tier_score
+from gpu4bdgamers.score import get_tier_score_table
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 from gpu4bdgamers.naming import add_gpu_unit_name, gddr5_vs_gddr6_1650, gpu_version_diff
 
@@ -225,10 +225,10 @@ def data_collection_to_df(
     ]
     lowest_price_df.reset_index(drop=True, inplace=True)
     logger.info(f"lowest_price_df created with {len(lowest_price_df)} entries")
-    overall_tier_score_df = df_overall_tier_score(logger, tier_score_excel_file)
+    tier_score_table = get_tier_score_table(logger, tier_score_excel_file)
     lowest_prices_tiered = pd.merge(
         left=lowest_price_df,
-        right=overall_tier_score_df[
+        right=tier_score_table[
             ["gpu_unit_name", "base_tier_score", "net_tier_score", "non_rt_net_score"]
         ],
         on="gpu_unit_name",
