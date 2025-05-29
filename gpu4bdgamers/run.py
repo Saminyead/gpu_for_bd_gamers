@@ -9,7 +9,7 @@ from functools import partial
 
 import math
 
-from gpu4bdgamers.overall_tier_score import df_overall_tier_score
+from gpu4bdgamers.score import df_overall_tier_score
 from gpu4bdgamers.database import push_to_db, replace_previous_date_data_table_db
 from gpu4bdgamers.naming import add_gpu_unit_name, gddr5_vs_gddr6_1650, gpu_version_diff
 
