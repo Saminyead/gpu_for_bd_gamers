@@ -2,8 +2,7 @@ from logging import RootLogger, Logger
 import pathlib
 import pytest
 
-from gpu4bdgamers.master_df import get_master_df
-from gpu4bdgamers.run import data_collection_to_df, data_collection_to_db
+from gpu4bdgamers.run import data_collection_to_df, data_collection_to_db, get_master_df
 from gpu4bdgamers.database import push_to_db, TodayDataAlreadyExistsError
 
 import pandas as pd
