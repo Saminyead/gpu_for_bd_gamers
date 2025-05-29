@@ -8,7 +8,6 @@ from gpu4bdgamers.database import push_to_db, TodayDataAlreadyExistsError
 
 import pandas as pd
 import pandas.testing as pdt
-import pydantic
 import sqlalchemy
 
 

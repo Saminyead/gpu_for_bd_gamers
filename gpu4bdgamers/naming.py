@@ -63,6 +63,27 @@ def add_gpu_unit_name(
     return gpu_base_name_df
 
 
+
+def gpu_version_diff(string:str,gpu_name:str,pattern_version_dict:dict):
+    """for differentiating between 2 different versions of GPU in the gpu dataframes (for example, RX 
+        580 4GB vs 8GB) using regex
+
+    Args:
+        string (str): the full name of the gpu as listed in the retailer website
+        gpu_name (str): the base name of the gpu
+        pattern_version_dict (dict): a dictionary containing the pattern (using which the GPU version 
+            is to be differentiated) as the key and the suffix (e.g. 8GB) to be added to the GPU name
+
+    Returns:
+        str: the gpu name and version
+    """
+    for key,value in pattern_version_dict.items():
+        regex_match = re.search(pattern=key,string=string,flags=re.I)
+        if bool(regex_match)==True:
+            gpu_version = f"{gpu_name} {value}"
+            return gpu_version
+
+
 def gddr5_vs_gddr6_1650(gpu_1650):
     """since there are both gddr5 and gddr6 versions of the GTX 1650 with significant performance difference,
     this function distinguishes between them (to be applied with the .apply() method in dataframe)
